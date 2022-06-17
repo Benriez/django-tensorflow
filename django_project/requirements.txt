@@ -13,7 +13,7 @@ gunicorn==19.9.0
 idna==2.8
 jdcal==1.4.1
 openpyxl==3.0.0
-psycopg2-binary==2.8.6
+psycopg2-binary==2.9.3
 py-moneyed==1.2
 pytz==2019.1
 requests==2.26.0
