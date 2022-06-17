@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>System Monitor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/justgage/1.1.0/justgage.js"></script>
+    <style>
+        .column {
+            float: left;
+            width: 50%;
+        }
+
+        .row {
+            margin: 0 -5px;
+        }
+
+        body, .row {
+            height: 100vh;
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gage {
+            width: 45%;
+            height: 200px;
+        }
+
+    </style>
+</head>
+<body>
+<div>
+    <div class="row" style="position: relative">
+        <div class="column">
+            <div id="cpu" class="gage" style="float: right"></div>
+        </div>
+        <div class="column">
+            <div id="ram" class="gage"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var cpu = new JustGage({
+        id: "cpu",
+        value: 0,
+        min: 0,
+        max: 100,
+        decimals: 1,
+        title: "CPU Load %"
+    });
+    var ram = new JustGage({
+        id: "ram",
+        value: 0,
+        min: 0,
+        max: 100,
+        decimals: 1,
+        title: "RAM Load %"
+    });
+    const systemSocket = new WebSocket(`ws://${window.location.host}/ws/system/`);
+    systemSocket.onopen = function (e) {
+        systemSocket.send(JSON.stringify({"message": 'Sending message to server'}));
+    };
+    systemSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        cpu.refresh(data.cpu_percent);
+        ram.refresh(data.ram_percent);
+    };
+    systemSocket.onclose = function (e) {
+        console.error('Chat socket closed');
+    };
+
+</script>
+</body>
+</html>

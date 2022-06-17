@@ -7,6 +7,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Application definition
 INSTALLED_APPS = [
+    "channels",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -17,7 +18,11 @@ INSTALLED_APPS = [
     # Add your apps here
     "djmoney",
     "app.apps.AppConfig",
+    "system",
 ]
+
+STREAM_SOCKET_GROUP_NAME = "system_detail"
+ASGI_APPLICATION = "django_project.asgi.application"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -37,6 +42,7 @@ TEMPLATES = [
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
             os.path.join(BASE_DIR,  "django_project/templates"),
+            os.path.join(BASE_DIR,  "system/templates"),
         ],
         "APP_DIRS": True,
         "OPTIONS": {
@@ -50,7 +56,17 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "django_project.wsgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
+
+
+#WSGI_APPLICATION = "django_project.wsgi.application"
 
 
 # Password validation
@@ -94,6 +110,9 @@ TEMPLATE_DIRS = (os.path.join(BASE_DIR,  "templates"),)
 # WhiteNoise Configuration
 # http://whitenoise.evans.io/en/stable/#quickstart-for-django-apps
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+
+
 
 
 if os.environ.get("CAPROVER") is None:
