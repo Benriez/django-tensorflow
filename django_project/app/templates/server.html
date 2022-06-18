@@ -1,0 +1,40 @@
+{%  extends 'main.html' %}
+
+{% load static %}
+{% block content %}
+
+
+<img src="{{ img.0.file.url }}" class="img-fluid live-img" alt="Responsive image">
+<!-- {% for i in img %}
+    <img src="{{ img.0.file.url }}" class="img-fluid" alt="Responsive image">
+{% endfor %} -->
+
+
+<script>
+    const systemSocket = new WebSocket(`ws://${window.location.host}/ws/live/`);
+    systemSocket.onopen = function (e) {
+        systemSocket.send(JSON.stringify({"message": 'Sending message to server'}));
+    };
+    systemSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        // cpu.refresh(data.cpu_percent);
+        // ram.refresh(data.ram_percent);
+    };
+    systemSocket.onclose = function (e) {
+        console.error('Chat socket closed');
+    };
+
+</script>
+
+
+<style>
+    .live-img{
+        height: 100%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+</style>
+
+
+{% endblock %}

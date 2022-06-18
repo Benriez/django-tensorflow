@@ -25,8 +25,9 @@ urlpatterns = [
     path('admin/',  admin.site.urls),
     path('system/', include('system.urls')),
     path('auth/',   include('authentication.urls')),
+    path('',        include('app.urls')),
 
-    path('',        views.index),
+    #path('',        views.index),
     # path('login/', views.loginPage, name='loginPage'),
 ]
 
