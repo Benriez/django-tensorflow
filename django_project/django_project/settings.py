@@ -17,7 +17,6 @@ INSTALLED_APPS = [
 
     # Add your apps here
     "app",
-    #"app.apps.AppConfig",
     "authentication",
     "system",
     "djmoney",
@@ -115,11 +114,18 @@ TEMPLATE_DIRS = (os.path.join(BASE_DIR,  "templates"),)
 # WhiteNoise Configuration
 # http://whitenoise.evans.io/en/stable/#quickstart-for-django-apps
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
-
 DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 
 
+STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# Media file handling
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 
 if os.environ.get("CAPROVER") is None:
