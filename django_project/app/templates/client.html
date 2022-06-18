@@ -1,0 +1,32 @@
+{%  extends 'main.html' %}
+
+{% load static %}
+{% block content %}
+
+
+
+
+
+<script>
+    const systemSocket = new WebSocket(`ws://${window.location.host}/ws/client/`);
+    systemSocket.onopen = function (e) {
+        systemSocket.send(JSON.stringify({"message": 'Sending message to server'}));
+    };
+    systemSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        // cpu.refresh(data.cpu_percent);
+        // ram.refresh(data.ram_percent);
+    };
+    systemSocket.onclose = function (e) {
+        console.error('Chat socket closed');
+    };
+
+</script>
+
+
+<style>
+
+</style>
+
+
+{% endblock %}

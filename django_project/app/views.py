@@ -13,6 +13,6 @@ def index(request):
         return render(request, 'server.html', context)
     
     else:
-        return HttpResponse('client view')
+        return render(request, 'client.html')
 
         
