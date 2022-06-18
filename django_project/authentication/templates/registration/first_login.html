@@ -1,0 +1,69 @@
+{% extends 'app/main.html' %}
+{% load static %}
+{% load auth_extras %}
+
+{% block content %}
+
+	{%  if form.errors %}
+	<div class="alert alert-warning" role="alert">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+		<p>Mit Ihrer Eingabe ist etwas nicht in Ordnung!</p>
+
+	</div>
+	{%  endif %}
+
+	<!-- {%  if next %}
+	<p>you cant access the page!</p>
+	{%  endif %} -->
+
+	<div class="container h-100">
+		<div class="d-flex justify-content-center h-100 form_anim">
+			<div class="user_card text-center">
+				<div class="d-flex justify-content-center">
+					<h3 id="form-title" class="log_anim">Anmeldung</h3>
+				</div>
+				{% if request.user|has_group:"school-admins" or request.user|has_group:"teachers" %}
+				<h6>Bitte melden Sie sich jetzt an.</h6>
+				{% else %}
+				<h6>Bitte melde Dich jetzt an.</h6>
+				{% endif %}
+				<div class="d-flex justify-content-center form_container">
+					<form method="POST" action="">
+						{% csrf_token %}
+						<div class="input-group mb-3">
+							<div class="input-group-append">
+								<span class="input-group-text"><i class="fa fa-user"></i></span>
+							</div>
+							<input type="text" name="username" placeholder="Benutzername..." class="form-control">
+						</div>
+						<div class="input-group mb-2">
+							<div class="input-group-append">
+								<span class="input-group-text"><i class="fa fa-key"></i></span>
+							</div>
+								<input type="password" name="password" placeholder="Passwort..." class="form-control" >
+						</div>
+
+							<div class="d-flex justify-content-center mt-3 login_container">
+				 				<input class="btn btn-primary login_btn" type="submit" value="Anmelden">
+				   			</div>
+					</form>
+
+				</div>
+
+				{% for message in messages %}
+					<p id="messages">{{message}}</p>
+				{% endfor %}
+
+				<div class="mt-4" style="font-size: small;">
+					<div class="d-flex justify-content-center links reset_anim">
+						Passwort vergessen? <a href="{% url 'reset_password' %}" class="ml-2">Passwort zurücksetzen</a>
+					</div>
+			
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}

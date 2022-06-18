@@ -16,13 +16,16 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     # Add your apps here
-    "djmoney",
-    "app.apps.AppConfig",
+    "app",
+    #"app.apps.AppConfig",
+    "authentication",
     "system",
+    "djmoney",
 ]
 
 STREAM_SOCKET_GROUP_NAME = "system_detail"
 ASGI_APPLICATION = "django_project.asgi.application"
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -41,8 +44,10 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
+            os.path.join(BASE_DIR,  "app/templates"),
+            os.path.join(BASE_DIR,  "authentication/templates"),
             os.path.join(BASE_DIR,  "django_project/templates"),
-            os.path.join(BASE_DIR,  "system/templates"),
+            os.path.join(BASE_DIR,  "system/templates")
         ],
         "APP_DIRS": True,
         "OPTIONS": {
@@ -111,6 +116,8 @@ TEMPLATE_DIRS = (os.path.join(BASE_DIR,  "templates"),)
 # http://whitenoise.evans.io/en/stable/#quickstart-for-django-apps
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
+
+DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 
 
 

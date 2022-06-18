@@ -1,0 +1,89 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+
+	{%  if form.errors %}
+	<div class="alert alert-warning" role="alert">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+		<p>Mit Ihrer Eingabe ist etwas nicht in Ordnung!</p>
+
+	</div>
+	{%  endif %}
+
+	<div class="container h-100">
+		<div class="d-flex justify-content-center h-100 form_anim">
+			<div class="user_card card-login">
+				<div class="d-flex justify-content-center">
+					<h3 id="form-title" class="log_anim">Anmeldung</h3>
+				</div>
+				<div class="d-flex justify-content-center form_container">
+					<form method="POST" action="">
+						{% csrf_token %}
+						<div class="input-group mb-3">
+							<div class="input-group-append">
+								<span class="input-group-text" style="display: initial;">
+									<i class="fa fa-user"></i>
+								</span>
+							</div>
+							<input type="text" name="username" placeholder="Benutzername..." class="form-control">
+						</div>
+						<div class="input-group mb-2">
+							<div class="input-group-append">
+								<span class="input-group-text" style="display: initial;">
+									<i class="fa fa-lock"></i>
+								</span>
+							</div>
+								<input id="password" type="password" name="password" placeholder="Passwort..." class="form-control" >
+								<div class="input-group-append">
+									<span class="input-group-text" onclick="password_show_hide();">
+										<i class="fa fa-eye-slash d-none" id="hide_eye"></i>
+									  	<i class="fa fa-eye" id="show_eye"></i>
+									</span>
+								  </div>
+							</div>
+
+							<div class="d-flex justify-content-center mt-3 login_container">
+				 				<input class="btn btn-primary login_btn" type="submit" value="Anmelden">
+				   			</div>
+					</form>
+
+				</div>
+
+				{% for message in messages %}
+					<p id="messages">{{message}}</p>
+				{% endfor %}
+
+				<div class="mt-4" style="font-size: small;">
+					<hr style="width: 8rem;">
+					<div class="d-flex justify-content-center links reset_anim">
+						Passwort vergessen? <a href="" class="ml-2"style="color:#298bbc">Passwort zurücksetzen</a>
+					</div>
+			
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+<script>
+	function password_show_hide() {
+		var x = document.getElementById("password");
+		var show_eye = document.getElementById("show_eye");
+		var hide_eye = document.getElementById("hide_eye");
+		hide_eye.classList.remove("d-none");
+		if (x.type === "password") {
+			x.type = "text";
+			show_eye.style.display = "block";
+			hide_eye.style.display = "none";
+		} else {
+			x.type = "password";
+			show_eye.style.display = "none";
+			hide_eye.style.display = "block";
+		}
+	}
+</script>
+
+{% endblock %}

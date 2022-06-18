@@ -1,0 +1,88 @@
+{% extends 'app/main.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container move card-block" style="background-color: #fff;">
+    <div class="row">
+        <a href="/"><icon class="fa fa-angle-left" style="font-size: 2.5rem; cursor: pointer; margin-top: 3%; padding-left: 2rem;"></icon></a>
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
+            {% endfor %}
+
+        {% endif %} 
+        
+        <div class="col d-flex justify-content-center">
+            <h4 style="margin-top: 8px; margin-bottom: 1.5rem; text-shadow: #c3c1c1 0.1em 0.1em 0.2em; margin-left: -3rem;">Einstellungen</h4>
+        </div>
+    </div>
+    <hr>
+    <h6 id="labelchangeEmail" onclick="HideEmailChange()" style="display: none; cursor: pointer;">Email-Adresse ändern</h6>
+  
+    <div class="form-group d-flex justify-content-center">
+        <a id="linkChangeEmail" onclick="ShowEmailChange()" style="cursor: pointer;">Email-Adresse ändern</a>    
+        <form id="changeEmail" method="POST" style="display: none">
+            {% csrf_token %}           
+
+            {{ email.as_p }}
+            <button class="btn btn-primary pull-right" name="btnFormEmail">Übernehmen</button>
+        </form>
+    </div>
+
+    <hr>
+    <h6 id="labelchangePw" onclick="HidePwChange()" style="display: {{showPwChange}}; margin-bottom: 5%; cursor: pointer;">Passwort ändern</h6>
+    <div class="form-group d-flex justify-content-center">    
+        <a id="linkChangePw" onclick="ShowPwChange()" style="cursor: pointer;">Passwort ändern</a>
+        <form id="changePw" method="POST" style="display: {{showPwChange}};">
+            {% csrf_token %}
+            {{ pwchange.as_p }}
+            <button class="btn btn-primary pull-right" name="btnFormPw">Übernehmen</button>
+        </form>
+    </div>
+
+    <hr>
+
+</div>
+
+
+
+
+<script>
+    window.onload = function () {
+        const move = document.querySelector(".move")
+
+        const tl_edit= new TimelineMax();
+        tl_edit.fromTo(move, 0.3, {x: 25, opacity: 0}, {x: 0, ease: Power2.easeOut, opacity: 1, ease: Power2.easeOut})
+
+    }
+
+    function ShowPwChange() {
+      document.getElementById("changePw").style.display = "block";
+      document.getElementById("labelchangePw").style.display = "block";
+      document.getElementById("linkChangePw").style.display = "none";
+    }
+
+    function ShowEmailChange() {
+      document.getElementById("changeEmail").style.display = "block";
+      document.getElementById("labelchangeEmail").style.display = "block";
+      document.getElementById("linkChangeEmail").style.display = "none";
+    }
+
+    function HideEmailChange() {
+      document.getElementById("changeEmail").style.display = "none";
+      document.getElementById("labelchangeEmail").style.display = "none";
+      document.getElementById("linkChangeEmail").style.display = "block";
+    }
+
+    function HidePwChange() {
+      document.getElementById("changePw").style.display = "none";
+      document.getElementById("labelchangePw").style.display = "none";
+      document.getElementById("linkChangePw").style.display = "block";
+    }
+
+</script>
+
+
+{% endblock %}
