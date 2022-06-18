@@ -13,12 +13,11 @@
 <script>
     const systemSocket = new WebSocket(`ws://${window.location.host}/ws/live/`);
     systemSocket.onopen = function (e) {
-        systemSocket.send(JSON.stringify({"message": 'Sending message to server'}));
+        systemSocket.send(JSON.stringify({"message": 'liveview connected'}));
     };
     systemSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
-        // cpu.refresh(data.cpu_percent);
-        // ram.refresh(data.ram_percent);
+        console.log(data.message)
     };
     systemSocket.onclose = function (e) {
         console.error('Chat socket closed');

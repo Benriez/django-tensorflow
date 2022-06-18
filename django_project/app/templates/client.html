@@ -3,14 +3,14 @@
 {% load static %}
 {% block content %}
 
-
+<button type="button" onclick="send_message()" class="btn btn-primary">Send</button>
 
 
 
 <script>
-    const systemSocket = new WebSocket(`ws://${window.location.host}/ws/client/`);
+    const systemSocket = new WebSocket(`ws://${window.location.host}/ws/live/`);
     systemSocket.onopen = function (e) {
-        systemSocket.send(JSON.stringify({"message": 'Sending message to server'}));
+        systemSocket.send(JSON.stringify({"message": 'client connected'}));
     };
     systemSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
@@ -20,6 +20,10 @@
     systemSocket.onclose = function (e) {
         console.error('Chat socket closed');
     };
+
+    function send_message(){
+        systemSocket.send(JSON.stringify({"message": 'ping'}));
+    }
 
 </script>
 

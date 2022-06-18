@@ -16,3 +16,11 @@ def index(request):
         return render(request, 'client.html')
 
         
+
+#------------------------------------------------------------------
+def start_slideshow(request):
+    img = Images.objects.all()
+    context = {
+        'img':img
+    }
+    return render(request, 'server.html', context)    
