@@ -18,8 +18,15 @@
     systemSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
         console.log(data.message)
-        document.getElementById("background").src = data.message;
-        document.getElementById("background").style.display = "inline"
+        if (data.message == "start"){
+            document.getElementById("background").src = data.src;
+            document.getElementById("background").style.display = "inline"
+        }
+
+        if (data.message == "reset"){
+            document.getElementById("background").style.display = "none"
+            document.getElementById("background").style.src = ""
+        }
     };
     systemSocket.onclose = function (e) {
         console.error('Chat socket closed');

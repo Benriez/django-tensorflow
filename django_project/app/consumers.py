@@ -39,17 +39,29 @@ class LiveViewConsumer(AsyncWebsocketConsumer):
         if message == "start": 
             #get first image  
             url = await get_next_image()
-
             if url:
                 await self.channel_layer.group_send(
                     self.group_name,
                     {
                         'type': 'client_server',
                         'data': {
-                            'message': url, 
+                            'message': 'start',
+                            'src': url 
                         }
                     }
                 )
+        
+        if message == "reset":
+            await reset()
+            await self.channel_layer.group_send(
+                self.group_name,
+                {
+                    'type': 'client_server',
+                    'data': {
+                        'message': 'reset', 
+                    }
+                }
+            )
 
 
     async def client_server(self, event):
@@ -58,6 +70,7 @@ class LiveViewConsumer(AsyncWebsocketConsumer):
     
 
 
+#-----------------------------------------------------------------------------------------
 @sync_to_async
 def get_next_image():
     try:
@@ -67,12 +80,26 @@ def get_next_image():
         img.save()
 
         next = img.file.url
-        
+        #next = img      
     except:
         next = None
 
 
     return next
+
+
+@sync_to_async
+def reset(): 
+    imgs = Images.objects.all()
+
+    for i in imgs:
+        i.displayed = False
+        i.seen = False
+        i.save()
+    
+
+
+        
 
 
 

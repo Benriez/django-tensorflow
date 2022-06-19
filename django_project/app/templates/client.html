@@ -6,6 +6,7 @@
 <button type="button" onclick="send_message()" class="btn btn-primary">Start</button>
 <button type="button" onclick="stop_carrousel()" class="btn btn-primary">Stop</button>
 <button type="button" onclick="change_timeout()" class="btn btn-primary">Change Timeout</button>
+<button type="button" onclick="reset()" class="btn btn-primary">Reset</button>
 
 
 
@@ -19,6 +20,7 @@
         // cpu.refresh(data.cpu_percent);
         // ram.refresh(data.ram_percent);
     };
+    
     systemSocket.onclose = function (e) {
         console.error('Chat socket closed');
     };
@@ -31,6 +33,9 @@
     }
     function stop_carrousel(){        
         systemSocket.send(JSON.stringify({"message": 'stop'}));
+    }
+    function reset(){        
+        systemSocket.send(JSON.stringify({"message": 'reset'}));
     }
 </script>
 
