@@ -9,6 +9,9 @@ from django.conf import settings
 from .models import Images
 
 
+
+
+
 class LiveViewConsumer(AsyncWebsocketConsumer):
     group_name = "live_view"
 
@@ -36,17 +39,18 @@ class LiveViewConsumer(AsyncWebsocketConsumer):
         # Send data to group     
         if message == "start": 
             #get first image  
-            image = await sync_to_async(Images.objects.get, thread_sensitive=True)(id=1) 
-            print('url', image.file.url)
-            # await self.channel_layer.group_send(
-            #     self.group_name,
-            #     {
-            #         'type': 'client_server',
-            #         'data': {
-            #             'message': url, 
-            #         }
-            #     }
-            # )
+            url = await get_next_image()
+
+            if url:
+                await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        'type': 'client_server',
+                        'data': {
+                            'message': url, 
+                        }
+                    }
+                )
 
 
     async def client_server(self, event):
@@ -56,19 +60,20 @@ class LiveViewConsumer(AsyncWebsocketConsumer):
 
 
 @sync_to_async
-def _get_image():
-    image = Images.objects.filter(seen=False).first()
-    print(image.file.url)
-    x = [creator for creator in image]
-    return x
+def get_next_image():
+    try:
+        img = Images.objects.all().filter(seen=False).filter(displayed=False).first()
+        img.displayed = True
+        img.seen = True
+        img.save()
+
+        next = img.file.url
+        
+    except:
+        next = None
 
 
-# @sync_to_async
-# def get_image():
-#     img = Images.objects.filter(seen=False).first()
-#     #img.displayed = True
-#     img.save()
-#     return img
+    return next
 
 
 
