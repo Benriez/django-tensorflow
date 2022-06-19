@@ -6,17 +6,13 @@ from .models import Images
 
 def index(request):
     if request.user.is_superuser:
-        img = Images.objects.all()
-        context = {
-            'img':img
-        }
-        return render(request, 'server.html', context)
+        return render(request, 'server.html') 
     
     else:
         return render(request, 'client.html')
 
         
-
+ 
 #------------------------------------------------------------------
 def start_slideshow(request):
     img = Images.objects.all()

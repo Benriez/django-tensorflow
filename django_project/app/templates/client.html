@@ -3,7 +3,9 @@
 {% load static %}
 {% block content %}
 
-<button type="button" onclick="send_message()" class="btn btn-primary">Send</button>
+<button type="button" onclick="send_message()" class="btn btn-primary">Start</button>
+<button type="button" onclick="stop_carrousel()" class="btn btn-primary">Stop</button>
+<button type="button" onclick="change_timeout()" class="btn btn-primary">Change Timeout</button>
 
 
 
@@ -21,10 +23,15 @@
         console.error('Chat socket closed');
     };
 
-    function send_message(){
-        systemSocket.send(JSON.stringify({"message": 'ping'}));
+    function send_message(){        
+        systemSocket.send(JSON.stringify({"message": 'start'}));
     }
-
+    function change_timeout(){        
+        systemSocket.send(JSON.stringify({"message": 30}));
+    }
+    function stop_carrousel(){        
+        systemSocket.send(JSON.stringify({"message": 'stop'}));
+    }
 </script>
 
 

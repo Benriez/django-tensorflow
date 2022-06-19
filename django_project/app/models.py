@@ -8,7 +8,8 @@ class Images(models.Model):
     website     = models.CharField("Website", max_length=50, blank=True, null=True)
     comment     = models.TextField("Comment", max_length=1000, blank=True)
     file        = models.ImageField("Datei", blank=True, null=True, upload_to="img")
-
+    displayed   = models.BooleanField(default=False)
+    seen        = models.BooleanField(default=False)
     class Meta:
         verbose_name = 'Image'
         verbose_name_plural = 'Images'

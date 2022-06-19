@@ -4,7 +4,7 @@
 {% block content %}
 
 
-<img src="{{ img.0.file.url }}" class="img-fluid live-img" alt="Responsive image">
+<img id="background" src="{{ img.file.url }}" class="img-fluid live-img" alt="Responsive image">
 <!-- {% for i in img %}
     <img src="{{ img.0.file.url }}" class="img-fluid" alt="Responsive image">
 {% endfor %} -->
@@ -18,6 +18,7 @@
     systemSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
         console.log(data.message)
+        document.getElementById("background").src = data.message;
     };
     systemSocket.onclose = function (e) {
         console.error('Chat socket closed');
