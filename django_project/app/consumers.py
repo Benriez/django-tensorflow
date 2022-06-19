@@ -34,7 +34,7 @@ class LiveViewConsumer(AsyncWebsocketConsumer):
         # Receive data from WebSocket
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
-
+        print(message)
         # Send data to group     
         if message == "start": 
             #get first image  

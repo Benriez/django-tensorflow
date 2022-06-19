@@ -3,18 +3,30 @@
 {% load static %}
 {% block content %}
 
-<button type="button" onclick="send_message()" class="btn btn-primary">Start</button>
-<button type="button" onclick="stop_carrousel()" class="btn btn-primary">Stop</button>
-<button type="button" onclick="change_timeout()" class="btn btn-primary">Change Timeout</button>
-<button type="button" onclick="reset()" class="btn btn-primary">Reset</button>
+<div id="websocket" class="alert alert-danger text-center" role="alert">
+    Not connected
+</div>
+
+<div class="col-12 controls">
+    <button type="button" onclick="send_message()" class="btn btn-primary">Start</button>
+    <button type="button" onclick="stop_carrousel()" class="btn btn-primary">Stop</button>
+    <button type="button" onclick="change_timeout()" class="btn btn-primary">Timeout</button>
+    <button type="button" onclick="reset()" class="btn btn-primary">Reset</button>
+</div>
 
 
 
 <script>
     const systemSocket = new WebSocket(`ws://${window.location.host}/ws/live/`);
+    const websocketState = document.getElementById("websocket")
+
     systemSocket.onopen = function (e) {
+        websocketState.classList.remove('alert-danger');
+        websocketState.classList.add('alert-success');
+        websocketState.innerText = "Connected"
         systemSocket.send(JSON.stringify({"message": 'client connected'}));
     };
+
     systemSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
         // cpu.refresh(data.cpu_percent);
@@ -23,6 +35,10 @@
     
     systemSocket.onclose = function (e) {
         console.error('Chat socket closed');
+        websocketState.classList.remove('alert-success');
+        websocketState.classList.add('alert-danger');
+        websocketState.innerText = "Not Connected"
+
     };
 
     function send_message(){        
@@ -41,7 +57,10 @@
 
 
 <style>
-
+    .controls{
+        display: flex;
+        justify-content: space-evenly;
+    }
 </style>
 
 
