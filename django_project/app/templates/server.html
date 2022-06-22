@@ -4,11 +4,46 @@
 {% block content %}
 
 
-<img id="background" src="{{ img.file.url }}" class="img-fluid live-img" alt="Responsive image">
-<!-- {% for i in img %}
-    <img src="{{ img.0.file.url }}" class="img-fluid" alt="Responsive image">
-{% endfor %} -->
 
+<div id="display"></div>
+
+
+<script src="{% static 'js/pixi.js' %}"></script>
+
+<script>
+    var app;
+    var image;
+    var image_path = "{% static 'img/background.jpeg' %}";
+    var displacement_path = "{% static 'img/displacement.jpg' %}";
+
+    function initPixi() {
+      app = new PIXI.Application({width: window.innerWidth, height: window.innerHeight});
+      document.body.appendChild(app.view);
+
+      image = new PIXI.Sprite.from(image_path);
+      image.width = window.innerWidth;
+      image.height = window.innerHeight;
+      app.stage.addChild(image);
+      console.log(app.stage)
+
+      displacementSprite = new PIXI.Sprite.from(displacement_path);
+      displacementFilter = new PIXI.filters.DisplacementFilter(displacementSprite);
+      displacementSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
+      app.stage.addChild(displacementSprite);
+      app.stage.filters = [displacementFilter];
+
+      app.renderer.view.style.transform = 'scale(1.02)';
+      displacementSprite.scale.x = 4;
+      displacementSprite.scale.y = 4;
+      animate();
+    }
+    function animate() {
+      displacementSprite.x += 2;
+      displacementSprite.y += .5;
+      requestAnimationFrame(animate);
+    }
+    initPixi();
+</script>
 
 <script>
     const systemSocket = new WebSocket(`ws://${window.location.host}/ws/live/`);
@@ -19,13 +54,18 @@
         const data = JSON.parse(e.data);
         console.log(data.message)
         if (data.message == "start"){
-            document.getElementById("background").src = data.src;
-            document.getElementById("background").style.display = "inline"
+            app.destroy(true);
+            app = null;
+            image_path = data.src
+            initPixi();
+            
         }
 
         if (data.message == "reset"){
-            document.getElementById("background").style.display = "none"
-            document.getElementById("background").style.src = ""
+            app.destroy(true);
+            app = null;
+            image_path = "{% static 'img/background.jpeg' %}"
+            initPixi();
         }
     };
     systemSocket.onclose = function (e) {
@@ -42,6 +82,15 @@
         background-repeat: no-repeat;
         background-size: cover;
         display: none;
+    }
+
+    #display{
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 </style>
 
