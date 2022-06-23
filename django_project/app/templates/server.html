@@ -17,14 +17,13 @@
     var displacement_path = "{% static 'img/displacement.jpg' %}";
 
     function initPixi() {
-      app = new PIXI.Application({width: window.innerWidth, height: window.innerHeight});
+      app = new PIXI.Application({width: window.innerWidth, height: window.innerHeight, resizeTo: window});
       document.body.appendChild(app.view);
 
       image = new PIXI.Sprite.from(image_path);
       image.width = window.innerWidth;
       image.height = window.innerHeight;
       app.stage.addChild(image);
-      console.log(app.stage)
 
       displacementSprite = new PIXI.Sprite.from(displacement_path);
       displacementFilter = new PIXI.filters.DisplacementFilter(displacementSprite);
@@ -32,14 +31,14 @@
       app.stage.addChild(displacementSprite);
       app.stage.filters = [displacementFilter];
 
-      app.renderer.view.style.transform = 'scale(1.02)';
-      displacementSprite.scale.x = 4;
+      app.renderer.view.style.transform = 'scale(1.1)';
+      displacementSprite.scale.x = 5;
       displacementSprite.scale.y = 4;
       animate();
     }
     function animate() {
-      displacementSprite.x += 2;
-      displacementSprite.y += .5;
+      displacementSprite.x += 1.8;
+      displacementSprite.y += 1.4;
       requestAnimationFrame(animate);
     }
     initPixi();
