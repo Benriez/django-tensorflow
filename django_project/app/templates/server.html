@@ -19,6 +19,7 @@
     var displacement_path = "{% static 'img/displacement2.jpg' %}";
 
     var displacement_x_value = 5;
+    var displacement_y_value = 1.4;
 
     function initPixi() {
       app = new PIXI.Application({width: window.innerWidth, height: window.innerHeight, resizeTo: window});
@@ -36,13 +37,13 @@
       app.stage.filters = [displacementFilter];
 
       app.renderer.view.style.transform = 'scale(1.1)';
-      displacementSprite.scale.x = displacement_x_value;
+      displacementSprite.scale.x = 5;
       displacementSprite.scale.y = 4;
       animate();
     }
     function animate() {
-      displacementSprite.x += 1.8;
-      displacementSprite.y += 1.4;
+      displacementSprite.x += displacement_x_value;
+      displacementSprite.y += displacement_y_value;
       requestAnimationFrame(animate);
     }
     initPixi();
@@ -61,7 +62,7 @@
     };
     systemSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
-        console.log(data.value)
+        console.log(data.message)
 
         if (data.message == "start"){
             app.destroy(true);
@@ -72,9 +73,12 @@
             
         }
 
-        if (data.message == "displacement.x"){
-            displacement_x_value = data.message
-            //initPixi();
+        if (data.message == "displacement-x"){
+            displacement_x_value = parseInt(data.value)
+        }
+
+        if (data.message == "displacement-y"){
+            displacement_y_value = parseInt(data.value)
         }
 
         if (data.message == "reset"){

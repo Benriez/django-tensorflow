@@ -42,18 +42,29 @@ class LiveViewConsumer(AsyncWebsocketConsumer):
         if message == "liveview-server connected": 
             pass
 
-        if message == "displacement.x": 
+        if message == "displacement-x": 
             await self.channel_layer.group_send(
                 self.group_name,
                 {
                     'type': 'client_server',
                     'data': {
-                        'message': 'displacement.x',
+                        'message': 'displacement-x',
                         'value': text_data_json['value'] 
                     }
                 }
             )
 
+        if message == "displacement-y": 
+            await self.channel_layer.group_send(
+                self.group_name,
+                {
+                    'type': 'client_server',
+                    'data': {
+                        'message': 'displacement-y',
+                        'value': text_data_json['value'] 
+                    }
+                }
+            )
 
         if message == "client-connected": 
             deviceID = text_data_json['deviceID']
