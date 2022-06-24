@@ -17,6 +17,7 @@ class LiveViewConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         # Joining group
+        print('liveviewConsumer connect')
         await self.channel_layer.group_add(
             self.group_name,
             self.channel_name
@@ -25,6 +26,7 @@ class LiveViewConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         # Leave group
+        print('liveviewConsumer disconnect')
         await self.channel_layer.group_discard(
             self.group_name,
             self.channel_name
@@ -34,6 +36,29 @@ class LiveViewConsumer(AsyncWebsocketConsumer):
         # Receive data from WebSocket
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
+
+
+
+        if message == "liveview-server connected": 
+            pass
+
+        if message == "displacement.x": 
+            await self.channel_layer.group_send(
+                self.group_name,
+                {
+                    'type': 'client_server',
+                    'data': {
+                        'message': 'displacement.x',
+                        'value': text_data_json['value'] 
+                    }
+                }
+            )
+
+
+        if message == "client-connected": 
+            deviceID = text_data_json['deviceID']
+            print('deviceID ', deviceID)
+
    
         # Send data to group     
         if message == "start": 

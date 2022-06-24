@@ -13,8 +13,10 @@
 <script>
     var app;
     var image;
-    var image_path = "{% static 'img/background.jpeg' %}";
-    var displacement_path = "{% static 'img/displacement.jpg' %}";
+    var image_path = "{% static 'img/background2.jpeg' %}";
+    var displacement_path = "{% static 'img/displacement2.jpg' %}";
+
+    var displacement_x_value = 5;
 
     function initPixi() {
       app = new PIXI.Application({width: window.innerWidth, height: window.innerHeight, resizeTo: window});
@@ -32,7 +34,7 @@
       app.stage.filters = [displacementFilter];
 
       app.renderer.view.style.transform = 'scale(1.1)';
-      displacementSprite.scale.x = 5;
+      displacementSprite.scale.x = displacement_x_value;
       displacementSprite.scale.y = 4;
       animate();
     }
@@ -47,28 +49,38 @@
 <script>
     const systemSocket = new WebSocket(`ws://${window.location.host}/ws/live/`);
     systemSocket.onopen = function (e) {
-        systemSocket.send(JSON.stringify({"message": 'liveview connected'}));
+        console.info('liveview socket listening');
+        systemSocket.send(JSON.stringify({"message": 'liveview-server connected'}));
     };
     systemSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
-        console.log(data.message)
+        console.log(data.value)
+
         if (data.message == "start"){
             app.destroy(true);
             app = null;
             image_path = data.src
+            displacement_path = "{% static 'img/displacement.jpg' %}"
             initPixi();
             
+        }
+
+        if (data.message == "displacement.x"){
+            displacement_x_value = data.message
+            initPixi();
         }
 
         if (data.message == "reset"){
             app.destroy(true);
             app = null;
-            image_path = "{% static 'img/background.jpeg' %}"
+            image_path = "{% static 'img/background2.jpeg' %}"
+            displacement_path = "{% static 'img/displacement2.jpg' %}"
             initPixi();
         }
     };
     systemSocket.onclose = function (e) {
         console.error('Chat socket closed');
+        systemSocket.send(JSON.stringify({"message": 'closed'}));
     };
 
 </script>

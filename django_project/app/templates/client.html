@@ -14,7 +14,17 @@
     <button type="button" onclick="reset()" class="btn btn-primary">Reset</button>
 </div>
 
-
+<div class="col-12" style="margin-top: 5rem;">
+    <label for="customRange1" class="form-label">displacementSprite.x</label>
+    <div class="row">
+        <div class="col-12">
+            <input type="range" class="form-range" id="customRange1" min="0" max="5" step="0.1" oninput="updateTextInput(this.value);" style="width:100%">
+        </div>
+        <div class="col-1 offset-11">
+            <label id="textInput" for="customRange3" class="form-label">2.5</label>
+        </div>
+    </div>
+</div>
 
 <script>
     const systemSocket = new WebSocket(`ws://${window.location.host}/ws/live/`);
@@ -24,11 +34,39 @@
         websocketState.classList.remove('alert-danger');
         websocketState.classList.add('alert-success');
         websocketState.innerText = "Connected"
-        systemSocket.send(JSON.stringify({"message": 'client connected'}));
+
+
+        // check if user has cookie 
+        if (document.cookie.indexOf('deviceID=')){
+            device_id = Math.floor(100000 + Math.random() * 900000)
+            document.cookie = "deviceID=" + device_id;
+        
+        } else {
+            // create new device id
+            let name = "deviceID=";
+            let ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    device_id = c.substring(name.length, c.length)
+                    //return c.substring(name.length, c.length);
+                }
+            }
+      
+            
+        };
+   
+        console.log(device_id)
+        systemSocket.send(JSON.stringify({"message": 'client-connected',"deviceID": device_id}));
+
     };
 
     systemSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
+        //console.log(data)
         // cpu.refresh(data.cpu_percent);
         // ram.refresh(data.ram_percent);
     };
@@ -43,6 +81,7 @@
 
     function send_message(){        
         systemSocket.send(JSON.stringify({"message": 'start'}));
+        console.log()
     }
     function change_timeout(){        
         systemSocket.send(JSON.stringify({"message": 30}));
@@ -52,6 +91,13 @@
     }
     function reset(){        
         systemSocket.send(JSON.stringify({"message": 'reset'}));
+    }
+
+
+
+    function updateTextInput(val) {
+        systemSocket.send(JSON.stringify({"message": 'displacement.x', "value":val}));
+        document.getElementById('textInput').innerText=val; 
     }
 </script>
 
