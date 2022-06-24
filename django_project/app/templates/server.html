@@ -5,7 +5,9 @@
 
 
 
-<div id="display"></div>
+<div id="display">
+    <span id="websocket" class="badge badge-pill badge-danger" style="z-index: 10; position:absolute; top:2rem; right: 2rem">Offline</span>
+</div>
 
 
 <script src="{% static 'js/pixi.js' %}"></script>
@@ -48,8 +50,13 @@
 
 <script>
     const systemSocket = new WebSocket(`ws://${window.location.host}/ws/live/`);
+    const websocketState = document.getElementById("websocket")
+
     systemSocket.onopen = function (e) {
         console.info('liveview socket listening');
+        websocketState.classList.remove('badge-danger');
+        websocketState.classList.add('badge-success');
+        websocketState.innerText = "Online"
         systemSocket.send(JSON.stringify({"message": 'liveview-server connected'}));
     };
     systemSocket.onmessage = function (e) {
@@ -67,7 +74,7 @@
 
         if (data.message == "displacement.x"){
             displacement_x_value = data.message
-            initPixi();
+            //initPixi();
         }
 
         if (data.message == "reset"){
@@ -80,6 +87,9 @@
     };
     systemSocket.onclose = function (e) {
         console.error('Chat socket closed');
+        websocketState.classList.remove('badge-success');
+        websocketState.classList.add('badge-danger');
+        websocketState.innerText = "Offline"
         systemSocket.send(JSON.stringify({"message": 'closed'}));
     };
 

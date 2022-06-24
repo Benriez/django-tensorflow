@@ -14,6 +14,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'rest_framework',
 
     # Add your apps here
     "app",
@@ -21,6 +22,14 @@ INSTALLED_APPS = [
     "system",
     "djmoney",
 ]
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
 
 STREAM_SOCKET_GROUP_NAME = "system_detail"
 ASGI_APPLICATION = "django_project.asgi.application"
