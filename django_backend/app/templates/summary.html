@@ -3,53 +3,7 @@
 {% load static %}
 {% block content %}
 <div class="row">
-<div class="col-12 col-md-10 offset-md-1">
-    <div class="form-content">
-        <div style="display: flex;justify-content: space-between;">
-            <p>
-                <span class="badge badge-pill badge-dark mr-2">1</span>
-                Daten
-            </p>
-            <p>
-                <span class="badge badge-pill badge-dark mr-2">2</span>
-                Zusammenfassung
-            </p>
-        </div>
-        <form method="POST" action="" style="margin-top: 2rem;">
-            {% csrf_token %}
-            <div class="card col-12">
-                <h5><i class="fas fa-user"></i>Wer wird versichert?</h5>
-                <div class="row">
-                    <select class="form-select col-12 col-md-2" aria-label="Default select example">
-                        <option selected>Anrede</option>
-                        <option value="1">Herr</option>
-                        <option value="2">Frau</option>
-                        <option value="3">Nicht Binär</option>
-                    </select>
-                    <input class="col-12 col-md-5" type="text" placeholder="Vorname">
-                    <input class="col-12 col-md-5" type="text" placeholder="Nachname">
-                    <input type="email" class="col-12 col-md-8" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="E-Mail Adresse">
-                    <input class="col-12 col-md-4" type="date" placeholder="Nachname">
-                    <input class="col-12 col-md-7" type="text" placeholder="Straße & Hausnummer">
-                    <input class="col-6 col-md-2" type="text" placeholder="PLZ">
-                    <input class="col-6 col-md-3" type="text" placeholder="Ort">
-                </div>
-            </div>
-
-
-            <div class="card col-12" style="margin-top: 2rem;">
-                <h5><i class="fas fa-solid fa-wallet"></i>Bankverbindung</h5>
-                <input class="col-12 col-md-6" type="text" placeholder="IBAN">
-                <small class="text-center mt-5">Mit der Eingabe meines Kontos erteile ich das Sepa-Lastschriftmandat zum Einzug der Beiträge von meinem Konto</small>
-            </div>
-
-            <div style="text-align: end;">
-                <input name="next" type="submit" value="Weiter" class="btn btn-primary col-12 col-md-3" style="margin-top: 5rem;">
-            </div>
-            
-        </form>
-    </div>
-</div>
+    <h1>Summary</h1>
 </div>
 
 <style>
