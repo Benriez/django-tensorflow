@@ -3,7 +3,7 @@
 {% load static %}
 {% block content %}
 <div class="row">
-<div class="col-10 offset-1">
+<div class="col-12 col-md-10 offset-md-1">
     <div class="form-content">
         <div style="display: flex;justify-content: space-between;">
             <p>Daten</p>
@@ -12,20 +12,22 @@
         <form method="POST" action="" style="margin-top: 2rem; text-align: center;">
             {% csrf_token %}
             <!-- {{ form }} -->
-            <div class="card row">
-                <select class="form-select col-2" aria-label="Default select example">
-                    <option selected>Anrede</option>
-                    <option value="1">Herr</option>
-                    <option value="2">Frau</option>
-                    <option value="3">Nicht Binär</option>
-                </select>
-                <input class="col-5" type="password" name="new_password1" autocomplete="new-password" required="" id="id_new_password1" placeholder="Neues Passwort">
-                <input class="col-5" type="password" name="new_password2" autocomplete="new-password" required="" id="id_new_password2" placeholder="Passwort bestätigen">
+            <div class="card col-12">
+                <div class="row">
+                    <select class="form-select col-12 col-md-2" aria-label="Default select example">
+                        <option selected>Anrede</option>
+                        <option value="1">Herr</option>
+                        <option value="2">Frau</option>
+                        <option value="3">Nicht Binär</option>
+                    </select>
+                    <input class="col-12 col-md-5" type="password" name="new_password1" autocomplete="new-password" required="" id="id_new_password1" placeholder="Neues Passwort">
+                    <input class="col-12 col-md-5" type="password" name="new_password2" autocomplete="new-password" required="" id="id_new_password2" placeholder="Passwort bestätigen">
 
+                </div>
             </div>
 
             <div class="text-center">
-                <input type="submit" value="Passwort setzen" class="btn btn-primary" style="margin-top: 10%">
+                <input type="submit" value="Passwort setzen" class="btn btn-primary" style="margin-top: 5rem;">
             </div>
         </form>
     </div>
@@ -33,10 +35,6 @@
 </div>
 
 <style>
-    .card {
-        display: initial;
-   
-    }
     .form-content {
         width: 100%;
     }
@@ -91,7 +89,7 @@
         padding: 15px 32px;
         text-align: center;
         text-decoration: none;
-        display: inline-block;
+        display: flex;
         font-size: 16px;
         margin-top: 5px;
         border: 2px solid #f6f6f6;
