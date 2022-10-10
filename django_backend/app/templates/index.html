@@ -9,10 +9,11 @@
             <p>Daten</p>
             <p>Zusammenfassung</p>
         </div>
-        <form method="POST" action="" style="margin-top: 2rem; text-align: center;">
+        <form method="POST" action="" style="margin-top: 2rem;">
             {% csrf_token %}
             <!-- {{ form }} -->
             <div class="card col-12">
+                <h5>Wer wird versichert?</h5>
                 <div class="row">
                     <select class="form-select col-12 col-md-2" aria-label="Default select example">
                         <option selected>Anrede</option>
@@ -20,9 +21,19 @@
                         <option value="2">Frau</option>
                         <option value="3">Nicht Binär</option>
                     </select>
-                    <input class="col-12 col-md-5" type="text" class="form-control" placeholder="Vorname">
-                    <input class="col-12 col-md-5" type="text" class="form-control" placeholder="Nachname">
+                    <input class="col-12 col-md-5" type="text" placeholder="Vorname">
+                    <input class="col-12 col-md-5" type="text" placeholder="Nachname">
+                    <input type="email" class="col-12 col-md-8" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="E-Mail Adresse">
+                    <input class="col-12 col-md-4" type="date" placeholder="Nachname">
+                    <input class="col-12 col-md-7" type="text" placeholder="Straße & Hausnummer">
+                    <input class="col-6 col-md-2" type="text" placeholder="PLZ">
+                    <input class="col-6 col-md-3" type="text" placeholder="Ort">
                 </div>
+            </div>
+
+
+            <div class="card col-12" style="margin-top: 2rem;">
+                <h5>Bankverbindung</h5>
             </div>
 
             <div class="text-center">
@@ -34,6 +45,13 @@
 </div>
 
 <style>
+    .row {
+        padding: 1rem
+    }
+    .card{
+        padding: 1rem;
+    }
+
     .form-content {
         width: 100%;
     }
@@ -66,7 +84,7 @@
         -moz-transition: all 0.3s ease-in-out;
         -ms-transition: all 0.3s ease-in-out;
         -o-transition: all 0.3s ease-in-out;
-        transition: all 0.3s ease-in-out;
+        transition: all 0.2s ease-in-out;
     }
 
     input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover  {
@@ -81,16 +99,17 @@
         transform: scale(0.95);
     }
 
-    input[type=password], input[type=text], .form-select {
+    input[type=password], input[type=text], input[type=email], input[type=date], .form-select {
         background-color: #031c261c;
         border: none;
         color: #0d0d0d;
         padding: 15px 32px;
-        text-align: center;
+        text-align: left;
         text-decoration: none;
         display: flex;
         font-size: 16px;
         margin-top: 5px;
+        min-height: 4rem;
         border: 2px solid #f6f6f6;
         -webkit-transition: all 0.5s ease-in-out;
         -moz-transition: all 0.5s ease-in-out;
@@ -101,7 +120,7 @@
         border-radius: 5px 5px 5px 5px;
     }
 
-    input[type=password]:focus, input[type=text]:focus, .form-select:focus {
+    input[type=password]:focus, input[type=text]:focus, input[type=email]:focus, input[type=date]:focus, .form-select:focus {
         background-color: #fff;
         border-bottom: 2px solid #5fbae9;
     }
