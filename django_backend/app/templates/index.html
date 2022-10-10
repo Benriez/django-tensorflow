@@ -35,7 +35,7 @@
             <div class="card col-12" style="margin-top: 2rem;">
                 <h5>Bankverbindung</h5>
                 <input class="col-12 col-md-6" type="text" placeholder="IBAN">
-                <small class="text-center mt-5">Mit der Eingabe meines Kontos erteile ich das Sepa-Lastschriftmandat zun Einzug der Beiträge von meinem Konto</small>
+                <small class="text-center mt-5">Mit der Eingabe meines Kontos erteile ich das Sepa-Lastschriftmandat zum Einzug der Beiträge von meinem Konto</small>
             </div>
 
             <div style="text-align: end;">
@@ -132,6 +132,9 @@
 </style>
 
 <script>
+    if ( window.history.replaceState ) {
+         window.history.replaceState( null, null, window.location.href );
+    }
     // const systemSocket = new WebSocket(`ws://${window.location.host}/ws/live/`);
     // const websocketState = document.getElementById("websocket")
 
