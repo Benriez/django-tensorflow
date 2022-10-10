@@ -39,7 +39,7 @@
 
             <div class="card col-12" style="margin-top: 2rem;">
                 <h5><i class="fas fa-solid fa-wallet"></i>Bankverbindung</h5>
-                <input class="col-12 col-md-6" type="text" placeholder="IBAN">
+                <input id="iban" class="col-12 col-md-6 form-control" type="text" placeholder="IBAN" onfocusout="validateIBAN()"></input>
                 <small class="text-center mt-5">Mit der Eingabe meines Kontos erteile ich das Sepa-Lastschriftmandat zum Einzug der Beiträge von meinem Konto</small>
             </div>
 
@@ -53,6 +53,12 @@
 </div>
 
 <style>
+    .form-control.is-false {
+        border-color: #871934;
+    }
+    .form-control.is-valid, .was-validated .form-control:valid {
+        border-color: #198754;
+    }
     .fas {
         margin-right: 1rem;
     }
@@ -141,9 +147,27 @@
 </style>
 
 <script>
+    
+</script>
+
+<script src="{% static 'js/iban.js' %}"></script>
+<script>
     if ( window.history.replaceState ) {
          window.history.replaceState( null, null, window.location.href );
     }
+
+    function validateIBAN(){
+        iban = document.getElementById("iban")
+        if (IBAN.isValid(iban.value)){
+            iban.classList.remove("is-false");
+            iban.classList.add("is-valid");
+        } else {
+            iban.classList.remove("is-valid");
+            iban.classList.add("is-false");
+        }
+    }
+
+
     // const systemSocket = new WebSocket(`ws://${window.location.host}/ws/live/`);
     // const websocketState = document.getElementById("websocket")
 
