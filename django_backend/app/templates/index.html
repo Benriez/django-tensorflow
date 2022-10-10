@@ -20,9 +20,8 @@
                         <option value="2">Frau</option>
                         <option value="3">Nicht Binär</option>
                     </select>
-                    <input class="col-12 col-md-5" type="password" name="new_password1" autocomplete="new-password" required="" id="id_new_password1" placeholder="Neues Passwort">
-                    <input class="col-12 col-md-5" type="password" name="new_password2" autocomplete="new-password" required="" id="id_new_password2" placeholder="Passwort bestätigen">
-
+                    <input class="col-12 col-md-5" type="text" class="form-control" placeholder="Vorname">
+                    <input class="col-12 col-md-5" type="text" class="form-control" placeholder="Nachname">
                 </div>
             </div>
 
@@ -82,7 +81,7 @@
         transform: scale(0.95);
     }
 
-    input[type=password], .form-select {
+    input[type=password], input[type=text], .form-select {
         background-color: #031c261c;
         border: none;
         color: #0d0d0d;
@@ -102,7 +101,7 @@
         border-radius: 5px 5px 5px 5px;
     }
 
-    input[type=password]:focus, .form-select:focus {
+    input[type=password]:focus, input[type=text]:focus, .form-select:focus {
         background-color: #fff;
         border-bottom: 2px solid #5fbae9;
     }
