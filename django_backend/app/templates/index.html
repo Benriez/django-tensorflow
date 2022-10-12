@@ -3,148 +3,54 @@
 {% load static %}
 {% block content %}
 <div class="row">
-<div class="col-12 col-md-10 offset-md-1">
-    <div class="form-content">
-        <div style="display: flex;justify-content: space-between;">
-            <p>
-                <span class="badge badge-pill badge-dark mr-2">1</span>
-                Daten
-            </p>
-            <p>
-                <span class="badge badge-pill badge-dark mr-2">2</span>
-                Zusammenfassung
-            </p>
-        </div>
-        <form method="POST" action="" style="margin-top: 2rem;">
-            {% csrf_token %}
-            <div class="card col-12">
-                <h5><i class="fas fa-user"></i>Wer wird versichert?</h5>
-                <div class="row">
-                    <select class="form-select col-12 col-md-2" aria-label="Default select example">
-                        <option selected>Anrede</option>
-                        <option value="1">Herr</option>
-                        <option value="2">Frau</option>
-                        <option value="3">Nicht Binär</option>
-                    </select>
-                    <input class="col-12 col-md-5" type="text" placeholder="Vorname">
-                    <input class="col-12 col-md-5" type="text" placeholder="Nachname">
-                    <input type="email" class="col-12 col-md-8" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="E-Mail Adresse">
-                    <input class="col-12 col-md-4" type="date" placeholder="Nachname">
-                    <input class="col-12 col-md-7" type="text" placeholder="Straße & Hausnummer">
-                    <input class="col-6 col-md-2" type="text" placeholder="PLZ">
-                    <input class="col-6 col-md-3" type="text" placeholder="Ort">
+    <div class="col-12 col-md-10 offset-md-1">
+        <div class="form-content">
+            <div style="display: flex;justify-content: space-between;">
+                <p>
+                    <span class="badge badge-pill badge-dark mr-2">1</span>
+                    Daten
+                </p>
+                <p>
+                    <span class="badge badge-pill badge-dark mr-2">2</span>
+                    Zusammenfassung
+                </p>
+            </div>
+            <form method="POST" action="" style="margin-top: 2rem;">
+                {% csrf_token %}
+                <div class="card col-12">
+                    <h5><i class="fas fa-user"></i>Wer wird versichert?</h5>
+                    <div class="row">
+                        <select id="andrede" name="anrede" class="select col-12 col-md-2" aria-label="Default select example">
+                            <option selected>Anrede</option>
+                            <option value="Frau">Frau</option>
+                            <option value="Herr">Herr</option>
+                        </select>
+                        <input id="vorname" name="vorname" class="col-12 col-md-5" type="text" placeholder="Vorname">
+                        <input id="nachname" name="nachname" class="col-12 col-md-5" type="text" placeholder="Nachname">
+                        <input type="email" class="col-12 col-md-8" id="email-addresse" name="email-addresse" aria-describedby="emailHelp" placeholder="E-Mail Adresse">
+                        <input id="geburtsdatum" name="geburtsdatum" class="col-12 col-md-4" type="date">
+                        <input id="strasse" name="strasse" class="col-12 col-md-7" type="text" placeholder="Straße & Hausnummer">
+                        <input id="plz" name="plz" lass="col-6 col-md-2" type="text" placeholder="PLZ">
+                        <input id="ort" name="ort" class="col-6 col-md-3" type="text" placeholder="Ort">
+                    </div>
                 </div>
-            </div>
 
 
-            <div class="card col-12" style="margin-top: 2rem;">
-                <h5><i class="fas fa-solid fa-wallet"></i>Bankverbindung</h5>
-                <input id="iban" class="col-12 col-md-6 form-control" type="text" placeholder="IBAN" onfocusout="validateIBAN()"></input>
-                <small class="text-center mt-5">Mit der Eingabe meines Kontos erteile ich das Sepa-Lastschriftmandat zum Einzug der Beiträge von meinem Konto</small>
-            </div>
+                <div class="card col-12" style="margin-top: 2rem;">
+                    <h5><i class="fas fa-solid fa-wallet"></i>Bankverbindung</h5>
+                    <input id="iban" name="iban" class="col-12 col-md-6 form-control" type="text" placeholder="IBAN" onfocusout="validateIBAN()"></input>
+                    <small class="text-center mt-5">Mit der Eingabe meines Kontos erteile ich das Sepa-Lastschriftmandat zum Einzug der Beiträge von meinem Konto</small>
+                </div>
 
-            <div style="text-align: end;">
-                <input name="next" type="submit" value="Weiter" class="btn btn-primary col-12 col-md-3" style="margin-top: 5rem;">
-            </div>
-            
-        </form>
+                <div style="text-align: end;">
+                    <input name="next" type="submit" value="Weiter" class="btn btn-primary col-12 col-md-3" style="margin-top: 5rem;">
+                </div>
+                
+            </form>
+        </div>
     </div>
 </div>
-</div>
 
-<style>
-    .form-control.is-false {
-        border-color: #871934;
-    }
-    .form-control.is-valid, .was-validated .form-control:valid {
-        border-color: #198754;
-    }
-    .fas {
-        margin-right: 1rem;
-    }
-    .row {
-        padding: 1rem
-    }
-    .card{
-        padding: 1rem;
-    }
-
-    .form-content {
-        width: 100%;
-    }
-    /* TABS */
-    h2.inactive {
-        color: #cccccc;
-    }
-
-    h2.active {
-        color: #0d0d0d;
-        border-bottom: 2px solid #5fbae9;
-    }
-    /* FORM TYPOGRAPHY*/
-    input[type=button], input[type=submit], input[type=reset] {
-        background-color: #00212d;
-        border: none;
-        color: white;
-        padding: 15px 80px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        text-transform: uppercase;
-        font-size: 13px;
-        -webkit-box-shadow: 0 10px 30px 0 rgb(3 19 27 / 27%);
-        box-shadow: 0 10px 30px 0 rgb(3 19 27 / 27%);
-        -webkit-border-radius: 5px 5px 5px 5px;
-        border-radius: 5px 5px 5px 5px;
-        -webkit-transition: all 0.3s ease-in-out;
-        -moz-transition: all 0.3s ease-in-out;
-        -ms-transition: all 0.3s ease-in-out;
-        -o-transition: all 0.3s ease-in-out;
-        transition: all 0.2s ease-in-out;
-    }
-
-    input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover  {
-        background-color: #39ace7;
-    }
-
-    input[type=button]:active, input[type=submit]:active, input[type=reset]:active  {
-        -moz-transform: scale(0.95);
-        -webkit-transform: scale(0.95);
-        -o-transform: scale(0.95);
-        -ms-transform: scale(0.95);
-        transform: scale(0.95);
-    }
-
-    input[type=password], input[type=text], input[type=email], input[type=date], .form-select {
-        background-color: #031c261c;
-        border: none;
-        color: #0d0d0d;
-        padding: 15px 32px;
-        text-align: left;
-        text-decoration: none;
-        display: flex;
-        font-size: 16px;
-        margin-top: 5px;
-        min-height: 4rem;
-        border: 2px solid #f6f6f6;
-        -webkit-transition: all 0.5s ease-in-out;
-        -moz-transition: all 0.5s ease-in-out;
-        -ms-transition: all 0.5s ease-in-out;
-        -o-transition: all 0.5s ease-in-out;
-        transition: all 0.5s ease-in-out;
-        -webkit-border-radius: 5px 5px 5px 5px;
-        border-radius: 5px 5px 5px 5px;
-    }
-
-    input[type=password]:focus, input[type=text]:focus, input[type=email]:focus, input[type=date]:focus, .form-select:focus {
-        background-color: #fff;
-        border-bottom: 2px solid #5fbae9;
-    }
-
-    input[type=password]:placeholder {
-        color: #0d0d0d;
-    }
-</style>
 
 <script>
     

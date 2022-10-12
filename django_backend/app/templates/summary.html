@@ -3,87 +3,155 @@
 {% load static %}
 {% block content %}
 <div class="row">
-    <h1>Summary</h1>
-</div>
+    <div class="col-12 col-md-10 offset-md-1">
+        <div class="form-content">
+            <div style="display: flex;justify-content: space-between;">
+                <p>
+                    <span class="badge badge-pill badge-dark mr-2">1</span>
+                    Daten
+                </p>
+                <p>
+                    <span class="badge badge-pill badge-dark mr-2">2</span>
+                    Zusammenfassung
+                </p>
+            </div>
+            <div class="card col-12">
+                <h5><i class="fas fa-user"></i>Ihre Versicherung</h5>
+                <div class="row row-card">
+                    <div class="col-3 key">
+                        <p>Tarif</p>
+                    </div>
+                    <div class="col-9">
+                        <p>Dental-Vorsorge Premium</p>
+                    </div>
+                </div>
+                <div class="row row-card">
+                    <div class="col-3 key">
+                        <p>Beitrag</p>
+                    </div>
+                    <div class="col-9">
+                        <p>15,80€ / Monat</p>
+                    </div>
+                </div>
+                <div class="row row-card">
+                    <div class="col-3 key">
+                        <p>Beginn</p>
+                    </div>
+                    <div class="col-9">
+                        <p>0.11.2022</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card col-12">
+                <h5><i class="fas fa-user"></i>Zahnersatz (Optional)</h5>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="mySwitch" name="darkmode" value="yes" onclick="show_zusatz()">
+                    <label class="form-check-label" for="mySwitch">Sofort Kosten für Zahnersatz sichern!</label>
+                </div>
+                <div id="zusatz" style="height: 50vh; display: none;">
 
+                </div>
+            </div>
+            <div class="card col-12">
+                <h5><i class="fas fa-user"></i>Versicherte Person</h5>
+                <div class="row row-card">
+                    <div class="col-3 key">
+                        <p>Person</p>
+                    </div>
+                    <div class="col-9">
+                        <p>
+                            {{ request.session.anrede }} {{ request.session.vorname }} {{ request.session.nachname }} 
+                            <br> 
+                            {{ request.session.strasse }}
+                            <br>
+                            {{ request.session.plz }}, {{ request.session.ort }}
+                        </p>
+                    </div>
+                </div>
+                <div class="row row-card">
+                    <div class="col-3 key">
+                        <p>Kontakt</p>
+                    </div>
+                    <div class="col-9">
+                        <p>{{ request.session.email }}</p>
+                    </div>
+                </div>
+                <div class="row row-card">
+                    <div class="col-3 key">
+                        <p>Geburtsdatum</p>
+                    </div>
+                    <div class="col-9">
+                        <p>{{ request.session.geburtsdatum }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card col-12">
+                <h5><i class="fas fa-user"></i>Ihre Bankdaten</h5>
+                <div class="row row-card">
+                    <div class="col-3 key">
+                        <p>IBAN</p>
+                    </div>
+                    <div class="col-9">
+                        <p>{{ request.session.iban }}</p>
+                    </div>
+                </div>
+                <div class="row row-card">
+                    <div class="col-3 key">
+                        <p>BIC</p>
+                    </div>
+                    <div class="col-9">
+                        <p>HELADEFFXXX</p>
+                    </div>
+                </div>
+                <div class="row row-card">
+                    <div class="col-3 key">
+                        <p>Bankname</p>
+                    </div>
+                    <div class="col-9">
+                        <p>Landesbank-Hessen-Thür-Girozentrale</p>
+                    </div>
+                </div>
+                <div class="row row-card">
+                    <div class="col-3 key">
+                        <p>Zahlungsart</p>
+                    </div>
+                    <div class="col-9">
+                        <p>Sepa-Lastschriftmandat</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card col-12">
+                <h5></i>Files</h5>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     if ( window.history.replaceState ) {
          window.history.replaceState( null, null, window.location.href );
     }
-    // const systemSocket = new WebSocket(`ws://${window.location.host}/ws/live/`);
-    // const websocketState = document.getElementById("websocket")
 
-    // systemSocket.onopen = function (e) {
-    //     websocketState.classList.remove('alert-danger');
-    //     websocketState.classList.add('alert-success');
-    //     websocketState.innerText = "Connected"
-
-
-    //     // check if user has cookie 
-    //     if (document.cookie.indexOf('deviceID=')){
-    //         device_id = Math.floor(100000 + Math.random() * 900000)
-    //         document.cookie = "deviceID=" + device_id;
-        
-    //     } else {
-    //         // create new device id
-    //         let name = "deviceID=";
-    //         let ca = document.cookie.split(';');
-    //         for(let i = 0; i < ca.length; i++) {
-    //             let c = ca[i];
-    //             while (c.charAt(0) == ' ') {
-    //                 c = c.substring(1);
-    //             }
-    //             if (c.indexOf(name) == 0) {
-    //                 device_id = c.substring(name.length, c.length)
-    //                 //return c.substring(name.length, c.length);
-    //             }
-    //         }
-      
-            
-    //     };
-   
-    //     console.log(device_id)
-    //     systemSocket.send(JSON.stringify({"message": 'client-connected',"deviceID": device_id}));
-
-    // };
-
-    // systemSocket.onmessage = function (e) {
-    //     const data = JSON.parse(e.data);
-    //     //console.log(data)
-    //     // cpu.refresh(data.cpu_percent);
-    //     // ram.refresh(data.ram_percent);
-    // };
+    function show_zusatz(){
+        el = document.getElementById('zusatz')
+        if (el.style.display == "none"){
+            el.style.display = "block";
+        } else {
+            el.style.display = "none";
+        }
+    }
     
-    // systemSocket.onclose = function (e) {
-    //     console.error('Chat socket closed');
-    //     websocketState.classList.remove('alert-success');
-    //     websocketState.classList.add('alert-danger');
-    //     websocketState.innerText = "Not Connected"
-
-    // };
-
-    // function send_message(){        
-    //     systemSocket.send(JSON.stringify({"message": 'start'}));
-    //     console.log()
-    // }
-    // function change_timeout(){        
-    //     systemSocket.send(JSON.stringify({"message": 30}));
-    // }
-    // function stop_carrousel(){        
-    //     systemSocket.send(JSON.stringify({"message": 'stop'}));
-    // }
-    // function reset(){        
-    //     systemSocket.send(JSON.stringify({"message": 'reset'}));
-    // }
-
-
-
-
 </script>
 
 
 <style>
+    .row-card {
+        padding-top: 0.5rem!important;
+        padding-bottom: 0.5rem!important;
+    }
+    .key {
+        max-width: 200px;
+    }
     .controls{
         display: flex;
         justify-content: space-evenly;
