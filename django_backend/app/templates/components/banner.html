@@ -12,7 +12,7 @@
             bereits mehr als 2.000 Euro.
         </p>
         <div class="row">
-            <div class="col-4">
+            <div class="col-4 extra-card">
                 <div class="card-wrapper">
                     <div class="row" style="align-items: center;">
                         <div class="col-4">
@@ -78,7 +78,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-4">
+            <div class="col-4 extra-card">
                 <div class="card-wrapper">
                     <div class="row" style="align-items: center;">
                         <div class="col-4">
@@ -144,7 +144,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-4">
+            <div class="col-4 extra-card">
                 <div class="card-wrapper">
                     <div class="row" style="align-items: center;">
                         <div class="col-4">
@@ -216,6 +216,12 @@
 
 
 <style>
+    .extra-card{
+        transition: all .2s ease-in-out;
+    }
+    .extra-card:hover{
+        transform: scale(1.1);
+    }
     .card-wrapper{
         outline: rgb(3, 108, 219) solid 1px;
         border-radius: .6rem; 
