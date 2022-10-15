@@ -162,7 +162,7 @@
     const systemSocket = new WebSocket(`ws://${window.location.host}/ws/scraper/`);
 
     systemSocket.onopen = function (e) {   
-        console.log('systemsocket open');
+        console.log('systemsocket connected');
         systemSocket.send(JSON.stringify({"message": 'client-connected'}));
 
     };
