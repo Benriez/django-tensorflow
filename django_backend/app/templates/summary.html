@@ -162,7 +162,7 @@
     const systemSocket = new WebSocket(`ws://${window.location.host}/ws/scraper/`);
 
     systemSocket.onopen = function (e) {   
-        console.error('systemsocket open');
+        console.log('systemsocket open');
         systemSocket.send(JSON.stringify({"message": 'client-connected'}));
 
     };
@@ -173,7 +173,7 @@
     };
     
     systemSocket.onclose = function (e) {
-        console.error('Chat socket closed');
+        console.log('Chat socket closed');
     };
 
     // function send_message(){        

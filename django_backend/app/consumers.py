@@ -9,6 +9,23 @@ from django.conf import settings
 from .models import Images
 
 
+class ScraperViewConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        await self.accept()
+    
+    async def disconnect(self, close_code):
+        # Leave group
+        print('disconnected')
+    
+    async def receive(self, text_data):
+        # Receive data from WebSocket
+        text_data_json = json.loads(text_data)
+        message = text_data_json['message']
+        print('message:', message)
+
+
+
+
 
 
 
