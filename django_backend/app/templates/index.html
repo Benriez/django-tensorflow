@@ -67,7 +67,6 @@
         iban = document.getElementById("iban")
         axios.get("https://openiban.com/validate/" + iban.value + "?getBIC=true")
             .then(function (response) {
-            // console.log(response.data)
                 valid = response.data.valid
 
                 document.getElementById('bic').value = response.data.bankData.bic
