@@ -100,7 +100,7 @@
                         <p>BIC</p>
                     </div>
                     <div class="col-9">
-                        <p>HELADEFFXXX</p>
+                        <p id="bic">xxx</p>
                     </div>
                 </div>
                 <div class="row row-card">
@@ -108,7 +108,7 @@
                         <p>Bankname</p>
                     </div>
                     <div class="col-9">
-                        <p>Landesbank-Hessen-Thür-Girozentrale</p>
+                        <p id="bankname">xxx</p>
                     </div>
                 </div>
                 <div class="row row-card">
@@ -128,9 +128,24 @@
 </div>
 
 <script>
+    iban = "{{ request.session.iban }}"
+    bic = ""
+    bankname = ""
+
     if ( window.history.replaceState ) {
          window.history.replaceState( null, null, window.location.href );
     }
+
+    // todo add loading icon
+    axios.get("https://openiban.com/validate/" + iban + "?getBIC=true")
+        .then(function (response) {
+           // console.log(response.data)
+            bic = response.data.bankData.bic
+            bankname = response.data.bankData.name
+            document.getElementById('bic').innerText = bic
+            document.getElementById('bankname').innerText = bankname
+        })
+        
 
     function show_zusatz(){
         el = document.getElementById('zusatz')
