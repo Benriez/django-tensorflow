@@ -104,7 +104,7 @@
                         <p>BIC</p>
                     </div>
                     <div class="col-9">
-                        <p id="bic">xxx</p>
+                        <p id="bic">{{ request.session.bic }}</p>
                     </div>
                 </div>
                 <div class="row row-card">
@@ -112,7 +112,7 @@
                         <p>Bankname</p>
                     </div>
                     <div class="col-9">
-                        <p id="bankname">xxx</p>
+                        <p id="bankname">{{ request.session.bankname }}</p>
                     </div>
                 </div>
                 <div class="row row-card">
@@ -157,15 +157,6 @@
     if ( window.history.replaceState ) {
          window.history.replaceState( null, null, window.location.href );
     }
-
-    // todo add loading icon
-    axios.get("https://openiban.com/validate/" + iban + "?getBIC=true")
-        .then(function (response) {
-            bic = response.data.bankData.bic
-            bankname = response.data.bankData.name
-            document.getElementById('bic').innerText = bic
-            document.getElementById('bankname').innerText = bankname
-        })
         
 
     function show_zusatz(){

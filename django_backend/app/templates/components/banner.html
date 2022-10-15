@@ -13,40 +13,66 @@
         </p>
         <div class="row">
             <div class="col-4" style="outline: rgb(3, 108, 219) solid 1px; border-radius: .6rem; background-color: white;">
-                <div class="row" style="align-items: center;">
+                <div class="row select-card" style="align-items: center;">
                     <div class="col-4">
-                        <div class="wrapper text-center" style="padding: .8rem; background-color: #1adeff; border-radius: .6rem; width: 5rem;height: 5rem;display: flex; justify-content: center; align-items: center;">                  
-                            <i class="fas fa-regular fa-star" style="margin-right: 0rem;"></i>
+                        <div class="text-center" style="padding: .8rem; background-color: #efefef; border-radius: .8rem; width: 5rem;height: 5rem;display: flex; justify-content: center; align-items: center;">                  
+                            <i class="fas fa-regular fa-star" style="margin-right: 0rem; font-size: 2rem;"></i>
                         </div>
                     </div>
                     <div class="col-8">
                         <h5>Schutz 75</h5>
                         <div style="display: flex; align-items: baseline;">
-                            <h3>20,50€</h3> 
+                            <h3 class="offer">20,50€</h3> 
                             <p style="margin-left: .3rem;">/Monat</p>
                         </div>
                     </div>
                 </div>
                 <hr>
-                <div class="row">
+
+                <div class="row select-card">
                     <ul>
-                        <li style="display: flex;align-items: baseline;">
-                            <div class="wrapper text-center" style="padding: .6rem; background-color: #1adeff; border-radius: .2rem; display: flex; justify-content: center; align-items: center;">                  
-                                <i class="fas fa-regular fa-star" style="margin-right: 0rem;"></i>
+                        <li>
+                            <div class="list-wrapper text-center">                  
+                                <i class="fas fa-regular fa-star list-icon"></i>
                             </div>
                             <p style="margin-left: 1rem">100% Zahnreinigung</p>
                         </li>
-                        <li>250€ Bleaching</li>
-                        <li>100% Regelversorgung</li>
-                        <li>75% Zahnersatz</li>
-                        <li>75% Implantate</li>
-                        <li>75% Inlays</li>
+                        <li>
+                            <div class="list-wrapper text-center">                  
+                                <i class="fas fa-regular fa-star list-icon"></i>
+                            </div>
+                            <p style="margin-left: 1rem">250€ Bleaching</p>
+                        </li>
+                        <li>
+                            <div class="list-wrapper text-center">                  
+                                <i class="fas fa-regular fa-star list-icon"></i>
+                            </div>
+                            <p style="margin-left: 1rem">100% Regelversorgung</p>            
+                        </li>
+                        <li>
+                            <div class="list-wrapper text-center">                  
+                                <i class="fas fa-regular fa-star list-icon"></i>
+                            </div>
+                            <p style="margin-left: 1rem">75% Zahnersatz</p>  
+                        </li>
+                        <li>
+                            <div class="list-wrapper text-center">                  
+                                <i class="fas fa-regular fa-star list-icon"></i>
+                            </div>
+                            <p style="margin-left: 1rem">75% Implantate</p>  
+                        </li>
+                        <li>
+                            <div class="list-wrapper text-center">                  
+                                <i class="fas fa-regular fa-star list-icon"></i>
+                            </div>
+                            <p style="margin-left: 1rem">75% Inlays</p> 
+                        </li>
                       </ul>
                 </div>
                 
-                <div class="row">
+                <div class="row select-card">
                     <div style="text-align: center;">
-                        <a class="btn btn-primary select_extra" style="color:white; border-radius: .6rem;">Ausgewählt</a>
+                        <a class="btn btn-primary select_extra" style="color:white; border-radius: .6rem;">Auswählen</a>
                     </div>
                 </div>
             </div>
@@ -62,6 +88,25 @@
 
 
 <style>
+    .offer {
+        color:#1adeff;
+    }
+    .list-icon{
+        margin-right: 0rem!important;
+    }
+    .list-wrapper{
+        padding: .6rem;
+        background-color: #ffffff; 
+        border-radius: .2rem; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+    }
+
+    li{
+        display: flex;
+        align-items: baseline;
+    }
     ul{
         list-style: none;
     }

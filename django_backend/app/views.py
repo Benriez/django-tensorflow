@@ -12,6 +12,8 @@ def index(request):
         plz = request.POST.get("plz")
         ort = request.POST.get("ort")
         iban = request.POST.get('iban')
+        bic = request.POST.get('bic')
+        bankname = request.POST.get('bankname')
 
         request.session["anrede"] = anrede
         request.session["vorname"] = vorname
@@ -22,6 +24,9 @@ def index(request):
         request.session["email"] = email_addresse
         request.session["geburtsdatum"] = geburtsdatum
         request.session["iban"] = iban
+        request.session["bic"] = bic
+        request.session["bankname"] = bankname
+
 
         # get BIC
         # get bank name
