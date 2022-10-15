@@ -3,7 +3,7 @@
 {% load static %}
 {% block content %}
 <div class="row">
-    <div class="col-12 col-md-10 offset-md-1">
+    <div class="col-12 col-md-10 offset-md-1" style="border: .2rem solid rgb(0, 33, 45);">
         <div class="form-content">
             <div style="display: flex;justify-content: space-between;">
                 <p>
@@ -44,12 +44,16 @@
             </div>
             <div class="card col-12">
                 <h5><i class="fas fa-user"></i>Zahnersatz (Optional)</h5>
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="mySwitch" name="darkmode" value="yes" onclick="show_zusatz()">
-                    <label class="form-check-label" for="mySwitch">Sofort Kosten für Zahnersatz sichern!</label>
+                <div class="row">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="mySwitch" name="darkmode" value="yes" onclick="show_zusatz()">
+                        <label class="form-check-label" for="mySwitch">Sofort Kosten für Zahnersatz sichern!</label>
+                    </div>
                 </div>
-                <div id="zusatz" style="display: none;">
-                    {% include 'components/banner.html' %}
+                <div class="row">
+                    <div id="zusatz" style="display: none;">
+                        {% include 'components/banner.html' %}
+                    </div>
                 </div>
             </div>
             <div class="card col-12">
@@ -122,6 +126,24 @@
             </div>
             <div class="card col-12">
                 <h5></i>Files</h5>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        Ja, ich habe die Vertragsunterlagen zur Kenntnis genommen.
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        Ich habe die "Einwilligung in die Erhebung und Verwendung von Gesundheitsdaten und Schweigepflichtsentbindungserklärung" gelesen und erteile die darin enthaltenen Einwilligungen.
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        Ich habe die Informationspflichten nach Art. 13 DSGVO zur Kenntnis genommen.
+                    </label>
+                </div>
             </div>
         </div>
     </div>
@@ -139,7 +161,6 @@
     // todo add loading icon
     axios.get("https://openiban.com/validate/" + iban + "?getBIC=true")
         .then(function (response) {
-           // console.log(response.data)
             bic = response.data.bankData.bic
             bankname = response.data.bankData.name
             document.getElementById('bic').innerText = bic
@@ -160,6 +181,9 @@
 
 
 <style>
+    .card{
+        margin-bottom: 1.5rem;
+    }
     .row-card {
         padding-top: 0.5rem!important;
         padding-bottom: 0.5rem!important;

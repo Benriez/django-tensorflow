@@ -1,12 +1,49 @@
 {% load static %}
 {% block content %}
 
-
-<div class="row">
-    <div√ style="display: flex;">
-        <div class="col-12">
-            <div class="col-4">
-                1
+<div style="display: flex;">
+    <div class="">
+        <p>
+            Der Versicherer bietet Ihnen nun die Möglichkeit Ihren Versicherungsschutz, 
+            ohne jegliche Wartezeit, um die Kostenerstattung für Zahnersatz zu erweitern: 
+            Kronen, Brücken, Implantate, Inlays, Prothesen etc. Gerade hier sind die Leistungen 
+            der gesetzlichen Kassen oft sehr gering und die privat zu tragenden Eigenbeteiligungen 
+            erreichen oftmals mehrere tausend Euro. Alleine ein Implantat kostet im Durchschnitt 
+            bereits mehr als 2.000 Euro.
+        </p>
+        <div class="row">
+            <div class="col-4" style="outline: rgb(3, 108, 219) solid 1px; border-radius: .6rem;">
+                <div class="row" style="align-items: center;">
+                    <div class="col-4">
+                        <div class="wrapper text-center" style="padding: .8rem; background-color: #1adeff; border-radius: .6rem; width: 5rem;height: 5rem;display: flex; justify-content: center; align-items: center;">                  
+                            <i class="fas fa-regular fa-star" style="margin-right: 0rem;"></i>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <h5>Schutz 75</h5>
+                        <div style="display: flex; align-items: baseline;">
+                            <h3>20,50€</h3> 
+                            <p>/Monat</p>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <ul>
+                        <li>100% Zahnreinigung</li>
+                        <li>250€ Bleaching</li>
+                        <li>100% Regelversorgung</li>
+                        <li>75% Zahnersatz</li>
+                        <li>75% Implantate</li>
+                        <li>75% Inlays</li>
+                      </ul>
+                </div>
+                
+                <div class="row">
+                    <div style="text-align: center;">
+                        <a class="btn btn-primary select_extra" style="color:white; border-radius: .6rem;">Weiter</a>
+                    </div>
+                </div>
             </div>
             <div class="col-4">
                 2
@@ -17,5 +54,15 @@
         </div>
     </div>
 </div>
+
+
+<style>
+    ul{
+        list-style: none;
+    }
+    hr {
+        margin: 0.2rem 0!important;
+    }
+</style>
 
 {% endblock %}
