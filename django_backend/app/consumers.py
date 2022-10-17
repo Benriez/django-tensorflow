@@ -25,9 +25,9 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
     
     async def receive(self, text_data):
         # Receive data from WebSocket
-        text_data_json = json.loads(text_data)
-        print(text_data_json)
-        message = text_data_json['message']
+        data_json = json.loads(text_data)
+        print(data_json)
+        message = data_json['message']
         #print('message:', message)
 
         async with async_playwright() as playwright:
