@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import render, redirect
 
 
@@ -7,7 +8,17 @@ def index(request):
         vorname = request.POST.get("vorname")
         nachname = request.POST.get("nachname")
         email_addresse = request.POST.get("email-addresse")
-        geburtsdatum = request.POST.get("geburtsdatum")
+        
+        str_geburtsdatum = request.POST.get("geburtsdatum")
+        list_geburtsdatum = list(str_geburtsdatum.split("-"))
+        list_geburtsdatum.reverse()
+        format_geburtsdatum =""
+        for l in list_geburtsdatum:  
+            format_geburtsdatum += l +'.' 
+        
+        format_geburtsdatum = format_geburtsdatum[:-1]
+
+
         strasse = request.POST.get("strasse")
         plz = request.POST.get("plz")
         ort = request.POST.get("ort")
@@ -22,7 +33,7 @@ def index(request):
         request.session["plz"] = plz
         request.session["ort"] = ort
         request.session["email"] = email_addresse
-        request.session["geburtsdatum"] = geburtsdatum
+        request.session["geburtsdatum"] = format_geburtsdatum
         request.session["iban"] = iban
         request.session["bic"] = bic
         request.session["bankname"] = bankname

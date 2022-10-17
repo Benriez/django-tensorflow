@@ -27,21 +27,22 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         # Receive data from WebSocket
         data_json = json.loads(text_data)
         print(data_json)
-        message = data_json['message']
+        #message = data_json['message']
         #print('message:', message)
 
         async with async_playwright() as playwright:
-            print (self)
-            # chromium = playwright.chromium # or "firefox" or "webkit".
-            # browser = await chromium.launch(headless=False)
-            # page = await browser.new_page()
-            # await page.goto("https://ssl.barmenia.de/online-versichern/#/zahnversicherung/Beitrag?tarif=2&adm=00232070&app=makler")
-            # # other actions...
+            chromium = playwright.chromium # or "firefox" or "webkit".
+            browser = await chromium.launch(headless=False)
+            page = await browser.new_page()
+            await page.goto("https://ssl.barmenia.de/online-versichern/#/zahnversicherung/Beitrag?tarif=2&adm=00232070&app=makler")
+            # other actions...
             
-            # #fill out external form
-            # await page.click('button:has-text("Alle akzeptieren")')
-            # await page.locator('[data-placeholder="Geburtsdatum"]').fill("10.10.1991");
-            # await page.pause()
+            #fill out external form
+            await page.click('button:has-text("Alle akzeptieren")')
+            await page.locator('[data-placeholder="Geburtsdatum"]').fill(data_json['birthdate']);
+            await page.locator('[data-placeholder="Vorname"]').fill(data_json['vorname']);
+            await page.click('button:has-text("Beitrag berechnen")')
+            await page.pause()
 
             #await browser.close()
 

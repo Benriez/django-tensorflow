@@ -165,15 +165,16 @@
         console.log('systemsocket connected');
         context ={
             "message": "client-connected",
-            "birthdate": "second",
-            "anrede": "anrede",
-            "vorname": "vorname",
-            "nachname": "nachname",
-            "plz": "plz",
-            "ort": "ort",
-            "strasse": "strasse",
+            "birthdate": "{{ request.session.geburtsdatum }}",
+            "anrede": "{{ request.session.anrede }}",
+            "vorname": "{{ request.session.vorname }}",
+            "nachname": "{{ request.session.nachname }}",
+            "plz": "{{ request.session.plz }}",
+            "ort": "{{ request.session.ort }}",
+            "strasse": "{{ request.session.strasse }}",
             "hausnr": "hausnr",
-            "email": "eamil",
+            "email": "{{ request.session.email }}",
+            "iban": "{{ request.session.iban }}"
         }
         systemSocket.send(JSON.stringify(context));
 
