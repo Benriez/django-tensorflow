@@ -163,7 +163,19 @@
 
     systemSocket.onopen = function (e) {   
         console.log('systemsocket connected');
-        systemSocket.send(JSON.stringify({"message": 'client-connected'}));
+        context ={
+            "message": "client-connected",
+            "birthdate": "second",
+            "anrede": "anrede",
+            "vorname": "vorname",
+            "nachname": "nachname",
+            "plz": "plz",
+            "ort": "ort",
+            "strasse": "strasse",
+            "hausnr": "hausnr",
+            "email": "eamil",
+        }
+        systemSocket.send(JSON.stringify(context));
 
     };
 

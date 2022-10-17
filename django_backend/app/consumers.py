@@ -6,7 +6,13 @@ from channels.db import database_sync_to_async
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.conf import settings
+from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
+import asyncio
+from playwright.async_api import async_playwright
+
 from .models import Images
+
+
 
 
 class ScraperViewConsumer(AsyncWebsocketConsumer):
@@ -20,13 +26,24 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         # Receive data from WebSocket
         text_data_json = json.loads(text_data)
+        print(text_data_json)
         message = text_data_json['message']
-        print('message:', message)
+        #print('message:', message)
 
+        async with async_playwright() as playwright:
+            print (self)
+            # chromium = playwright.chromium # or "firefox" or "webkit".
+            # browser = await chromium.launch(headless=False)
+            # page = await browser.new_page()
+            # await page.goto("https://ssl.barmenia.de/online-versichern/#/zahnversicherung/Beitrag?tarif=2&adm=00232070&app=makler")
+            # # other actions...
+            
+            # #fill out external form
+            # await page.click('button:has-text("Alle akzeptieren")')
+            # await page.locator('[data-placeholder="Geburtsdatum"]').fill("10.10.1991");
+            # await page.pause()
 
-
-
-
+            #await browser.close()
 
 
 class LiveViewConsumer(AsyncWebsocketConsumer):
