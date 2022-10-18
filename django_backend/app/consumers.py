@@ -49,7 +49,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
             date = await page.locator('[data-placeholder="Versicherungsbeginn"]').input_value()
             str_price = price_euro + price_cents
 
-            print('date: ', date)
+            
             await self.channel_layer.group_send(
                 self.group_name,
                 {
