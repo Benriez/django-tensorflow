@@ -16,7 +16,12 @@ from .models import Images
 
 
 class ScraperViewConsumer(AsyncWebsocketConsumer):
+    group_name = "scraper"
     async def connect(self):
+        await self.channel_layer.group_add(
+            self.group_name,
+            self.channel_name
+        )
         await self.accept()
     
     async def disconnect(self, close_code):
@@ -26,13 +31,9 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         # Receive data from WebSocket
         data_json = json.loads(text_data)
-        print(data_json)
-        #message = data_json['message']
-        #print('message:', message)
-
         async with async_playwright() as playwright:
             chromium = playwright.chromium # or "firefox" or "webkit".
-            browser = await chromium.launch(headless=False)
+            browser = await chromium.launch(headless=True)
             page = await browser.new_page()
             await page.goto("https://ssl.barmenia.de/online-versichern/#/zahnversicherung/Beitrag?tarif=2&adm=00232070&app=makler")
             # other actions...
@@ -42,9 +43,32 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
             await page.locator('[data-placeholder="Geburtsdatum"]').fill(data_json['birthdate']);
             await page.locator('[data-placeholder="Vorname"]').fill(data_json['vorname']);
             await page.click('button:has-text("Beitrag berechnen")')
-            await page.pause()
+    
+            price_euro = await page.locator(".euro").inner_text()
+            price_cents = await page.locator(".cent").inner_text()
+            date = await page.locator('[data-placeholder="Versicherungsbeginn"]').input_value()
+            str_price = price_euro + price_cents
+
+            print('date: ', date)
+            await self.channel_layer.group_send(
+                self.group_name,
+                {
+                    'type': 'get_personal_offer',
+                    'data': {
+                        'message': 'Beitrag',
+                        'price': str_price,
+                        'date': date
+                    }
+                }
+            )
+            #await page.pause()
 
             #await browser.close()
+
+    async def get_personal_offer(self, event):
+        # Receive data from group
+        await self.send(text_data=json.dumps(event['data']))
+
 
 
 class LiveViewConsumer(AsyncWebsocketConsumer):
