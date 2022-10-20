@@ -64,8 +64,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
             
             await page.click('button:has-text("Jetzt abschließen")')
             
-
-            print(data_json["anrede"])
+            
             if data_json["anrede"] == "Herr":
                 # await page.locator('input[value=Herr]')
                 await page.click('#mat-radio-2')
