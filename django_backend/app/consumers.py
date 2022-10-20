@@ -33,7 +33,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         data_json = json.loads(text_data)
         async with async_playwright() as playwright:
             chromium = playwright.chromium # or "firefox" or "webkit".
-            browser = await chromium.launch(headless=True)
+            browser = await chromium.launch(headless=False)
             page = await browser.new_page()
             await page.goto("https://ssl.barmenia.de/online-versichern/#/zahnversicherung/Beitrag?tarif=2&adm=00232070&app=makler")
             # other actions...
@@ -61,7 +61,19 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                     }
                 }
             )
-            #await page.pause()
+            
+            await page.click('button:has-text("Jetzt abschließen")')
+            
+
+            print(data_json["anrede"])
+            if data_json["anrede"] == "Herr":
+                # await page.locator('input[value=Herr]')
+                await page.click('#mat-radio-2')
+
+            else:
+                await page.click('#mat-radio-3')
+            
+            await page.pause()
 
             #await browser.close()
 
