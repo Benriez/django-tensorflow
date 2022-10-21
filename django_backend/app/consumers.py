@@ -40,8 +40,8 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
             
             #fill out external form
             await page.click('button:has-text("Alle akzeptieren")')
-            await page.locator('[data-placeholder="Geburtsdatum"]').fill(data_json['birthdate']);
-            await page.locator('[data-placeholder="Vorname"]').fill(data_json['vorname']);
+            await page.locator('[data-placeholder="Geburtsdatum"]').fill(data_json['birthdate'])
+            await page.locator('[data-placeholder="Vorname"]').fill(data_json['vorname'])
             await page.click('button:has-text("Beitrag berechnen")')
     
             price_euro = await page.locator(".euro").inner_text()
@@ -64,7 +64,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
             
             await page.click('button:has-text("Jetzt abschließen")')
             
-            
+            # step 2
             if data_json["anrede"] == "Herr":
                 # await page.locator('input[value=Herr]')
                 await page.click('#mat-radio-2')
@@ -72,6 +72,12 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
             else:
                 await page.click('#mat-radio-3')
             
+            await page.locator('[data-placeholder="Name"]').fill(data_json['nachname'])
+            await page.click('button:has-text("Weiter")')
+
+            # step 3
+            await page.locator('[data-placeholder="PLZ"]').fill(data_json['plz'])
+            await page.locator('[data-placeholder="Straße"]').fill(data_json['strasse'])
             await page.pause()
 
             #await browser.close()

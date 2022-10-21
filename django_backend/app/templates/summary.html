@@ -66,7 +66,7 @@
                         <p>
                             {{ request.session.anrede }} {{ request.session.vorname }} {{ request.session.nachname }} 
                             <br> 
-                            {{ request.session.strasse }}
+                            {{ request.session.strasse }} {{ request.session.hausnr }} 
                             <br>
                             {{ request.session.plz }}, {{ request.session.ort }}
                         </p>
@@ -172,7 +172,7 @@
             "plz": "{{ request.session.plz }}",
             "ort": "{{ request.session.ort }}",
             "strasse": "{{ request.session.strasse }}",
-            "hausnr": "hausnr",
+            "hausnr": "{{ request.session.hausnr }}",
             "email": "{{ request.session.email }}",
             "iban": "{{ request.session.iban }}"
         }

@@ -20,6 +20,8 @@ def index(request):
 
 
         strasse = request.POST.get("strasse")
+        print('strasse: ', strasse)
+        hausnr = request.POST.get('hausnr')
         plz = request.POST.get("plz")
         ort = request.POST.get("ort")
         iban = request.POST.get('iban')
@@ -30,6 +32,7 @@ def index(request):
         request.session["vorname"] = vorname
         request.session["nachname"] = nachname
         request.session["strasse"] = strasse
+        request.session["hausnr"] = hausnr
         request.session["plz"] = plz
         request.session["ort"] = ort
         request.session["email"] = email_addresse
