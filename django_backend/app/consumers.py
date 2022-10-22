@@ -33,7 +33,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         data_json = json.loads(text_data)
         async with async_playwright() as playwright:
             chromium = playwright.chromium # or "firefox" or "webkit".
-            browser = await chromium.launch(headless=False)
+            browser = await chromium.launch(headless=True)
             page = await browser.new_page()
             await page.goto("https://ssl.barmenia.de/online-versichern/#/zahnversicherung/Beitrag?tarif=2&adm=00232070&app=makler")
             # other actions...
