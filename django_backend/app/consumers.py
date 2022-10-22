@@ -12,7 +12,7 @@ from playwright.async_api import async_playwright
 
 from .models import Images
 
-
+email= "admin@mail.com"
 
 
 class ScraperViewConsumer(AsyncWebsocketConsumer):
@@ -33,7 +33,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         data_json = json.loads(text_data)
         async with async_playwright() as playwright:
             chromium = playwright.chromium # or "firefox" or "webkit".
-            browser = await chromium.launch(headless=True)
+            browser = await chromium.launch(headless=False)
             page = await browser.new_page()
             await page.goto("https://ssl.barmenia.de/online-versichern/#/zahnversicherung/Beitrag?tarif=2&adm=00232070&app=makler")
             # other actions...
@@ -78,8 +78,14 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
             # step 3
             await page.locator('[data-placeholder="PLZ"]').fill(data_json['plz'])
             await page.locator('[data-placeholder="Straße"]').fill(data_json['strasse'])
-            #await page.pause()
+            await page.locator('[data-placeholder="Hausnummer"]').fill(data_json['hausnr'])
 
+            await page.click('mat-checkbox')
+            await page.locator('[data-placeholder="E-Mail-Adresse"]').fill(email)
+            await page.locator('baf-button:has-text("Weiter")').hover()
+
+
+            await page.pause()
             await browser.close()
 
     async def get_personal_offer(self, event):
