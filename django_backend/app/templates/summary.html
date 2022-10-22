@@ -30,7 +30,8 @@
                         <p>Beitrag</p>
                     </div>
                     <div class="col-9">
-                        <p id="beitrag"></p>
+                        <div id="loader_beitrag" class="loader"></div>
+                        <p id="beitrag" style="display: none;"></p>
                     </div>
                 </div>
                 <div class="row row-card">
@@ -38,7 +39,8 @@
                         <p>Beginn</p>
                     </div>
                     <div class="col-9">
-                        <p id="insurance_begin"></p>
+                        <div id="loader_begin" class="loader"></div>
+                        <p id="insurance_begin" style="display: none;"></p>
                     </div>
                 </div>
             </div>
@@ -185,8 +187,14 @@
         console.log(data)
         if (data.message == "Beitrag"){
             document.getElementById('beitrag').innerText = data.price + ' / Monat'
+            document.getElementById('loader_beitrag').style.display = "none"
+            document.getElementById('beitrag').style.display = 'block' 
+
+
             document.getElementById('insurance_begin').innerText = data.date
-            
+            document.getElementById('loader_begin').style.display = "none"
+            document.getElementById('insurance_begin').style.display = 'block' 
+
         }
     };
     
@@ -235,6 +243,20 @@
     .controls{
         display: flex;
         justify-content: space-evenly;
+    }
+
+    .loader {
+        border: 0.2rem solid #f3f3f3; /* Light grey */
+        border-top: 0.2rem solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 1.5rem;
+        height: 1.5rem;
+        animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
     }
 </style>
 

@@ -78,9 +78,9 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
             # step 3
             await page.locator('[data-placeholder="PLZ"]').fill(data_json['plz'])
             await page.locator('[data-placeholder="Straße"]').fill(data_json['strasse'])
-            await page.pause()
+            #await page.pause()
 
-            #await browser.close()
+            await browser.close()
 
     async def get_personal_offer(self, event):
         # Receive data from group
