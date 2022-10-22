@@ -3,7 +3,7 @@
 {% load static %}
 {% block content %}
 <div class="row">
-    <div class="col-12 col-md-10 offset-md-1" style="border: .2rem solid rgb(0, 33, 45);">
+    <div class="col-12 col-md-10 offset-md-1" style="border: .2rem solid rgb(0, 33, 45);max-width: 1500px;margin-left: auto;margin-right: auto;">
         <div class="form-content">
             <div style="display: flex;justify-content: space-between;">
                 <p>
@@ -46,7 +46,7 @@
             </div>
             <div class="card col-12">
                 <h5><i class="fas fa-user"></i>Zahnersatz (Optional)</h5>
-                <div class="row">
+                <div class="">
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" id="mySwitch" name="darkmode" value="yes" onclick="show_zusatz()">
                         <label class="form-check-label" for="mySwitch">Sofort Kosten für Zahnersatz sichern!</label>
@@ -148,6 +148,9 @@
                     </label>
                 </div>
             </div>
+            <div style="display: flex; justify-content: center;">
+                <input name="next" type="submit" value="Weiter" class="btn btn-primary col-12 col-md-3" style="margin-top: 1rem; margin-bottom: 1.2rem;">
+            </div>
         </div>
     </div>
 </div>
@@ -231,12 +234,15 @@
 
 
 <style>
+    h5{
+        margin-bottom: 1.7rem!important;
+    }
     .card{
         margin-bottom: 1.5rem;
     }
     .row-card {
-        padding-top: 0.5rem!important;
-        padding-bottom: 0.5rem!important;
+        padding-top: 0.2rem!important;
+        padding-bottom: 0.2rem!important;
     }
     .key {
         max-width: 200px;
