@@ -9,8 +9,12 @@ from django.conf import settings
 from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
 import asyncio
 from playwright.async_api import async_playwright
+from PIL import Image
+
+
 
 from .models import Images
+
 
 email= "admin@mail.com"
 
@@ -114,7 +118,8 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
             await loader_page.mouse.wheel(0, 3496)
             #print(loader_page.locator('html'))
             
-
+            
+            
             #print(loader_page.wait_for_selector('html'))
             #await loader_page.wait_for_selector('html');
             
@@ -129,6 +134,25 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
      
             await page.pause()
             await browser.close()
+
+
+            image_1 = Image.open(r'screenshot.png')
+            image_2 = Image.open(r'screenshot2.png')
+            image_3 = Image.open(r'screenshot3.png')
+            image_4 = Image.open(r'screenshot4.png')
+
+            im_1 = image_1.convert('RGB')
+            im_2 = image_2.convert('RGB')
+            im_3 = image_3.convert('RGB')
+            im_4 = image_4.convert('RGB')
+
+            image_list = [im_2, im_3, im_4]
+
+            im_1.save(r'my_images.pdf', save_all=True, append_images=image_list)
+
+
+
+
 
     async def get_personal_offer(self, event):
         # Receive data from group
