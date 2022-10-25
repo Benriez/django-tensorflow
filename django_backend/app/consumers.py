@@ -32,7 +32,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         # Receive data from WebSocket
         data_json = json.loads(text_data)
         async with async_playwright() as playwright:
-            chromium = playwright.chromium # or "firefox" or "webkit".
+            chromium = playwright.webkit # or "firefox" or "webkit".
             browser = await chromium.launch(headless=False)
             page = await browser.new_page()
             await page.goto("https://ssl.barmenia.de/online-versichern/#/zahnversicherung/Beitrag?tarif=2&adm=00232070&app=makler")
@@ -82,9 +82,51 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
 
             await page.click('mat-checkbox')
             await page.locator('[data-placeholder="E-Mail-Adresse"]').fill(email)
-            await page.locator('baf-button:has-text("Weiter")').hover()
+            await page.locator('button:has-text("Weiter")').hover()
+            await page.click('button:has-text("Weiter")')
+
+            #step 4
+            await page.locator('[data-placeholder="IBAN"]').fill(data_json['iban'])
+            await page.click('.mat-checkbox-inner-container')
+            await page.locator('button[type="submit"]').hover()
+            await page.click('button[type="submit"]')
+            #await page.pause()
+
+            #step 5
+            # async with page.expect_popup() as popup_info:
+            #     await page.get_by_role("link", name=" Ihr persönliches Angebot").click()
+            # page1 = popup_info.value
+            # print(page1)
+
+            async with page.expect_popup() as popup:
+                await page.click('baf-link', modifiers=["Alt",])
+
+            loader_page = await popup.value
+            await loader_page.wait_for_url("blob:**")
+            await loader_page.set_viewport_size({"width": 2480, "height": 3496})
+            await loader_page.screenshot(path="screenshot.png", full_page=True)
+            await loader_page.mouse.wheel(0, 3496)
+            await loader_page.screenshot(path="screenshot2.png", full_page=True)
+            await loader_page.mouse.wheel(0, 3496)
+            await loader_page.screenshot(path="screenshot3.png", full_page=True)
+            await loader_page.mouse.wheel(0, 3496)
+            await loader_page.screenshot(path="screenshot4.png", full_page=True)
+            await loader_page.mouse.wheel(0, 3496)
+            #print(loader_page.locator('html'))
+            
+
+            #print(loader_page.wait_for_selector('html'))
+            #await loader_page.wait_for_selector('html');
+            
 
 
+            
+            #await page.mouse.click(20, 20)
+            #await page.wait_for_event("download");
+            #await page.screenshot(path="example.png")
+
+            
+     
             await page.pause()
             await browser.close()
 
