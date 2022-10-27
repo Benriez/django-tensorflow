@@ -98,11 +98,6 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
             #await page.pause()
 
             #step 5
-            # async with page.expect_popup() as popup_info:
-            #     await page.get_by_role("link", name=" Ihr persönliches Angebot").click()
-            # page1 = popup_info.value
-            # print(page1)
-
             async with page.expect_popup() as popup:
                 await page.click('baf-link', modifiers=["Alt",])
 
@@ -111,36 +106,24 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
             await loader_page.set_viewport_size({"width": 2480, "height": 3496})
 
             print_pages = 29
+            image_list =[]
             for p in range(print_pages):
                 await loader_page.screenshot(path="screenshot"+str(p)+".png", full_page=True)
                 await loader_page.mouse.wheel(0, 3496)
-
-            #print(loader_page.locator('html'))
-            
-            
-            
-            #print(loader_page.wait_for_selector('html'))
-            #await loader_page.wait_for_selector('html');
-            
-
-
-            
-            #await page.mouse.click(20, 20)
-            #await page.wait_for_event("download");
-            #await page.screenshot(path="example.png")
-
-            
-     
-            await page.pause()
-            await browser.close()
-
-            image_list =[]
-            for p in range(print_pages):
                 image = Image.open(r'screenshot'+str(p)+'.png')
                 im_con = image.convert('RGB')
                 image_list.append(im_con)
-
+            
             im_con.save(r'my_images.pdf', save_all=True, append_images=image_list)
+
+            
+            await page.pause()
+            await page.locator(".mat-checkbox-inner-container").first.click()
+            await page.locator("#mat-checkbox-5 > .mat-checkbox-layout > .mat-checkbox-inner-container").click()
+            await page.locator("#mat-checkbox-4 > .mat-checkbox-layout > .mat-checkbox-inner-container").click()
+            
+            # Final step klick "weiter"
+            await browser.close()            
             
             for p in range(print_pages):
                 os.remove(r'screenshot'+str(p)+'.png')
