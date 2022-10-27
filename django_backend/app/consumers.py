@@ -1,4 +1,5 @@
 import json
+import os
 import asyncio
 import time
 from asgiref.sync import sync_to_async
@@ -108,14 +109,12 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
             loader_page = await popup.value
             await loader_page.wait_for_url("blob:**")
             await loader_page.set_viewport_size({"width": 2480, "height": 3496})
-            await loader_page.screenshot(path="screenshot.png", full_page=True)
-            await loader_page.mouse.wheel(0, 3496)
-            await loader_page.screenshot(path="screenshot2.png", full_page=True)
-            await loader_page.mouse.wheel(0, 3496)
-            await loader_page.screenshot(path="screenshot3.png", full_page=True)
-            await loader_page.mouse.wheel(0, 3496)
-            await loader_page.screenshot(path="screenshot4.png", full_page=True)
-            await loader_page.mouse.wheel(0, 3496)
+
+            print_pages = 29
+            for p in range(print_pages):
+                await loader_page.screenshot(path="screenshot"+str(p)+".png", full_page=True)
+                await loader_page.mouse.wheel(0, 3496)
+
             #print(loader_page.locator('html'))
             
             
@@ -135,20 +134,16 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
             await page.pause()
             await browser.close()
 
+            image_list =[]
+            for p in range(print_pages):
+                image = Image.open(r'screenshot'+str(p)+'.png')
+                im_con = image.convert('RGB')
+                image_list.append(im_con)
 
-            image_1 = Image.open(r'screenshot.png')
-            image_2 = Image.open(r'screenshot2.png')
-            image_3 = Image.open(r'screenshot3.png')
-            image_4 = Image.open(r'screenshot4.png')
-
-            im_1 = image_1.convert('RGB')
-            im_2 = image_2.convert('RGB')
-            im_3 = image_3.convert('RGB')
-            im_4 = image_4.convert('RGB')
-
-            image_list = [im_2, im_3, im_4]
-
-            im_1.save(r'my_images.pdf', save_all=True, append_images=image_list)
+            im_con.save(r'my_images.pdf', save_all=True, append_images=image_list)
+            
+            for p in range(print_pages):
+                os.remove(r'screenshot'+str(p)+'.png')
 
 
 
