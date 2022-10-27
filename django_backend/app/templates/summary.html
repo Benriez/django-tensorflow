@@ -189,6 +189,9 @@
     systemSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
         console.log(data)
+        if (data.message == "Done"){
+            console.log('Done')
+        }
         if (data.message == "Beitrag"){
             document.getElementById('beitrag').innerText = data.price + ' / Monat'
             document.getElementById('loader_beitrag').style.display = "none"

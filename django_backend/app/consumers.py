@@ -4,7 +4,7 @@ import asyncio
 import time
 from asgiref.sync import sync_to_async
 from channels.db import database_sync_to_async
-
+from django.core.exceptions import ImproperlyConfigured
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.conf import settings
 from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
@@ -16,8 +16,10 @@ from PIL import Image
 
 from .models import Images
 
-
-email= "admin@mail.com"
+try:
+    email = os.environ.get("CR_EMAIL") or ImproperlyConfigured("CR_EMAIL not set")
+except:
+    email= "admin@mail.com"
 
 
 class ScraperViewConsumer(AsyncWebsocketConsumer):
@@ -38,7 +40,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         data_json = json.loads(text_data)
         async with async_playwright() as playwright:
             chromium = playwright.webkit # or "firefox" or "webkit".
-            browser = await chromium.launch(headless=False)
+            browser = await chromium.launch(headless=True)
             page = await browser.new_page()
             await page.goto("https://ssl.barmenia.de/online-versichern/#/zahnversicherung/Beitrag?tarif=2&adm=00232070&app=makler")
             # other actions...
@@ -116,6 +118,16 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
             
             im_con.save(r'my_images.pdf', save_all=True, append_images=image_list)
 
+            await self.channel_layer.group_send(
+                self.group_name,
+                {
+                    'type': 'serve_personal_offer',
+                    'data': {
+                        'message': 'Done'
+                    }
+                }
+            )
+
             
             await page.pause()
             await page.locator(".mat-checkbox-inner-container").first.click()
@@ -133,6 +145,10 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
 
 
     async def get_personal_offer(self, event):
+        # Receive data from group
+        await self.send(text_data=json.dumps(event['data']))
+
+    async def serve_personal_offer(self, event):
         # Receive data from group
         await self.send(text_data=json.dumps(event['data']))
 
