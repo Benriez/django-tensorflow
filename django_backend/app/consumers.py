@@ -29,108 +29,108 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         # Receive data from WebSocket
         data_json = json.loads(text_data)
-        async with async_playwright() as playwright:
-            chromium = playwright.webkit # or "firefox" or "webkit".
-            browser = await chromium.launch(headless=True)
-            page = await browser.new_page()
-            await page.goto("https://ssl.barmenia.de/online-versichern/#/zahnversicherung/Beitrag?tarif=2&adm=00232070&app=makler")
-            # other actions...
+        # async with async_playwright() as playwright:
+        #     chromium = playwright.webkit # or "firefox" or "webkit".
+        #     browser = await chromium.launch(headless=True)
+        #     page = await browser.new_page()
+        #     await page.goto("https://ssl.barmenia.de/online-versichern/#/zahnversicherung/Beitrag?tarif=2&adm=00232070&app=makler")
+        #     # other actions...
             
-            #fill out external form
-            await page.click('button:has-text("Alle akzeptieren")')
-            await page.locator('[data-placeholder="Geburtsdatum"]').fill(data_json['birthdate'])
-            await page.locator('[data-placeholder="Vorname"]').fill(data_json['vorname'])
-            await page.click('button:has-text("Beitrag berechnen")')
+        #     #fill out external form
+        #     await page.click('button:has-text("Alle akzeptieren")')
+        #     await page.locator('[data-placeholder="Geburtsdatum"]').fill(data_json['birthdate'])
+        #     await page.locator('[data-placeholder="Vorname"]').fill(data_json['vorname'])
+        #     await page.click('button:has-text("Beitrag berechnen")')
     
-            price_euro = await page.locator(".euro").inner_text()
-            price_cents = await page.locator(".cent").inner_text()
-            date = await page.locator('[data-placeholder="Versicherungsbeginn"]').input_value()
-            str_price = price_euro + price_cents
+        #     price_euro = await page.locator(".euro").inner_text()
+        #     price_cents = await page.locator(".cent").inner_text()
+        #     date = await page.locator('[data-placeholder="Versicherungsbeginn"]').input_value()
+        #     str_price = price_euro + price_cents
 
             
-            await self.channel_layer.group_send(
-                self.group_name,
-                {
-                    'type': 'get_personal_offer',
-                    'data': {
-                        'message': 'Beitrag',
-                        'price': str_price,
-                        'date': date
-                    }
-                }
-            )
+        #     await self.channel_layer.group_send(
+        #         self.group_name,
+        #         {
+        #             'type': 'get_personal_offer',
+        #             'data': {
+        #                 'message': 'Beitrag',
+        #                 'price': str_price,
+        #                 'date': date
+        #             }
+        #         }
+        #     )
             
-            await page.click('button:has-text("Jetzt abschließen")')
+        #     await page.click('button:has-text("Jetzt abschließen")')
             
-            # step 2
-            if data_json["anrede"] == "Herr":
-                # await page.locator('input[value=Herr]')
-                await page.click('#mat-radio-2')
+        #     # step 2
+        #     if data_json["anrede"] == "Herr":
+        #         # await page.locator('input[value=Herr]')
+        #         await page.click('#mat-radio-2')
 
-            else:
-                await page.click('#mat-radio-3')
+        #     else:
+        #         await page.click('#mat-radio-3')
             
-            await page.locator('[data-placeholder="Name"]').fill(data_json['nachname'])
-            await page.click('button:has-text("Weiter")')
+        #     await page.locator('[data-placeholder="Name"]').fill(data_json['nachname'])
+        #     await page.click('button:has-text("Weiter")')
 
-            # step 3
-            await page.locator('[data-placeholder="PLZ"]').fill(data_json['plz'])
-            await page.locator('[data-placeholder="Straße"]').fill(data_json['strasse'])
-            await page.locator('[data-placeholder="Hausnummer"]').fill(data_json['hausnr'])
+        #     # step 3
+        #     await page.locator('[data-placeholder="PLZ"]').fill(data_json['plz'])
+        #     await page.locator('[data-placeholder="Straße"]').fill(data_json['strasse'])
+        #     await page.locator('[data-placeholder="Hausnummer"]').fill(data_json['hausnr'])
 
-            await page.click('mat-checkbox')
-            await page.locator('[data-placeholder="E-Mail-Adresse"]').fill(email)
-            await page.locator('button:has-text("Weiter")').hover()
-            await page.click('button:has-text("Weiter")')
+        #     await page.click('mat-checkbox')
+        #     await page.locator('[data-placeholder="E-Mail-Adresse"]').fill(email)
+        #     await page.locator('button:has-text("Weiter")').hover()
+        #     await page.click('button:has-text("Weiter")')
 
-            #step 4
-            await page.locator('[data-placeholder="IBAN"]').fill(data_json['iban'])
-            await page.click('.mat-checkbox-inner-container')
-            await page.locator('button[type="submit"]').hover()
-            await page.click('button[type="submit"]')
-            #await page.pause()
+        #     #step 4
+        #     await page.locator('[data-placeholder="IBAN"]').fill(data_json['iban'])
+        #     await page.click('.mat-checkbox-inner-container')
+        #     await page.locator('button[type="submit"]').hover()
+        #     await page.click('button[type="submit"]')
+        #     #await page.pause()
 
-            #step 5
-            async with page.expect_popup() as popup:
-                await page.click('baf-link', modifiers=["Alt",])
+        #     #step 5
+        #     async with page.expect_popup() as popup:
+        #         await page.click('baf-link', modifiers=["Alt",])
 
-            loader_page = await popup.value
-            await loader_page.wait_for_url("blob:**")
-            await loader_page.set_viewport_size({"width": 2480, "height": 3496})
+        #     loader_page = await popup.value
+        #     await loader_page.wait_for_url("blob:**")
+        #     await loader_page.set_viewport_size({"width": 2480, "height": 3496})
 
-            print_pages = 29
-            image_list =[]
-            for p in range(print_pages):
-                await loader_page.screenshot(path="screenshot"+str(p)+".png", full_page=True)
-                await loader_page.mouse.wheel(0, 3496)
-                image = Image.open(r'screenshot'+str(p)+'.png')
-                im_con = image.convert('RGB')
-                image_list.append(im_con)
+        #     print_pages = 29
+        #     image_list =[]
+        #     for p in range(print_pages):
+        #         await loader_page.screenshot(path="screenshot"+str(p)+".png", full_page=True)
+        #         await loader_page.mouse.wheel(0, 3496)
+        #         image = Image.open(r'screenshot'+str(p)+'.png')
+        #         im_con = image.convert('RGB')
+        #         image_list.append(im_con)
             
-            im_con.save('./media/pdfs/Mein_Angebot.pdf', save_all=True, append_images=image_list)
+        #     im_con.save('./media/pdfs/Mein_Angebot.pdf', save_all=True, append_images=image_list)
 
-            await self.channel_layer.group_send(
-                self.group_name,
-                {
-                    'type': 'serve_personal_offer',
-                    'data': {
-                        'message': 'Done'
-                    }
-                }
-            )
+        #     await self.channel_layer.group_send(
+        #         self.group_name,
+        #         {
+        #             'type': 'serve_personal_offer',
+        #             'data': {
+        #                 'message': 'Done'
+        #             }
+        #         }
+        #     )
 
             
-            #await page.pause()
-            await page.locator(".mat-checkbox-inner-container").first.click()
-            await page.locator("#mat-checkbox-5 > .mat-checkbox-layout > .mat-checkbox-inner-container").click()
-            await page.locator("#mat-checkbox-4 > .mat-checkbox-layout > .mat-checkbox-inner-container").click()
+        #     #await page.pause()
+        #     await page.locator(".mat-checkbox-inner-container").first.click()
+        #     await page.locator("#mat-checkbox-5 > .mat-checkbox-layout > .mat-checkbox-inner-container").click()
+        #     await page.locator("#mat-checkbox-4 > .mat-checkbox-layout > .mat-checkbox-inner-container").click()
             
-            # Final step klick "weiter"
-            await page.pause()
-            await browser.close()            
+        #     # Final step klick "weiter"
+        #     await page.pause()
+        #     await browser.close()            
             
-            for p in range(print_pages):
-                os.remove(r'screenshot'+str(p)+'.png')
+        #     for p in range(print_pages):
+        #         os.remove(r'screenshot'+str(p)+'.png')
 
 
 

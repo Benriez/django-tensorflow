@@ -162,7 +162,40 @@
                 </div>
             </div>
             <div style="display: flex; justify-content: center;">
-                <input name="next" type="submit" value="Weiter" class="btn btn-primary col-12 col-md-3" style="margin-top: 1rem; margin-bottom: 1.2rem;">
+                <input id="finish" name="next" type="submit" value="Bitte warten" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-primary col-12 col-md-3" style="margin-top: 1rem; margin-bottom: 1.2rem;">
+            </div>
+
+            
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header" style="justify-content: center;">
+                                <h5 class="modal-title text-center" id="exampleModalLabel">Glückwunsch</h5>
+                            </div>
+                            <div class="modal-body text-center">
+                                Ihr Antragsvorgang wurde erfolgreich durchgeführt.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Wie geht es jetzt weiter?</h5>
+                            </div>
+                            <div class="modal-body">
+                                <p>1. Ihr Versicherungsschein wird Ihnen innerhalb von einem Werktag per E-Mail zugestellt.</p>
+                                <p>2. Alle versicherten Leistungen können Sie ab Erhalt Ihrer Vertragsdokumente direkt in Anspruch nehmen.</p>
+                                <p>3. Rechnungen reichen Sie schnell und bequem per Smartphone-App oder per Email bei der Barmenia Krankenversicherung ein.</p>
+                            </div>
+                            <div class="modal-footer" style="display: flex;justify-content: center;">
+                                <input id="finish" name="next" type="submit" value="Verstanden" class="btn btn-primary col-12 col-md-3" style="margin-top: 1rem; margin-bottom: 1.2rem;">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
@@ -205,6 +238,9 @@
         if (data.message == "Done"){
             document.getElementById('loader_angebot').style.display = 'none'
             document.getElementById('personalizedPDF').style.display = 'flex'
+
+            document.getElementById('finish').disabled = false;
+            document.getElementById('finish').value = 'Abschließen';
         }
         if (data.message == "Beitrag"){
             document.getElementById('beitrag').innerText = data.price + ' / Monat'
