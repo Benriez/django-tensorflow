@@ -21,9 +21,10 @@
                             </div>
                         </div>
                         <div class="col-8">
-                            <h5>Schutz 75</h5>
-                            <div style="display: flex; align-items: baseline;">
-                                <h3 class="offer">18,30€</h3> 
+                            <h5 class="banner-title">Schutz 75</h5>
+                            <div class="loader loader-banner"></div>
+                            <div style="display: none; align-items: baseline;">
+                                <h3 id="offer-small" class="offer"></h3> 
                                 <p style="margin-left: .3rem;">/Monat</p>
                             </div>
                         </div>
@@ -87,9 +88,10 @@
                             </div>
                         </div>
                         <div class="col-8">
-                            <h5>Schutz 90</h5>
-                            <div style="display: flex; align-items: baseline;">
-                                <h3 class="offer">19,05€</h3> 
+                            <h5 class="banner-title">Schutz 90</h5>
+                            <div class="loader loader-banner"></div>
+                            <div style="display: none; align-items: baseline;">
+                                <h3 id="offer-medium" class="offer"></h3> 
                                 <p style="margin-left: .3rem;">/Monat</p>
                             </div>
                         </div>
@@ -153,9 +155,10 @@
                             </div>
                         </div>
                         <div class="col-8">
-                            <h5>Schutz 100</h5>
-                            <div style="display: flex; align-items: baseline;">
-                                <h3 class="offer">20,05€</h3> 
+                            <h5 class="banner-title">Schutz 100</h5>
+                            <div class="loader loader-banner"></div>
+                            <div style="display: none; align-items: baseline;">
+                                <h3 id="offer-large" class="offer">20,05€</h3> 
                                 <p style="margin-left: .3rem;">/Monat</p>
                             </div>
                         </div>
@@ -216,6 +219,13 @@
 
 
 <style>
+    .banner-title {
+        margin-bottom: 0.5rem!important;
+    }
+    .loader-banner{
+        width: 2rem!important;
+        height: 2rem!important;
+    }
     .extra-card{
         transition: all .2s ease-in-out;
         max-width: 300px!important;

@@ -134,23 +134,23 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         #         for p in range(print_pages):
         #             os.remove(r'screenshot'+str(p)+'.png')
 
-        if data_json['message'] == "get_zahnzusatz_pricelist":
-            print('get_zahnzusatz_pricelist')
-            async with async_playwright() as playwright:
-                chromium = playwright.webkit # or "firefox" or "webkit".
-                browser = await chromium.launch(headless=False)
-                page = await browser.new_page()
-                await page.goto("https://ssl.barmenia.de/online-versichern/#/zahnversicherung/Beitrag?tarif=1&app=makler&ADM=00232070")
-                # other actions...
+        # if data_json['message'] == "get_zahnzusatz_pricelist":
+        #     print('get_zahnzusatz_pricelist')
+        #     async with async_playwright() as playwright:
+        #         chromium = playwright.webkit # or "firefox" or "webkit".
+        #         browser = await chromium.launch(headless=False)
+        #         page = await browser.new_page()
+        #         await page.goto("https://ssl.barmenia.de/online-versichern/#/zahnversicherung/Beitrag?tarif=1&app=makler&ADM=00232070")
+        #         # other actions...
                 
-                #fill out external form
-                await page.get_by_test_id("uc-save-button").click()
-                await page.get_by_label("Geburtsdatum").fill(data_json['birthdate'])
-                await page.keyboard.press('Tab')
-                await page.get_by_role("button", name="Beitrag berechnen").click()
+        #         #fill out external form
+        #         await page.get_by_test_id("uc-save-button").click()
+        #         await page.get_by_label("Geburtsdatum").fill(data_json['birthdate'])
+        #         await page.keyboard.press('Tab')
+        #         await page.get_by_role("button", name="Beitrag berechnen").click()
 
 
-                await page.pause()
+        #         await page.pause()
         
 
 
