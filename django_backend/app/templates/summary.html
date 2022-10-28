@@ -213,7 +213,7 @@
 
     const systemSocket = new WebSocket(`ws://${window.location.host}/ws/scraper/`);
 
-    systemSocket.onopen = function (e) {   
+    systemSocket.onopen = function(e) {   
         console.log('systemsocket connected');
         context ={
             "message": "client-connected",

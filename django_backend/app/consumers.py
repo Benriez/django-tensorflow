@@ -1,3 +1,4 @@
+from ast import Pass
 import os
 import json
 
@@ -137,7 +138,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         if data_json['message'] == "get_zahnzusatz_pricelist":
             async with async_playwright() as playwright:
                 chromium = playwright.chromium # or "firefox" or "webkit".
-                browser = await chromium.launch(headless=False)
+                browser = await chromium.launch(headless=True)
                 page = await browser.new_page()
                 await page.goto("https://ssl.barmenia.de/online-versichern/#/zahnversicherung/Beitrag?tarif=1&app=makler&ADM=00232070")
                 # other actions...
@@ -159,9 +160,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 large_price_eur = await page.locator(".euro >>nth=2").inner_text()
                 large_price_cent = await page.locator(".cent >>nth=2").inner_text()
                 large_price = large_price_eur + large_price_cent
-
-               
-                await page.pause()
+                
                 await self.channel_layer.group_send(
                     self.group_name,
                     {
@@ -174,8 +173,21 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                         }
                     }
                 )
-                
                 await browser.close()  
+
+        if data_json['message'] == "get_extra_offer":
+            async with async_playwright() as playwright:
+                chromium = playwright.chromium # or "firefox" or "webkit".
+                browser = await chromium.launch(headless=False)
+                page = await browser.new_page()
+                await page.goto("https://ssl.barmenia.de/online-versichern/#/zahnversicherung/Beitrag?tarif=1&app=makler&ADM=00232070")
+                # other actions...
+                
+                #fill out external form
+                await page.get_by_test_id("uc-save-button").click()
+                await page.get_by_label("Geburtsdatum").fill(data_json['birthdate'])
+                await page.keyboard.press('Tab')
+                await page.get_by_role("button", name="Beitrag berechnen").click()
 
 
 
@@ -191,6 +203,9 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
     async def serve_price(self, event):
         # Receive data from group
         await self.send(text_data=json.dumps(event['data']))
+
+
+
 
 
 class LiveViewConsumer(AsyncWebsocketConsumer):
