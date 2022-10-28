@@ -238,24 +238,24 @@
             el.style.backgroundColor="#00212d"  
 
         } else if (identifier == "extra_small"){
-            active_el = document.getElementById(identifier)
-            active_el.innerText="Ausgewählt"
-            active_el.style.backgroundColor="#239ac5"  
+            select_extra_el(identifier) 
             deselect_extras(identifier)
 
         } else if (identifier == "extra_medium") {
-            active_el = document.getElementById(identifier)
-            active_el.innerText="Ausgewählt"
-            active_el.style.backgroundColor="#239ac5"
+            select_extra_el(identifier) 
             deselect_extras(identifier)
 
         } else {            
-            active_el = document.getElementById(identifier)
-            active_el.innerText="Ausgewählt"
-            active_el.style.backgroundColor="#239ac5"
+            select_extra_el(identifier) 
             deselect_extras(identifier)
         }
         
+    }
+
+    function select_extra_el(identifier){
+        el = document.getElementById(identifier)
+        el.innerText="Ausgewählt"
+        el.style.backgroundColor="#239ac5"
     }
 
     function deselect_extras(identifier){
