@@ -74,7 +74,7 @@
                     
                     <div class="row">
                         <div style="text-align: center;">
-                            <a class="btn btn-primary select_extra" style="color:white; border-radius: .6rem;">Auswählen</a>
+                            <a id="extra_small"class="btn btn-primary select_extra" style="color:white; border-radius: .6rem;" onclick="select_extra('extra_small')">Auswählen</a>
                         </div>
                     </div>
                 </div>
@@ -141,7 +141,7 @@
                     
                     <div class="row">
                         <div style="text-align: center;">
-                            <a class="btn btn-primary select_extra" style="color:white; border-radius: .6rem;">Auswählen</a>
+                            <a id="extra_medium" class="btn btn-primary select_extra" style="color:white; border-radius: .6rem;" onclick="select_extra('extra_medium')">Auswählen</a>
                         </div>
                     </div>
                 </div>
@@ -208,7 +208,7 @@
                     
                     <div class="row">
                         <div style="text-align: center;">
-                            <a class="btn btn-primary select_extra" style="color:white; border-radius: .6rem;">Auswählen</a>
+                            <a id="extra_large" class="btn btn-primary select_extra" style="color:white; border-radius: .6rem;" onclick="select_extra('extra_large')">Auswählen</a>
                         </div>
                     </div>
                 </div>
@@ -218,7 +218,53 @@
 </div>
 
 <script>
+    function select_extra(identifier){
+        if (document.getElementById(identifier).innerText.toUpperCase() == "AUSGEWÄHLT") {
+            el = document.getElementById(identifier)
+            el.innerText="Auswählen"
+            el.style.backgroundColor="#00212d"  
 
+        } else if (identifier == "extra_small"){
+            active_el = document.getElementById(identifier)
+            active_el.innerText="Ausgewählt"
+            active_el.style.backgroundColor="#239ac5"  
+
+            el_med = document.getElementById('extra_medium')
+            el_med.innerText="Auswählen"
+            el_med.style.backgroundColor="#00212d"
+
+            el_lg = document.getElementById('extra_large')
+            el_lg.innerText="Auswählen"
+            el_lg.style.backgroundColor="#00212d"
+
+        } else if (identifier == "extra_medium") {
+            el_sm = document.getElementById('extra_small')
+            el_sm.innerText="Auswählen"
+            el_sm.style.backgroundColor="#00212d"
+
+            active_el = document.getElementById(identifier)
+            active_el.innerText="Ausgewählt"
+            active_el.style.backgroundColor="#239ac5"
+
+            el_lg = document.getElementById('extra_large')
+            el_lg.innerText="Auswählen"
+            el_lg.style.backgroundColor="#00212d"
+
+        } else {
+            el_sm = document.getElementById('extra_small')
+            el_sm.innerText="Auswählen"
+            el_sm.style.backgroundColor="#00212d"
+            
+            el_med = document.getElementById('extra_medium')
+            el_med.innerText="Auswählen"
+            el_med.style.backgroundColor="#00212d"
+            
+            active_el = document.getElementById(identifier)
+            active_el.innerText="Ausgewählt"
+            active_el.style.backgroundColor="#239ac5"
+        }
+        
+    }
 
 </script>
 
