@@ -218,6 +218,19 @@
 </div>
 
 <script>
+    let ids = ['extra_small', 'extra_medium', 'extra_large']
+
+    function removeA(arr) {
+        var what, a = arguments, L = a.length, ax;
+        while (L > 1 && arr.length) {
+            what = a[--L];
+            while ((ax= arr.indexOf(what)) !== -1) {
+                arr.splice(ax, 1);
+            }
+        }
+        return arr;
+    }
+
     function select_extra(identifier){
         if (document.getElementById(identifier).innerText.toUpperCase() == "AUSGEWÄHLT") {
             el = document.getElementById(identifier)
@@ -228,41 +241,32 @@
             active_el = document.getElementById(identifier)
             active_el.innerText="Ausgewählt"
             active_el.style.backgroundColor="#239ac5"  
-
-            el_med = document.getElementById('extra_medium')
-            el_med.innerText="Auswählen"
-            el_med.style.backgroundColor="#00212d"
-
-            el_lg = document.getElementById('extra_large')
-            el_lg.innerText="Auswählen"
-            el_lg.style.backgroundColor="#00212d"
+            deselect_extras(identifier)
 
         } else if (identifier == "extra_medium") {
-            el_sm = document.getElementById('extra_small')
-            el_sm.innerText="Auswählen"
-            el_sm.style.backgroundColor="#00212d"
-
             active_el = document.getElementById(identifier)
             active_el.innerText="Ausgewählt"
             active_el.style.backgroundColor="#239ac5"
+            deselect_extras(identifier)
 
-            el_lg = document.getElementById('extra_large')
-            el_lg.innerText="Auswählen"
-            el_lg.style.backgroundColor="#00212d"
-
-        } else {
-            el_sm = document.getElementById('extra_small')
-            el_sm.innerText="Auswählen"
-            el_sm.style.backgroundColor="#00212d"
-            
-            el_med = document.getElementById('extra_medium')
-            el_med.innerText="Auswählen"
-            el_med.style.backgroundColor="#00212d"
-            
+        } else {            
             active_el = document.getElementById(identifier)
             active_el.innerText="Ausgewählt"
             active_el.style.backgroundColor="#239ac5"
+            deselect_extras(identifier)
         }
+        
+    }
+
+    function deselect_extras(identifier){
+        deselection = removeA(ids, identifier)
+        for (let i = 0; i < deselection.length; i++) {
+            el = document.getElementById(deselection[i])
+            el.innerText="Auswählen"
+            el.style.backgroundColor="#00212d"
+        }
+
+        ids.push(identifier)
         
     }
 
