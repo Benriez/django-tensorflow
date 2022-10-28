@@ -240,16 +240,27 @@
         } else if (identifier == "extra_small"){
             select_extra_el(identifier) 
             deselect_extras(identifier)
+            get_extra_offer(identifier)
 
         } else if (identifier == "extra_medium") {
             select_extra_el(identifier) 
             deselect_extras(identifier)
+            get_extra_offer(identifier)
 
         } else {            
             select_extra_el(identifier) 
             deselect_extras(identifier)
+            get_extra_offer(identifier)
         }
         
+    }
+
+    function get_extra_offer(identifier){
+        context ={
+            "message": "get_zahnzusatz_pricelist",
+            "birthdate": "{{ request.session.geburtsdatum }}"
+        }
+        systemSocket.send(JSON.stringify(context))
     }
 
     function select_extra_el(identifier){
