@@ -275,6 +275,13 @@
         
 
     function show_zusatz(){
+        context ={
+            "message": "get_zahnzusatz_pricelist",
+            "birthdate": "{{ request.session.geburtsdatum }}"
+        }
+        systemSocket.send(JSON.stringify(context))
+
+
         el = document.getElementById('zusatz')
         if (el.style.display == "none"){
             el.style.display = "block";
