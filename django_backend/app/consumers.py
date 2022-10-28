@@ -1,14 +1,8 @@
-import json
 import os
-import asyncio
-import time
+import json
+
 from asgiref.sync import sync_to_async
-from channels.db import database_sync_to_async
-from django.core.exceptions import ImproperlyConfigured
 from channels.generic.websocket import AsyncWebsocketConsumer
-from django.conf import settings
-from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
-import asyncio
 from playwright.async_api import async_playwright
 from PIL import Image
 
@@ -16,10 +10,7 @@ from PIL import Image
 
 from .models import Images
 
-try:
-    email = os.environ.get("CR_EMAIL") or ImproperlyConfigured("CR_EMAIL not set")
-except:
-    email= "admin@mail.com"
+email = "admin@mail.com"
 
 
 class ScraperViewConsumer(AsyncWebsocketConsumer):
@@ -116,7 +107,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 im_con = image.convert('RGB')
                 image_list.append(im_con)
             
-            im_con.save(r'my_images.pdf', save_all=True, append_images=image_list)
+            im_con.save('./media/pdfs/Mein_Angebot.pdf', save_all=True, append_images=image_list)
 
             await self.channel_layer.group_send(
                 self.group_name,
@@ -129,12 +120,13 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
             )
 
             
-            await page.pause()
+            #await page.pause()
             await page.locator(".mat-checkbox-inner-container").first.click()
             await page.locator("#mat-checkbox-5 > .mat-checkbox-layout > .mat-checkbox-inner-container").click()
             await page.locator("#mat-checkbox-4 > .mat-checkbox-layout > .mat-checkbox-inner-container").click()
             
             # Final step klick "weiter"
+            await page.pause()
             await browser.close()            
             
             for p in range(print_pages):

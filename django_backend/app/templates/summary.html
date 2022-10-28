@@ -128,14 +128,27 @@
             </div>
             <div class="card col-12">
                 <h5></i>Ihre Dokumente</h5>
-                <div id="loader_angebot" class="loader"></div>
-                <div class="form-check">
+                <div id="personalizedPDF" style="display: none;">
+                    <i class="fas fa-regular fa-file-pdf" style="font-size: 1.7rem; color: #3e1a1a;"></i>
+                    <a href="/media/pdfs/Mein_Angebot.pdf" style="margin-bottom: 0px;" download> Download - Ihr Persönliches Angebot</a>
+                </div>
+                <div id="loader_angebot" class="loader" style=""></div>
+
+
+
+                <div class="form-check" style="margin-bottom: 2rem; margin-top: 1rem;">
                     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                     <label class="form-check-label" for="flexCheckDefault">
                         Ja, ich habe die Vertragsunterlagen zur Kenntnis genommen.
                     </label>
                 </div>
-                <div class="form-check">
+
+                <div style="display: flex; margin-bottom: 1rem;">
+                    <i class="fas fa-regular fa-file-pdf" style="font-size: 1.7rem; color: #3e1a1a;"></i>
+                    <a href="/media/pdfs/Schweigepflichtsentbindungserklärung.pdf" style="margin-bottom: 0px;" download>Download - Schweigepflichtsentbindungserklärung.pdf</a>
+                </div>
+
+                <div class="form-check" style="margin-bottom: 2rem;">
                     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                     <label class="form-check-label" for="flexCheckDefault">
                         Ich habe die "Einwilligung in die Erhebung und Verwendung von Gesundheitsdaten und Schweigepflichtsentbindungserklärung" gelesen und erteile die darin enthaltenen Einwilligungen.
@@ -190,7 +203,8 @@
         const data = JSON.parse(e.data);
         console.log(data)
         if (data.message == "Done"){
-            console.log('Done')
+            document.getElementById('loader_angebot').style.display = 'none'
+            document.getElementById('personalizedPDF').style.display = 'flex'
         }
         if (data.message == "Beitrag"){
             document.getElementById('beitrag').innerText = data.price + ' / Monat'
