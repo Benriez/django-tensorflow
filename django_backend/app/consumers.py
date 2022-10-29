@@ -251,6 +251,7 @@ async def get_extra_offer_price(page, data_json):
     return small_price, medium_price, large_price
 
 
+
 async def get_extra_offer(page, data_json):
     await page.get_by_test_id("uc-save-button").click()
     await page.get_by_label("Geburtsdatum").fill(data_json['birthdate'])
