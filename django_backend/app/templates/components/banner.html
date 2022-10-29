@@ -236,6 +236,8 @@
             el = document.getElementById(identifier)
             el.innerText="Auswählen"
             el.style.backgroundColor="#00212d"  
+            document.getElementById('loader_extra_angebot').style.display = 'None'
+
 
         } else if (identifier == "extra_small"){
             select_extra_el(identifier) 
@@ -251,7 +253,10 @@
             select_extra_el(identifier) 
             deselect_extras(identifier)
             get_extra_offer(identifier)
+            
         }
+
+
         
     }
 
@@ -267,6 +272,9 @@
         el = document.getElementById(identifier)
         el.innerText="Ausgewählt"
         el.style.backgroundColor="#239ac5"
+
+        document.getElementById('loader_extra_angebot').style.display = 'flex'
+
     }
 
     function deselect_extras(identifier){
