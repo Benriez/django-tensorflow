@@ -262,14 +262,18 @@
             document.getElementById('offer-small-eur').innerText = data.small
             document.getElementById('loader-col-small').style.display = "none"
             document.getElementById('offer-small').style.display = "flex"
+            document.getElementById('extra_small').disabled = false
+            
 
             document.getElementById('offer-medium-eur').innerText = data.medium
             document.getElementById('loader-col-medium').style.display = "none"
             document.getElementById('offer-medium').style.display = "flex"
+            document.getElementById('extra_medium').disabled = false
 
             document.getElementById('offer-large-eur').innerText = data.large
             document.getElementById('loader-col-large').style.display = "none"
             document.getElementById('offer-large').style.display = "flex"
+            document.getElementById('extra_large').disabled = false
         }
     };
     
