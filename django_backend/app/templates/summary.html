@@ -128,7 +128,10 @@
             </div>
             <div class="card col-12 shadow-sm">
                 <h5></i>Ihre Dokumente</h5>
-                <div id="loader_extra_angebot" class="loader" style="display: none;margin-bottom: 1rem; "></div>
+                <div id="loader_extra_angebot" style="display: none;margin-bottom: 1rem; ">
+                    <div class="loader"></div>
+                    <p class="loading-text">Ihr Zahnersatzangebot wird erstellt ...</p>
+                </div>
                 <div id="personalized_extra_PDF" style="display: none;">
                     <i class="fas fa-regular fa-file-pdf" style="font-size: 1.7rem; color: #3e1a1a;"></i>
                     <a href="/media/pdfs/Mein_Angebot.pdf" style="margin-bottom: 1rem;" download> Download - Ihr Zahnersatz Angebot</a>
@@ -137,11 +140,13 @@
                     <i class="fas fa-regular fa-file-pdf" style="font-size: 1.7rem; color: #3e1a1a;"></i>
                     <a href="/media/pdfs/Mein_Angebot.pdf" style="margin-bottom: 0px;" download> Download - Ihr Persönliches Angebot</a>
                 </div>
-                <div id="loader_angebot" class="loader" style="display: none;"></div>
+                <div id="loader_angebot" style="display: none;">
+                    <div class="loader"></div>
+                    <p class="loading-text">Ihr Angebot wird erstellt ...</p>
+                </div>
 
 
-
-                <div id="angebot_check_text" class="form-check" style="margin-bottom: 2rem; margin-top: 1rem; display: none;">
+                <div id="angebot_check" class="form-check" style="margin-bottom: 2rem; margin-top: 1rem; display: none;">
                     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                     <label class="form-check-label" for="flexCheckDefault">
                         Ja, ich habe die Vertragsunterlagen zur Kenntnis genommen.
@@ -153,13 +158,13 @@
                     <a href="/media/pdfs/Schweigepflichtsentbindungserklärung.pdf" style="margin-bottom: 0px;" download>Download - Schweigepflichtsentbindungserklärung.pdf</a>
                 </div>
 
-                <div class="form-check" style="margin-bottom: 2rem;">
+                <div id="einwilligung_check" class="form-check" style="margin-bottom: 2rem;">
                     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                     <label class="form-check-label" for="flexCheckDefault">
                         Ich habe die "Einwilligung in die Erhebung und Verwendung von Gesundheitsdaten und Schweigepflichtsentbindungserklärung" gelesen und erteile die darin enthaltenen Einwilligungen.
                     </label>
                 </div>
-                <div class="form-check">
+                <div id="privacy_check" class="form-check">
                     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                     <label class="form-check-label" for="flexCheckDefault">
                         Ich habe die Informationspflichten nach Art. 13 DSGVO zur Kenntnis genommen.
@@ -167,7 +172,7 @@
                 </div>
             </div>
             <div style="display: flex; justify-content: center;">
-                <input id="finish" name="next" type="submit" value="Bitte warten" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-primary col-12 col-md-3" style="margin-top: 1rem; margin-bottom: 1.2rem;">
+                <input id="finish" name="next" type="submit" value="Bitte warten" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-primary col-12 col-md-3" style="margin-top: 1rem; margin-bottom: 1.2rem;" disabled>
             </div>
 
             
@@ -342,6 +347,11 @@
 
 
 <style>
+    .loading-text{
+        margin-left: 1rem; 
+        font-size: .9rem; 
+        font-style: italic;
+    }
     h5{
         margin-bottom: 1.7rem!important;
         font-weight: 700;

@@ -70,26 +70,26 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 # for p in range(print_pages):
                 #     os.remove(r'screenshot'+str(p)+'.png')
         
-        if data_json['message'] == 'beitrag-received':
-            async with async_playwright() as playwright:
-                chromium = playwright.webkit # or "firefox" or "webkit".
-                browser = await chromium.launch(headless=True)
-                page = await browser.new_page()
-                await page.goto(self.url_offer)
-                # other actions...
+        # if data_json['message'] == 'beitrag-received':
+        #     async with async_playwright() as playwright:
+        #         chromium = playwright.webkit # or "firefox" or "webkit".
+        #         browser = await chromium.launch(headless=True)
+        #         page = await browser.new_page()
+        #         await page.goto(self.url_offer)
+        #         # other actions...
                 
-                #fill out external form
-                await get_offer(page, data_json) 
-                await browser.close() 
-                await self.channel_layer.group_send(
-                    self.group_name,
-                    {
-                        'type': 'serve_personal_offer',
-                        'data': {
-                            'message': 'Done'
-                        }
-                    }
-                )
+        #         #fill out external form
+        #         await get_offer(page, data_json) 
+        #         await browser.close() 
+        #         await self.channel_layer.group_send(
+        #             self.group_name,
+        #             {
+        #                 'type': 'serve_personal_offer',
+        #                 'data': {
+        #                     'message': 'Done'
+        #                 }
+        #             }
+        #         )
 
         if data_json['message'] == "get_zahnzusatz_pricelist":
             async with async_playwright() as playwright:
