@@ -328,7 +328,7 @@
 
     function show_zusatz(){
         context ={
-            "message": "get_zahnzusatz_pricelist",
+            "message": "get_extra_pricelist",
             "birthdate": "{{ request.session.geburtsdatum }}"
         }
         systemSocket.send(JSON.stringify(context))

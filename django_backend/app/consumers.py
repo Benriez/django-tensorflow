@@ -91,7 +91,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         #             }
         #         )
 
-        if data_json['message'] == "get_zahnzusatz_pricelist":
+        if data_json['message'] == "get_extra_pricelist":
             async with async_playwright() as playwright:
                 chromium = playwright.chromium # or "firefox" or "webkit".
                 browser = await chromium.launch(headless=True)
@@ -99,7 +99,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 await page.goto(self.url_extra)
                 
                 #fill out external form
-                small_price, medium_price, large_price = await get_extra_offer(page, data_json, price_only=True)           
+                small_price, medium_price, large_price = await get_extra_offer_price(page, data_json)           
                 
                 # send result back to client
                 await self.channel_layer.group_send(
@@ -127,6 +127,9 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 
                 #fill out external form
                 await get_extra_offer(page, data_json)
+                
+                await page.pause()
+                await browser.close() 
    
 
         if data_json['message'] == "clear-data":
@@ -227,27 +230,32 @@ async def get_offer_price(page, data_json):
     
 
 
-async def get_extra_offer(page, data_json, price_only=False):
+async def get_extra_offer_price(page, data_json):
     await page.get_by_test_id("uc-save-button").click()
     await page.get_by_label("Geburtsdatum").fill(data_json['birthdate'])
     await page.keyboard.press('Tab')
     await page.get_by_role("button", name="Beitrag berechnen").click()
 
-    if price_only:
-        small_price_eur = await page.locator(".euro >>nth=0").inner_text()
-        small_price_cent = await page.locator(".cent >>nth=0").inner_text()
-        small_price = small_price_eur + small_price_cent
+    small_price_eur = await page.locator(".euro >>nth=0").inner_text()
+    small_price_cent = await page.locator(".cent >>nth=0").inner_text()
+    small_price = small_price_eur + small_price_cent
 
-        medium_price_eur = await page.locator(".euro >>nth=1").inner_text()
-        medium_price_cent = await page.locator(".cent >>nth=1").inner_text()
-        medium_price = medium_price_eur + medium_price_cent
+    medium_price_eur = await page.locator(".euro >>nth=1").inner_text()
+    medium_price_cent = await page.locator(".cent >>nth=1").inner_text()
+    medium_price = medium_price_eur + medium_price_cent
 
-        large_price_eur = await page.locator(".euro >>nth=2").inner_text()
-        large_price_cent = await page.locator(".cent >>nth=2").inner_text()
-        large_price = large_price_eur + large_price_cent
+    large_price_eur = await page.locator(".euro >>nth=2").inner_text()
+    large_price_cent = await page.locator(".cent >>nth=2").inner_text()
+    large_price = large_price_eur + large_price_cent
 
-        return small_price, medium_price, large_price
+    return small_price, medium_price, large_price
 
+
+async def get_extra_offer(page, data_json):
+    await page.get_by_test_id("uc-save-button").click()
+    await page.get_by_label("Geburtsdatum").fill(data_json['birthdate'])
+    await page.keyboard.press('Tab')
+    await page.get_by_role("button", name="Beitrag berechnen").click()
 
 
 class LiveViewConsumer(AsyncWebsocketConsumer):
