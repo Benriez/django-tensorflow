@@ -137,11 +137,11 @@
                     <i class="fas fa-regular fa-file-pdf" style="font-size: 1.7rem; color: #3e1a1a;"></i>
                     <a href="/media/pdfs/Mein_Angebot.pdf" style="margin-bottom: 0px;" download> Download - Ihr Persönliches Angebot</a>
                 </div>
-                <div id="loader_angebot" class="loader" style=""></div>
+                <div id="loader_angebot" class="loader" style="display: none;"></div>
 
 
 
-                <div class="form-check" style="margin-bottom: 2rem; margin-top: 1rem;">
+                <div id="angebot_check_text" class="form-check" style="margin-bottom: 2rem; margin-top: 1rem; display: none;">
                     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                     <label class="form-check-label" for="flexCheckDefault">
                         Ja, ich habe die Vertragsunterlagen zur Kenntnis genommen.
@@ -257,6 +257,24 @@
             document.getElementById('loader_begin').style.display = "none"
             document.getElementById('insurance_begin').style.display = 'block' 
 
+            context ={
+                "message": "beitrag-received",
+                "birthdate": "{{ request.session.geburtsdatum }}",
+                "anrede": "{{ request.session.anrede }}",
+                "vorname": "{{ request.session.vorname }}",
+                "nachname": "{{ request.session.nachname }}",
+                "plz": "{{ request.session.plz }}",
+                "ort": "{{ request.session.ort }}",
+                "strasse": "{{ request.session.strasse }}",
+                "hausnr": "{{ request.session.hausnr }}",
+                "email": "{{ request.session.email }}",
+                "iban": "{{ request.session.iban }}"
+            }
+            systemSocket.send(JSON.stringify(context));
+            document.getElementById('loader_angebot').style.display='flex'
+            document.getElementById('angebot_check_text').style.display='flex'
+
+
         }
         if (data.message == "serve_zahnzusatz_pricelist"){    
             document.getElementById('offer-small-eur').innerText = data.small
@@ -275,6 +293,13 @@
             document.getElementById('offer-large').style.display = "flex"
             document.getElementById('extra_large').disabled = false
         }
+
+        // if (data.message == "Finish"){
+        //     context ={
+        //         "message": "clear-data"
+        //     }
+        //     systemSocket.send(JSON.stringify(context));
+        // }
     };
     
     systemSocket.onclose = function (e) {
@@ -319,6 +344,7 @@
 <style>
     h5{
         margin-bottom: 1.7rem!important;
+        font-weight: 700;
     }
     .card{
         margin-bottom: 1.5rem;
