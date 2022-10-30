@@ -286,7 +286,7 @@
         } else if (identifier=="extra_medium"){
             selection = 1
         } else if (identifier=="extra_large"){
-            selection = 1
+            selection = 2
         } else {
             selection = -1
         }
@@ -294,7 +294,12 @@
         context ={
             "message": "get_extra_offer",
             "birthdate": "{{ request.session.geburtsdatum }}",
-            "selection": selection
+            "selection": selection,
+            "anrede": "{{ request.session.anrede }}",
+            "vorname": "{{ request.session.vorname }}",
+            "nachname": "{{ request.session.nachname }}",
+            "laufende_behandlung": "",
+            "anderweitiger_vertrag": ""
         }
         systemSocket.send(JSON.stringify(context))
     }

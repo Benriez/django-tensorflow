@@ -258,6 +258,22 @@ async def get_extra_offer(page, data_json):
     await page.keyboard.press('Tab')
     await page.get_by_role("button", name="Beitrag berechnen").click()
 
+    if data_json['selection'] == 0:
+        await page.locator("oa-tarif-container-neu:has-text(\"Mehr Zahn 80\") a").click()
+    elif data_json['selection'] == 1:
+        pass
+    elif data_json['selection'] == 2:
+        await page.locator("oa-tarif-container-neu:has-text(\"Mehr Zahn 100\") a").click()
+
+    await page.get_by_role("button", name="Jetzt abschließen").click()
+
+
+
+
+
+
+
+
 
 class LiveViewConsumer(AsyncWebsocketConsumer):
     group_name = "live_view"
