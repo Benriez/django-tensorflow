@@ -250,51 +250,30 @@
                         <p>Erfolgt zur Zeit eine Zahnersatzbehandlung, eine Wurzelbehandlung und/ oder eine Behandlung wegen Parodontose/ Parodontitis oder ist sie angeraten oder beabsichtigt? </p>
                         <div style="display: flex;">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                Ja
-                                </label>
+                                <input type="radio" class="form-check-input" id="radio1" name="optradio" value="option1" onclick="show_error()">Ja
+                                <label class="form-check-label" for="radio1"></label>
                             </div>
                             <div class="form-check ml-3">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-                                <label class="form-check-label" for="flexCheckChecked">
-                                Nein
-                                </label>
-                            </div>
+                                <input type="radio" class="form-check-input" id="radio2" name="optradio" value="option2" onclick="show_error()">Nein
+                                <label class="form-check-label" for="radio2"></label>
                         </div>
                     </div>
                     <div id="extra_question2" class="mt-5">
                         <p>Fehlen Zähne (außer Weisheitszähnen), die noch nicht ersetzt sind?</p>
                         <div style="display: flex;">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                Ja
-                                </label>
-                            </div>
-                            <div class="form-check ml-3">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-                                <label class="form-check-label" for="flexCheckChecked">
-                                Nein
-                                </label>
-                            </div>
+
                         </div>
                     </div>
-                    <div id="extra_question3" class="mt-5">
+                    <div id="extra_question3">
                         <p>Bestand innerhalb der letzten 6 Monate vor Vertragsabschluss eine anderweitige Zahnersatzversicherung?</p>
                         <div style="display: flex;">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                Ja
-                                </label>
+                                <input type="radio" class="form-check-input" id="radio3" name="optradio" value="option1">Ja
+                                <label class="form-check-label" for="radio1"></label>
                             </div>
                             <div class="form-check ml-3">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-                                <label class="form-check-label" for="flexCheckChecked">
-                                Nein
-                                </label>
-                            </div>
+                                <input type="radio" class="form-check-input" id="radio4" name="optradio" value="option2">Nein
+                                <label class="form-check-label" for="radio2"></label>
                         </div>
                     </div>
                 </div>
@@ -400,6 +379,14 @@
 
         ids.push(identifier)
         
+    }
+
+    function show_error(){
+        if (document.getElementById('radio1').checked == true){
+            console.log('show error message')
+        } else {
+            console.log('disable error message')
+        }
     }
 
 </script>
