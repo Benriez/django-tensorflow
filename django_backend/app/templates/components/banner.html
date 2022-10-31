@@ -326,7 +326,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" disabled>Angebot generieren</button>
+                    <button id="btn_generate"type="button" class="btn btn-primary" disabled>Angebot generieren</button>
                 </div>
             </div>
         </div>
@@ -335,6 +335,17 @@
 
 <script>
     let ids = ['extra_small', 'extra_medium', 'extra_large']
+    let step1=false
+    let step2=true
+    let step3=false
+
+    function can_generate(){
+        if (step1 && step2){
+            document.getElementById('btn_generate').disabled = false
+        } else {
+            document.getElementById('btn_generate').disabled = true
+        }
+    }
 
     function removeA(arr) {
         var what, a = arguments, L = a.length, ax;
@@ -432,9 +443,12 @@
     function show_error(){
         if (document.getElementById('radio1').checked == true){
             document.getElementById('radio1_error').style.display = "flex"
+            step1 = false
         } else {
             document.getElementById('radio1_error').style.display = "none"
+            step1 = true
         }
+        can_generate()
     }
 
     function check_teeth(){
@@ -442,18 +456,24 @@
         if (t_selection == "2") {
             document.getElementById('selection_error').style.display= "none"
             document.getElementById('selection_info').style.display= "flex"
+            step2 = true
 
         }else if (t_selection == "3"){
             document.getElementById('selection_error').style.display= "none"
             document.getElementById('selection_info').style.display= "flex"
+            step2 = true
 
         }else if (t_selection == "4"){
             document.getElementById('selection_error').style.display= "flex"
             document.getElementById('selection_info').style.display= "none"
+            step2 = false
         } else {
             document.getElementById('selection_error').style.display= "none"
             document.getElementById('selection_info').style.display= "none"
+            step2 = true
         }
+
+        can_generate()
     }
 
 </script>
