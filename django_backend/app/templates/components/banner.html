@@ -279,6 +279,35 @@
                                 </select>
                               </div>
                         </div>
+                        <div id="selection_error" class="mb-4" style="display: none; background-color: rgb(255, 210, 210); padding: 1rem;">
+                            Bei mehr als drei fehlenden Zähnen ist leider kein Versicherungsschutz möglich.
+                        </div>
+                        <div id="selection_info" class="mb-4" style="display: none; background-color: rgb(255 248 210); padding: 1rem; flex-direction: column;">
+                            <h5>Wichtiger Hinweis</h5>
+                            <p>
+                                Aufgrund der drei fehlenden Zähne werden Tarifleistungen in den ersten drei Kalenderjahren nach Versicherungsbeginn wie folgt begrenzt:
+                                <br>Erstattungsfähig im tariflichen Rahmen sind Aufwendungen bis zu einem Rechnungsbetrag von
+                            </p>
+                                <ul>
+                                    <li>
+                                        125 EUR im 1. Kalenderjahr
+                                    </li>
+                                    <li>
+                                        250 EUR im 2. Kalenderjahr
+                                    </li>
+                                    <li>
+                                        375 EUR im 3. Kalenderjahr
+                                    </li>
+                                </ul>
+                            <p>
+                                Diese Einschränkungen gelten nicht für Behandlungen von Unfallfolgen, wenn der Unfall nach Zu-Stande-Kommen des Vertrags eintritt. Der Versicherungsschutz weiterer versicherter Personen ist nicht betroffen.
+                            </p>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio2" name="check" value="checkval" onclick="show_error()">
+                                    Mit der beschriebenen Leistungseinschränkung bin ich einverstanden.
+                                <label class="form-check-label" for="radio2"></label>
+                            </div>
+                        </div>
                     </div>
                     <div id="extra_question3">
                         <p>Bestand innerhalb der letzten 6 Monate vor Vertragsabschluss eine anderweitige Zahnersatzversicherung?
@@ -409,8 +438,22 @@
     }
 
     function check_teeth(){
-        selection = document.getElementById("sel1").value;
-        console.log(selection)
+        t_selection = document.getElementById("sel1").value;
+        if (t_selection == "2") {
+            document.getElementById('selection_error').style.display= "none"
+            document.getElementById('selection_info').style.display= "flex"
+
+        }else if (t_selection == "3"){
+            document.getElementById('selection_error').style.display= "none"
+            document.getElementById('selection_info').style.display= "flex"
+
+        }else if (t_selection == "4"){
+            document.getElementById('selection_error').style.display= "flex"
+            document.getElementById('selection_info').style.display= "none"
+        } else {
+            document.getElementById('selection_error').style.display= "none"
+            document.getElementById('selection_info').style.display= "none"
+        }
     }
 
 </script>
