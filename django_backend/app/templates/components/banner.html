@@ -247,38 +247,57 @@
                 </div>
                 <div class="modal-body">   
                     <div id="extra_question1">
-                        <p>Erfolgt zur Zeit eine Zahnersatzbehandlung, eine Wurzelbehandlung und/ oder eine Behandlung wegen Parodontose/ Parodontitis oder ist sie angeraten oder beabsichtigt? </p>
-                        <div style="display: flex;">
+                        <p>Erfolgt zur Zeit eine Zahnersatzbehandlung, eine Wurzelbehandlung und/ oder eine Behandlung wegen Parodontose/ Parodontitis oder ist sie angeraten oder beabsichtigt?
+                            <i class="fas fa fa-info-circle ml-2"></i>
+                        </p>
+                        <div style="display: flex; flex-wrap: wrap;">
                             <div class="form-check">
-                                <input type="radio" class="form-check-input" id="radio1" name="optradio" value="option1" onclick="show_error()">Ja
+                                <input type="radio" class="form-check-input" id="radio1" name="optradio1" value="option1" onclick="show_error()">Ja
                                 <label class="form-check-label" for="radio1"></label>
                             </div>
                             <div class="form-check ml-3">
-                                <input type="radio" class="form-check-input" id="radio2" name="optradio" value="option2" onclick="show_error()">Nein
+                                <input type="radio" class="form-check-input" id="radio2" name="optradio1" value="option2" onclick="show_error()">Nein
                                 <label class="form-check-label" for="radio2"></label>
+                            </div>
+                            <div id="radio1_error" style="display: none; background-color: rgb(255, 210, 210); padding: 1rem;">
+                                Leider ist ein Abschluss aufgrund Ihrer Angaben nicht direkt online möglich. Manche Dinge lassen sich am besten in einem persönlichen Gespräch klären. Rufen Sie gerne an: Barmenia-Kundenbetreuung, 0202 438-3444.
+                            </div>
                         </div>
                     </div>
                     <div id="extra_question2" class="mt-5">
-                        <p>Fehlen Zähne (außer Weisheitszähnen), die noch nicht ersetzt sind?</p>
+                        <p>Fehlen Zähne (außer Weisheitszähnen), die noch nicht ersetzt sind?
+                            <i class="fas fa fa-info-circle ml-2"></i>
+                        </p>
                         <div style="display: flex;">
-
+                            <div class="form-group">
+                                <select class="form-select" id="sel1" onchange="check_teeth()">
+                                  <option value="0">0</option>
+                                  <option value="1">1</option>
+                                  <option value="2">2</option>
+                                  <option value="3">3</option>
+                                  <option value="4"> >3</option>
+                                </select>
+                              </div>
                         </div>
                     </div>
                     <div id="extra_question3">
-                        <p>Bestand innerhalb der letzten 6 Monate vor Vertragsabschluss eine anderweitige Zahnersatzversicherung?</p>
+                        <p>Bestand innerhalb der letzten 6 Monate vor Vertragsabschluss eine anderweitige Zahnersatzversicherung?
+                            <i class="fas fa fa-info-circle ml-2"></i>
+                        </p>
                         <div style="display: flex;">
                             <div class="form-check">
-                                <input type="radio" class="form-check-input" id="radio3" name="optradio" value="option1">Ja
+                                <input type="radio" class="form-check-input" id="radio3" name="optradio2" value="option1">Ja
                                 <label class="form-check-label" for="radio1"></label>
                             </div>
                             <div class="form-check ml-3">
-                                <input type="radio" class="form-check-input" id="radio4" name="optradio" value="option2">Nein
+                                <input type="radio" class="form-check-input" id="radio4" name="optradio2" value="option2">Nein
                                 <label class="form-check-label" for="radio2"></label>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Angebot generieren</button>
+                    <button type="button" class="btn btn-primary" disabled>Angebot generieren</button>
                 </div>
             </div>
         </div>
@@ -383,15 +402,23 @@
 
     function show_error(){
         if (document.getElementById('radio1').checked == true){
-            console.log('show error message')
+            document.getElementById('radio1_error').style.display = "flex"
         } else {
-            console.log('disable error message')
+            document.getElementById('radio1_error').style.display = "none"
         }
+    }
+
+    function check_teeth(){
+        selection = document.getElementById("sel1").value;
+        console.log(selection)
     }
 
 </script>
 
 <style>
+    .fa-info-circle {
+        font-size: 1.3rem;
+    }
     .modal {
         --bs-modal-width: 60%!important;
     }
