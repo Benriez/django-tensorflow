@@ -78,6 +78,7 @@
                                 class="btn btn-primary select_extra" 
                                 style="color:white; border-radius: .6rem;" 
                                 onclick="select_extra('extra_small')" 
+                                data-bs-toggle="modal" data-bs-target="#exampleModal"
                                 disabled>   
                                 Auswählen
                             </button>
@@ -151,6 +152,7 @@
                                 class="btn btn-primary select_extra" 
                                 style="color:white; border-radius: .6rem;" 
                                 onclick="select_extra('extra_medium')" 
+                                data-bs-toggle="modal" data-bs-target="#exampleModal"
                                 disabled>   
                                 Auswählen
                             </button>
@@ -223,12 +225,81 @@
                             <button id="extra_large" 
                                 class="btn btn-primary select_extra" 
                                 style="color:white; border-radius: .6rem;" 
-                                onclick="select_extra('extra_large')" 
-                                disabled>   
+                                onclick="select_extra('extra_large')"
+                                data-bs-toggle="modal" data-bs-target="#exampleModal" 
+                                >   
                                 Auswählen
                             </button>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered"">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Zusätzliche Angaben</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">   
+                    <div id="extra_question1">
+                        <p>Erfolgt zur Zeit eine Zahnersatzbehandlung, eine Wurzelbehandlung und/ oder eine Behandlung wegen Parodontose/ Parodontitis oder ist sie angeraten oder beabsichtigt? </p>
+                        <div style="display: flex;">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Ja
+                                </label>
+                            </div>
+                            <div class="form-check ml-3">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                                <label class="form-check-label" for="flexCheckChecked">
+                                Nein
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="extra_question2" class="mt-5">
+                        <p>Fehlen Zähne (außer Weisheitszähnen), die noch nicht ersetzt sind?</p>
+                        <div style="display: flex;">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Ja
+                                </label>
+                            </div>
+                            <div class="form-check ml-3">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                                <label class="form-check-label" for="flexCheckChecked">
+                                Nein
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="extra_question3" class="mt-5">
+                        <p>Bestand innerhalb der letzten 6 Monate vor Vertragsabschluss eine anderweitige Zahnersatzversicherung?</p>
+                        <div style="display: flex;">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Ja
+                                </label>
+                            </div>
+                            <div class="form-check ml-3">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                                <label class="form-check-label" for="flexCheckChecked">
+                                Nein
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Angebot generieren</button>
                 </div>
             </div>
         </div>
@@ -291,17 +362,17 @@
             selection = -1
         }
 
-        context ={
-            "message": "get_extra_offer",
-            "birthdate": "{{ request.session.geburtsdatum }}",
-            "selection": selection,
-            "anrede": "{{ request.session.anrede }}",
-            "vorname": "{{ request.session.vorname }}",
-            "nachname": "{{ request.session.nachname }}",
-            "laufende_behandlung": "",
-            "anderweitiger_vertrag": ""
-        }
-        systemSocket.send(JSON.stringify(context))
+        // context ={
+        //     "message": "get_extra_offer",
+        //     "birthdate": "{{ request.session.geburtsdatum }}",
+        //     "selection": selection,
+        //     "anrede": "{{ request.session.anrede }}",
+        //     "vorname": "{{ request.session.vorname }}",
+        //     "nachname": "{{ request.session.nachname }}",
+        //     "laufende_behandlung": "",
+        //     "anderweitiger_vertrag": ""
+        // }
+        // systemSocket.send(JSON.stringify(context))
     }
 
     function select_extra_el(identifier){
@@ -334,6 +405,9 @@
 </script>
 
 <style>
+    .modal {
+        --bs-modal-width: 60%!important;
+    }
     .banner-title {
         margin-bottom: 0.5rem!important;
     }
