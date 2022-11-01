@@ -132,6 +132,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 await page.pause()
                 await browser.close() 
    
+
         if data_json['message'] == "get_extra_offer_pdf":
             async with async_playwright() as playwright:
                 chromium = playwright.chromium # or "firefox" or "webkit".
@@ -175,7 +176,6 @@ async def get_offer(page, data_json):
     if data_json["anrede"] == "Herr":
         # await page.locator('input[value=Herr]')
         await page.click('#mat-radio-2')
-
     else:
         await page.click('#mat-radio-3')
     
