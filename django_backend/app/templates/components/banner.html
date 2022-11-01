@@ -359,6 +359,7 @@
     let step1=false
     let step2=true
     let step3=false
+    let selection
 
     function accept_warning(id){
         warning = document.getElementById('accept_damaged_'+id)
@@ -370,6 +371,7 @@
         can_generate()
     }
 
+    // check all conditions before generating pdf
     function can_generate(){
         btn_generate = document.getElementById('btn_generate')
         if (step1 && step2){
@@ -377,17 +379,6 @@
         } else {
             btn_generate.disabled = true
         }
-    }
-
-    function removeA(arr) {
-        var what, a = arguments, L = a.length, ax;
-        while (L > 1 && arr.length) {
-            what = a[--L];
-            while ((ax= arr.indexOf(what)) !== -1) {
-                arr.splice(ax, 1);
-            }
-        }
-        return arr;
     }
 
     function select_extra(identifier){
@@ -402,11 +393,10 @@
             btn_gen_extra_offer.innerHTML = "Angebot generieren"
             loader_extra_offer.style.display = 'none'
 
-
         } else if (identifier == "extra_small"){
             select_extra_el(identifier) 
             deselect_extras(identifier)
-            get_extra_offer(identifier)
+            //get_extra_offer_el(identifier)
             btn_gen_extra_offer.disabled = false
             btn_gen_extra_offer.innerHTML = "Angebot generieren"
             loader_extra_offer.style.display = 'none'
@@ -414,7 +404,7 @@
         } else if (identifier == "extra_medium") {
             select_extra_el(identifier) 
             deselect_extras(identifier)
-            get_extra_offer(identifier)
+            //get_extra_offer_el(identifier)
             btn_gen_extra_offer.disabled = false
             btn_gen_extra_offer.innerHTML = "Angebot generieren"
             loader_extra_offer.style.display = 'none'
@@ -422,19 +412,28 @@
         } else {            
             select_extra_el(identifier) 
             deselect_extras(identifier)
-            get_extra_offer(identifier)
+            //get_extra_offer_el(identifier)
             btn_gen_extra_offer.disabled = false
             btn_gen_extra_offer.innerHTML = "Angebot generieren"
             loader_extra_offer.style.display = 'none'
-        }
-
-
-        
+        }   
     }
 
-    function get_extra_offer(identifier){
-        let select
+    // function get_extra_offer_el(identifier){
+    //     let select
 
+    //     if (identifier=="extra_small"){
+    //         selection = 0
+    //     } else if (identifier=="extra_medium"){
+    //         selection = 1
+    //     } else if (identifier=="extra_large"){
+    //         selection = 2
+    //     } else {
+    //         selection = -1
+    //     }
+    // }
+
+    function select_extra_el(identifier){
         if (identifier=="extra_small"){
             selection = 0
         } else if (identifier=="extra_medium"){
@@ -445,20 +444,6 @@
             selection = -1
         }
 
-        // context ={
-        //     "message": "get_extra_offer",
-        //     "birthdate": "{{ request.session.geburtsdatum }}",
-        //     "selection": selection,
-        //     "anrede": "{{ request.session.anrede }}",
-        //     "vorname": "{{ request.session.vorname }}",
-        //     "nachname": "{{ request.session.nachname }}",
-        //     "laufende_behandlung": "",
-        //     "anderweitiger_vertrag": ""
-        // }
-        // systemSocket.send(JSON.stringify(context))
-    }
-
-    function select_extra_el(identifier){
         el = document.getElementById(identifier)
         el.innerText="Ausgewählt"
         el.style.backgroundColor="#239ac5"
@@ -542,9 +527,21 @@
 
         context ={
             "message": "get_extra_offer_pdf",
+            "selection": "selection",
             "birthdate": "{{ request.session.geburtsdatum }}"
         }
         systemSocket.send(JSON.stringify(context))   
+    }
+
+    function removeA(arr) {
+        var what, a = arguments, L = a.length, ax;
+        while (L > 1 && arr.length) {
+            what = a[--L];
+            while ((ax= arr.indexOf(what)) !== -1) {
+                arr.splice(ax, 1);
+            }
+        }
+        return arr;
     }
 </script>
 
