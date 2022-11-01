@@ -132,6 +132,16 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 await page.pause()
                 await browser.close() 
    
+        if data_json['message'] == "get_extra_offer_pdf":
+            async with async_playwright() as playwright:
+                chromium = playwright.chromium # or "firefox" or "webkit".
+                browser = await chromium.launch(headless=False)
+                page = await browser.new_page()
+                await page.goto(self.url_extra)
+
+                await page.pause()
+                await browser.close() 
+
 
         if data_json['message'] == "clear-data":
             pass

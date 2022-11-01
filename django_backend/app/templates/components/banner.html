@@ -455,13 +455,7 @@
         el = document.getElementById(identifier)
         el.innerText="Ausgewählt"
         el.style.backgroundColor="#239ac5"
-
-        context ={
-            "message": "get_zahnzusatz_",
-            "birthdate": "{{ request.session.geburtsdatum }}"
-        }
-        systemSocket.send(JSON.stringify(context))      
-
+     
     }
 
     function deselect_extras(identifier){
@@ -537,6 +531,12 @@
         document.getElementById('gen_extra_offer').innerHTML = "Ihr Angebot wird erstellt ..."
         document.getElementById('gen_extra_offer').disabled = true
         document.getElementById('loader_extra_angebot').style.display = 'flex'
+
+        context ={
+            "message": "get_extra_offer_pdf",
+            "birthdate": "{{ request.session.geburtsdatum }}"
+        }
+        systemSocket.send(JSON.stringify(context))   
     }
 </script>
 
