@@ -236,7 +236,6 @@
                     <button id="gen_extra_offer" 
                         class="btn btn-primary select_extra mb-3 mt-4" 
                         style="color:white; border-radius: .6rem;" 
-                        onclick="select_extra('extra_large')"
                         data-bs-toggle="modal" data-bs-target="#exampleModal" 
                         disabled>   
                         Angebot generieren
@@ -334,7 +333,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="btn_generate"type="button" class="btn btn-primary" disabled>Angebot generieren</button>
+                    <input id="btn_generate" disabled name="finish" type="submit" value="Angebot generieren" class="btn btn-primary col-12 col-md-3" onclick="gen_extra_pdf()" style="margin-top: 1rem; margin-bottom: 1.2rem; min-width: 320px;" data-bs-dismiss="modal">     
                 </div>
             </div>
         </div>
@@ -373,6 +372,8 @@
             el.style.backgroundColor="#00212d"  
             document.getElementById('loader_extra_angebot').style.display = 'None'
             document.getElementById('gen_extra_offer').disabled = true
+            document.getElementById('gen_extra_offer').innerHTML = "Angebot generieren"
+            document.getElementById('loader_extra_angebot').style.display = 'none'
 
 
         } else if (identifier == "extra_small"){
@@ -431,7 +432,6 @@
         el.innerText="Ausgewählt"
         el.style.backgroundColor="#239ac5"
 
-        document.getElementById('loader_extra_angebot').style.display = 'flex'
         context ={
             "message": "get_zahnzusatz_",
             "birthdate": "{{ request.session.geburtsdatum }}"
@@ -488,6 +488,11 @@
         can_generate()
     }
 
+    function gen_extra_pdf(){
+        document.getElementById('gen_extra_offer').innerHTML = "Ihr Angebot wird erstellt ..."
+        document.getElementById('gen_extra_offer').disabled = true
+        document.getElementById('loader_extra_angebot').style.display = 'flex'
+    }
 </script>
 
 <style>
