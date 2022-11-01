@@ -99,7 +99,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 await page.goto(self.url_extra)
                 
                 #fill out external form
-                small_price, medium_price, large_price = await get_extra_offer_price(page, data_json)           
+                small_price, medium_price, large_price, damage_text = await get_extra_offer_price(page, data_json)           
                 
                 # send result back to client
                 await self.channel_layer.group_send(
@@ -110,7 +110,8 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                             'message': 'serve_zahnzusatz_pricelist',
                             'small': small_price,
                             'medium': medium_price,
-                            'large': large_price
+                            'large': large_price,
+                            'damage_text': damage_text
                         }
                     }
                 )
@@ -248,7 +249,34 @@ async def get_extra_offer_price(page, data_json):
     large_price_cent = await page.locator(".cent >>nth=2").inner_text()
     large_price = large_price_eur + large_price_cent
 
-    return small_price, medium_price, large_price
+    await page.get_by_role("button", name="Jetzt abschließen").click()
+
+    # get price 2 damaged teeth
+    for i in range(2):
+        await page.click('#button-more-damage')
+
+    text1_damage2 = await page.locator("li >>nth=0").inner_text()
+    text2_damage2 = await page.locator("li >>nth=1").inner_text()
+    text3_damage2 = await page.locator("li >>nth=2").inner_text()
+    
+    # get price 3 damaged teeth
+    await page.click('#button-more-damage')
+    text1_damage3 = await page.locator("li >>nth=0").inner_text()
+    text2_damage3 = await page.locator("li >>nth=1").inner_text()
+    text3_damage3 = await page.locator("li >>nth=2").inner_text()   
+
+
+    damage_text = {
+        'text1_damage2':text1_damage2,
+        'text2_damage2':text2_damage2,
+        'text3_damage2':text3_damage2,
+        'text1_damage3':text1_damage3,
+        'text2_damage3':text2_damage3,
+        'text3_damage3':text3_damage3
+
+    }
+
+    return small_price, medium_price, large_price, damage_text
 
 
 
