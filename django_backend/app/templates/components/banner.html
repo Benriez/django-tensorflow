@@ -75,10 +75,9 @@
                     <div class="row">
                         <div style="text-align: center;">
                             <button id="extra_small" 
-                                class="btn btn-primary select_extra" 
+                                class="btn btn-primary select_extra mb-3" 
                                 style="color:white; border-radius: .6rem;" 
                                 onclick="select_extra('extra_small')" 
-                                data-bs-toggle="modal" data-bs-target="#exampleModal"
                                 disabled>   
                                 Auswählen
                             </button>
@@ -149,10 +148,9 @@
                     <div class="row">
                         <div style="text-align: center;">
                             <button id="extra_medium" 
-                                class="btn btn-primary select_extra" 
+                                class="btn btn-primary select_extra mb-3" 
                                 style="color:white; border-radius: .6rem;" 
                                 onclick="select_extra('extra_medium')" 
-                                data-bs-toggle="modal" data-bs-target="#exampleModal"
                                 disabled>   
                                 Auswählen
                             </button>
@@ -223,15 +221,26 @@
                     <div class="row">
                         <div style="text-align: center;">
                             <button id="extra_large" 
-                                class="btn btn-primary select_extra" 
+                                class="btn btn-primary select_extra mb-3" 
                                 style="color:white; border-radius: .6rem;" 
-                                onclick="select_extra('extra_large')"
-                                data-bs-toggle="modal" data-bs-target="#exampleModal" 
-                                >   
+                                onclick="select_extra('extra_large')" 
+                                disabled>   
                                 Auswählen
                             </button>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="row">
+                <div style="text-align: center;">
+                    <button id="gen_extra_offer" 
+                        class="btn btn-primary select_extra mb-3 mt-4" 
+                        style="color:white; border-radius: .6rem;" 
+                        onclick="select_extra('extra_large')"
+                        data-bs-toggle="modal" data-bs-target="#exampleModal" 
+                        disabled>   
+                        Angebot generieren
+                    </button>
                 </div>
             </div>
         </div>
@@ -243,7 +252,6 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Zusätzliche Angaben</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">   
                     <div id="extra_question1">
@@ -364,22 +372,27 @@
             el.innerText="Auswählen"
             el.style.backgroundColor="#00212d"  
             document.getElementById('loader_extra_angebot').style.display = 'None'
+            document.getElementById('gen_extra_offer').disabled = true
 
 
         } else if (identifier == "extra_small"){
             select_extra_el(identifier) 
             deselect_extras(identifier)
             get_extra_offer(identifier)
+            document.getElementById('gen_extra_offer').disabled = false
 
         } else if (identifier == "extra_medium") {
             select_extra_el(identifier) 
             deselect_extras(identifier)
             get_extra_offer(identifier)
+            document.getElementById('gen_extra_offer').disabled = false
+
 
         } else {            
             select_extra_el(identifier) 
             deselect_extras(identifier)
             get_extra_offer(identifier)
+            document.getElementById('gen_extra_offer').disabled = false
             
         }
 
@@ -419,7 +432,6 @@
         el.style.backgroundColor="#239ac5"
 
         document.getElementById('loader_extra_angebot').style.display = 'flex'
-        
         context ={
             "message": "get_zahnzusatz_",
             "birthdate": "{{ request.session.geburtsdatum }}"
