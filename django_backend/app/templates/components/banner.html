@@ -25,7 +25,7 @@
                             <div id="loader-col-small" class="loader loader-banner"></div>
                             <div id="offer-small" style="display: none; align-items: baseline;">
                                 <h3 id="offer-small-eur" class="offer"></h3> 
-                                <p style="margin-left: .3rem;">/Monat</p>
+                                <p style="margin-left: .3rem;">€/Monat</p>
                             </div>
                         </div>
                     </div>
@@ -98,7 +98,7 @@
                             <div id="loader-col-medium" class="loader loader-banner"></div>
                             <div id="offer-medium" style="display: none; align-items: baseline;">
                                 <h3 id="offer-medium-eur" class="offer"></h3> 
-                                <p style="margin-left: .3rem;">/Monat</p>
+                                <p style="margin-left: .3rem;">€/Monat</p>
                             </div>
                         </div>
                     </div>
@@ -171,7 +171,7 @@
                             <div id="loader-col-large" class="loader loader-banner"></div>
                             <div id="offer-large" style="display: none; align-items: baseline;">
                                 <h3 id="offer-large-eur" class="offer">20,05€</h3> 
-                                <p style="margin-left: .3rem;">/Monat</p>
+                                <p style="margin-left: .3rem;">€/Monat</p>
                             </div>
                         </div>
                     </div>
@@ -289,28 +289,42 @@
                         <div id="selection_error" class="mb-4" style="display: none; background-color: rgb(255, 210, 210); padding: 1rem;">
                             Bei mehr als drei fehlenden Zähnen ist leider kein Versicherungsschutz möglich.
                         </div>
-                        <div id="selection_info" class="mb-4" style="display: none; background-color: rgb(255 248 210); padding: 1rem; flex-direction: column;">
+                        <div id="selection_info-damage2" class="mb-4" style="display: none; background-color: rgb(255 248 210); padding: 1rem; flex-direction: column;">
+                            <h5>Wichtiger Hinweis</h5>
+                            <p>
+                                Aufgrund der zwei fehlenden Zähne werden Tarifleistungen in den ersten drei Kalenderjahren nach Versicherungsbeginn wie folgt begrenzt:
+                                <br>Erstattungsfähig im tariflichen Rahmen sind Aufwendungen bis zu einem Rechnungsbetrag von
+                            </p>
+                                <ul>
+                                    <li id="text1_damage2"></li>
+                                    <li id="text2_damage2"></li>
+                                    <li id="text3_damage2"></li>
+                                </ul>
+                            <p>
+                                Diese Einschränkungen gelten nicht für Behandlungen von Unfallfolgen, wenn der Unfall nach Zu-Stande-Kommen des Vertrags eintritt. Der Versicherungsschutz weiterer versicherter Personen ist nicht betroffen.
+                            </p>
+                            <div class="form-check">
+                                <input id="accept_damaged_2" type="checkbox" class="form-check-input" name="check" value="checkval" onclick="accept_warning(2)">
+                                    Mit der beschriebenen Leistungseinschränkung bin ich einverstanden.
+                                <label class="form-check-label" for="radio2"></label>
+                            </div>
+                        </div>
+                        <div id="selection_info-damage3" class="mb-4" style="display: none; background-color: rgb(255 248 210); padding: 1rem; flex-direction: column;">
                             <h5>Wichtiger Hinweis</h5>
                             <p>
                                 Aufgrund der drei fehlenden Zähne werden Tarifleistungen in den ersten drei Kalenderjahren nach Versicherungsbeginn wie folgt begrenzt:
                                 <br>Erstattungsfähig im tariflichen Rahmen sind Aufwendungen bis zu einem Rechnungsbetrag von
                             </p>
                                 <ul>
-                                    <li>
-                                        125 EUR im 1. Kalenderjahr
-                                    </li>
-                                    <li>
-                                        250 EUR im 2. Kalenderjahr
-                                    </li>
-                                    <li>
-                                        375 EUR im 3. Kalenderjahr
-                                    </li>
+                                    <li id="text1_damage3"></li>
+                                    <li id="text2_damage3"></li>
+                                    <li id="text3_damage3"></li>
                                 </ul>
                             <p>
                                 Diese Einschränkungen gelten nicht für Behandlungen von Unfallfolgen, wenn der Unfall nach Zu-Stande-Kommen des Vertrags eintritt. Der Versicherungsschutz weiterer versicherter Personen ist nicht betroffen.
                             </p>
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="radio2" name="check" value="checkval" onclick="show_error()">
+                                <input id="accept_damaged_3" type="checkbox" class="form-check-input" name="check" value="checkval" onclick="accept_warning(3)">
                                     Mit der beschriebenen Leistungseinschränkung bin ich einverstanden.
                                 <label class="form-check-label" for="radio2"></label>
                             </div>
@@ -345,6 +359,16 @@
     let step1=false
     let step2=true
     let step3=false
+
+    function accept_warning(id){
+        warning = document.getElementById('accept_damaged_'+id)
+        if (warning.checked){
+            step2 = true
+        } else {
+            step2 = false
+        }
+        can_generate()
+    }
 
     function can_generate(){
         if (step1 && step2){
@@ -465,23 +489,44 @@
 
     function check_teeth(){
         t_selection = document.getElementById("sel1").value;
+        selection_error = document.getElementById('selection_error');
+        selection_infoDamage3 = document.getElementById('selection_info-damage3');
+        selection_infoDamage2 = document.getElementById('selection_info-damage2');
+
         if (t_selection == "2") {
-            document.getElementById('selection_error').style.display= "none"
-            document.getElementById('selection_info').style.display= "flex"
-            step2 = true
+            selection_error.style.display= "none"
+            selection_infoDamage3.style.display= "none"
+            selection_infoDamage2.style.display= "flex"
+
+            check_damaged = document.getElementById('accept_damaged_2')
+            if (check_damaged.checked){
+                step2 = true
+            } else {
+                step2 = false
+            }
 
         }else if (t_selection == "3"){
-            document.getElementById('selection_error').style.display= "none"
-            document.getElementById('selection_info').style.display= "flex"
-            step2 = true
+            selection_error.style.display= "none"
+            selection_infoDamage2.style.display= "none"
+            selection_infoDamage3.style.display= "flex"
+
+            check_damaged = document.getElementById('accept_damaged_3')
+            if (check_damaged.checked){
+                step2 = true
+            } else {
+                step2 = false
+            }
 
         }else if (t_selection == "4"){
-            document.getElementById('selection_error').style.display= "flex"
-            document.getElementById('selection_info').style.display= "none"
+            selection_error.style.display= "flex"
+            selection_infoDamage2.style.display= "none"
+            selection_infoDamage3.style.display= "none"
+
             step2 = false
         } else {
-            document.getElementById('selection_error').style.display= "none"
-            document.getElementById('selection_info').style.display= "none"
+            selection_error.style.display= "none"
+            selection_infoDamage2.style.display= "none"
+            selection_infoDamage3.style.display= "none"
             step2 = true
         }
 

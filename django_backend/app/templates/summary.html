@@ -298,7 +298,13 @@
             document.getElementById('offer-large').style.display = "flex"
             document.getElementById('extra_large').disabled = false
 
-            console.log(data.damage_text)
+            document.getElementById('text1_damage2').innerText = data.damage_text.text1_damage2
+            document.getElementById('text2_damage2').innerText = data.damage_text.text2_damage2
+            document.getElementById('text3_damage2').innerText = data.damage_text.text3_damage2
+            document.getElementById('text1_damage3').innerText = data.damage_text.text1_damage3
+            document.getElementById('text2_damage3').innerText = data.damage_text.text2_damage3
+            document.getElementById('text3_damage3').innerText = data.damage_text.text3_damage3
+            
         }
 
         // if (data.message == "Finish"){
