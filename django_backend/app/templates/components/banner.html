@@ -371,10 +371,11 @@
     }
 
     function can_generate(){
+        btn_generate = document.getElementById('btn_generate')
         if (step1 && step2){
-            document.getElementById('btn_generate').disabled = false
+            btn_generate.disabled = false
         } else {
-            document.getElementById('btn_generate').disabled = true
+            btn_generate.disabled = true
         }
     }
 
@@ -390,38 +391,41 @@
     }
 
     function select_extra(identifier){
+        btn_gen_extra_offer = document.getElementById('gen_extra_offer')
+        loader_extra_offer = document.getElementById('loader_extra_angebot')
+
         if (document.getElementById(identifier).innerText.toUpperCase() == "AUSGEWÄHLT") {
             el = document.getElementById(identifier)
             el.innerText="Auswählen"
             el.style.backgroundColor="#00212d"  
-            document.getElementById('loader_extra_angebot').style.display = 'None'
-            document.getElementById('gen_extra_offer').disabled = true
-            document.getElementById('gen_extra_offer').innerHTML = "Angebot generieren"
-            document.getElementById('loader_extra_angebot').style.display = 'none'
+            btn_gen_extra_offer.disabled = true
+            btn_gen_extra_offer.innerHTML = "Angebot generieren"
+            loader_extra_offer.style.display = 'none'
 
 
         } else if (identifier == "extra_small"){
             select_extra_el(identifier) 
             deselect_extras(identifier)
             get_extra_offer(identifier)
-            document.getElementById('gen_extra_offer').disabled = false
-            document.getElementById('gen_extra_offer').innerHTML = "Angebot generieren"
+            btn_gen_extra_offer.disabled = false
+            btn_gen_extra_offer.innerHTML = "Angebot generieren"
+            loader_extra_offer.style.display = 'none'
 
         } else if (identifier == "extra_medium") {
             select_extra_el(identifier) 
             deselect_extras(identifier)
             get_extra_offer(identifier)
-            document.getElementById('gen_extra_offer').disabled = false
-            document.getElementById('gen_extra_offer').innerHTML = "Angebot generieren"
-
+            btn_gen_extra_offer.disabled = false
+            btn_gen_extra_offer.innerHTML = "Angebot generieren"
+            loader_extra_offer.style.display = 'none'
 
         } else {            
             select_extra_el(identifier) 
             deselect_extras(identifier)
             get_extra_offer(identifier)
-            document.getElementById('gen_extra_offer').disabled = false
-            document.getElementById('gen_extra_offer').innerHTML = "Angebot generieren"
-            
+            btn_gen_extra_offer.disabled = false
+            btn_gen_extra_offer.innerHTML = "Angebot generieren"
+            loader_extra_offer.style.display = 'none'
         }
 
 
@@ -474,11 +478,12 @@
     }
 
     function show_error(){
+        radio1_error = document.getElementById('radio1_error')
         if (document.getElementById('radio1').checked == true){
-            document.getElementById('radio1_error').style.display = "flex"
+            radio1_error.style.display = "flex"
             step1 = false
         } else {
-            document.getElementById('radio1_error').style.display = "none"
+            radio1_error.style.display = "none"
             step1 = true
         }
         can_generate()
