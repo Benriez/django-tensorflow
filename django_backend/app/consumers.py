@@ -91,7 +91,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         #             }
         #         )
 
-        if data_json['message'] == "get_extra_pricelist":
+        elif data_json['message'] == "get_extra_pricelist":
             async with async_playwright() as playwright:
                 chromium = playwright.chromium # or "firefox" or "webkit".
                 browser = await chromium.launch(headless=True)
@@ -116,9 +116,10 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                     }
                 )
                 await browser.close()  
+            
 
 
-        if data_json['message'] == "get_extra_offer_pdf":
+        elif data_json['message'] == "get_extra_offer_pdf":
             async with async_playwright() as playwright:
                 chromium = playwright.chromium # or "firefox" or "webkit".
                 browser = await chromium.launch(headless=False)
@@ -131,7 +132,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 await browser.close() 
 
 
-        if data_json['message'] == "clear-data":
+        elif data_json['message'] == "clear-data":
             pass
    
 

@@ -521,8 +521,9 @@
     }
 
     function gen_extra_pdf(){
-        document.getElementById('gen_extra_offer').innerHTML = "Ihr Angebot wird erstellt ..."
-        document.getElementById('gen_extra_offer').disabled = true
+        gen_extra_offer = document.getElementById('gen_extra_offer')
+        gen_extra_offer.innerHTML = "Ihr Angebot wird erstellt ..."
+        gen_extra_offer.disabled = true
         document.getElementById('loader_extra_angebot').style.display = 'flex'
 
         context ={
