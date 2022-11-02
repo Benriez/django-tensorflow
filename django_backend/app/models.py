@@ -12,8 +12,13 @@ class Customer(models.Model):
     email       = models.EmailField(('email address'), blank=True)
     date        = models.DateTimeField("Erstellt am", auto_now=True) 
 
+    def __str__(self):
+        return self.client_id
 
 
+class StandardPDF(models.Model):
+    name    = models.CharField(max_length=30)
+    pdf     = models.FileField(blank=True, null=True)
 
-
-
+    def __str__(self):
+        return self.name
