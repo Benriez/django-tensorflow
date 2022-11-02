@@ -1,4 +1,3 @@
-from ast import Pass
 import os
 import json
 
@@ -8,8 +7,6 @@ from playwright.async_api import async_playwright
 from PIL import Image
 
 
-
-from .models import Images
 
 email = "admin@mail.com"
 print_pages = 29
