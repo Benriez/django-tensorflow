@@ -1,8 +1,13 @@
 """local runserver settings"""
 
 import os
+import environ
 
 from .settings import BASE_DIR
+
+
+env = environ.Env()
+environ.Env.read_env()
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "q$yydv1ngc0$@s2(1yk@!yjojfcd3by_jtx+c9m3g*_6ymdxr="
@@ -29,3 +34,11 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [
 	os.path.join(BASE_DIR, 'static')
 ]
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = ''
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
