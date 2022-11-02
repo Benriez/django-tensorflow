@@ -427,19 +427,6 @@
         }   
     }
 
-    // function get_extra_offer_el(identifier){
-    //     let select
-
-    //     if (identifier=="extra_small"){
-    //         selection = 0
-    //     } else if (identifier=="extra_medium"){
-    //         selection = 1
-    //     } else if (identifier=="extra_large"){
-    //         selection = 2
-    //     } else {
-    //         selection = -1
-    //     }
-    // }
 
     function select_extra_el(identifier){
         if (identifier=="extra_small"){
@@ -539,11 +526,21 @@
         radio1 = document.getElementById('radio1') 
         radio2 = document.getElementById('radio2') 
 
+        radio3 = document.getElementById('radio3') 
+        radio4 = document.getElementById('radio4') 
+
         if (radio1.checked) {
             extra_behandlung = true
         } else if (radio2.checked) {
             extra_behandlung = false
         }
+
+        if (radio3.checked) {
+            current_contract = true
+        } else if (radio4.checked) {
+            current_contract = false
+        }
+
 
         context ={
             "message": "get_extra_offer_pdf",
@@ -554,7 +551,11 @@
             "nachname": "{{ request.session.nachname }}",
             "extra_behandlung": extra_behandlung,
             "missing_teeth": parseInt(str_missing_teeth),
-            "current_contract": 0
+            "current_contract": current_contract,
+            "plz": "{{ request.session.plz }}",
+            "strasse": "{{ request.session.strasse }}",
+            "hausnr": "{{ request.session.hausnr }}",
+            "iban": "{{ request.session.iban }}"
         }
         systemSocket.send(JSON.stringify(context))   
     }

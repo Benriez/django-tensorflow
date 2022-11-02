@@ -132,9 +132,9 @@
                     <div class="loader"></div>
                     <p class="loading-text">Ihr Zahnersatzangebot wird erstellt ...</p>
                 </div>
-                <div id="personalized_extra_PDF" style="display: none;">
+                <div id="extra_PDF" style="display: none;">
                     <i class="fas fa-regular fa-file-pdf" style="font-size: 1.7rem; color: #3e1a1a;"></i>
-                    <a href="/media/pdfs/Mein_Angebot.pdf" style="margin-bottom: 1rem;" download> Download - Ihr Zahnersatz Angebot</a>
+                    <a href="/media/pdfs/Mein_Extra_Angebot.pdf" style="margin-bottom: 1rem;" download> Download - Ihr Zahnersatz Angebot</a>
                 </div>
                 <div id="personalizedPDF" style="display: none;">
                     <i class="fas fa-regular fa-file-pdf" style="font-size: 1.7rem; color: #3e1a1a;"></i>
@@ -248,6 +248,13 @@
         if (data.message == "Done"){
             document.getElementById('loader_angebot').style.display = 'none'
             document.getElementById('personalizedPDF').style.display = 'flex'
+
+            document.getElementById('finish').disabled = false;
+            document.getElementById('finish').value = 'Abschließen';
+        }
+        if (data.message == "extra_done"){
+            document.getElementById('loader_extra_angebot').style.display = 'none'
+            document.getElementById('extra_PDF').style.display = 'flex'
 
             document.getElementById('finish').disabled = false;
             document.getElementById('finish').value = 'Abschließen';
