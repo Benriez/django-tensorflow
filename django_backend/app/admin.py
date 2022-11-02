@@ -1,11 +1,11 @@
 from django.contrib import admin
 from django.urls import path
 
-from .models import Images
+from .models import Customer
 
 
-@admin.register(Images)
+@admin.register(Customer)
 class CustomerModelAdmin(admin.ModelAdmin):
-    list_display = ('name', 'comment')
+    list_display = ('client_id', 'offer_pdf', 'extra_pdf', 'success')
 
 

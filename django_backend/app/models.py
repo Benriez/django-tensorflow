@@ -3,6 +3,16 @@ from django.db import models
 from django.utils.timezone import now
 
 
+
+class Customer(models.Model):
+    client_id   = models.CharField(max_length=30)
+    offer_pdf   = models.FileField(blank=True, null=True)
+    extra_pdf   = models.FileField(blank=True, null=True)
+    success     = models.BooleanField(default=False)
+
+
+
+
 class Images(models.Model):
     name        = models.CharField("Filename", max_length=128, blank=True, null=True)
     website     = models.CharField("Website", max_length=50, blank=True, null=True)
