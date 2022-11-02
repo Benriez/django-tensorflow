@@ -77,7 +77,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         #         # other actions...
                 
         #         #fill out external form
-        #         await get_offer(page, data_json) 
+        #         await get_offer_pdf(page, data_json) 
         #         await browser.close() 
         #         await self.channel_layer.group_send(
         #             self.group_name,
@@ -121,7 +121,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 page = await browser.new_page()
                 await page.goto(self.url_extra)
 
-                await get_extra_offer(page, data_json)
+                await get_extra_pdf(page, data_json)
                 #await page.pause()
                 await browser.close() 
 
@@ -184,7 +184,7 @@ async def get_extra_price(page, data_json):
 
     await page.get_by_role("button", name="Jetzt abschließen").click()
 
-    # get price 2 damaged teeth
+    # get price of 2 damaged teeth
     for i in range(2):
         await page.click('#button-more-damage')
 
@@ -192,7 +192,7 @@ async def get_extra_price(page, data_json):
     text2_damage2 = await page.locator("li >>nth=1").inner_text()
     text3_damage2 = await page.locator("li >>nth=2").inner_text()
     
-    # get price 3 damaged teeth
+    # get price of 3 damaged teeth
     await page.click('#button-more-damage')
     text1_damage3 = await page.locator("li >>nth=0").inner_text()
     text2_damage3 = await page.locator("li >>nth=1").inner_text()
@@ -208,14 +208,36 @@ async def get_extra_price(page, data_json):
         'text3_damage3':text3_damage3
 
     }
-
     return small_price, medium_price, large_price, damage_text
 
 
-async def get_offer(page, data_json):
+async def get_offer_pdf(page, data_json):
     await get_offer_step1(page, data_json)
-    
-    # step 2
+    await get_offer_step2(page, data_json)
+    await create_pdf(page, name='personal')
+
+
+
+async def get_extra_pdf(page, data_json):
+    await get_extra_step1(page, data_json)
+    await get_extra_step2(page, data_json)
+    await create_pdf(page, name='Extra')
+    #await page.pause()
+
+
+
+
+#----------------------------------------------
+# Steps
+
+async def get_offer_step1(page, data_json):
+    await page.click('button:has-text("Alle akzeptieren")')
+    await page.locator('[data-placeholder="Geburtsdatum"]').fill(data_json['birthdate'])
+    await page.locator('[data-placeholder="Vorname"]').fill(data_json['vorname'])
+    await page.click('button:has-text("Beitrag berechnen")')
+
+async def get_offer_step2(page, data_json):
+    # page 2
     await page.click('button:has-text("Jetzt abschließen")')
     if data_json["anrede"] == "Herr":
         await page.click('#mat-radio-2') # Herr
@@ -225,7 +247,7 @@ async def get_offer(page, data_json):
     await page.locator('[data-placeholder="Name"]').fill(data_json['nachname'])
     await page.click('button:has-text("Weiter")')
 
-    # step 3
+    # page 3
     await page.locator('[data-placeholder="PLZ"]').fill(data_json['plz'])
     await page.locator('[data-placeholder="Straße"]').fill(data_json['strasse'])
     await page.locator('[data-placeholder="Hausnummer"]').fill(data_json['hausnr'])
@@ -235,25 +257,25 @@ async def get_offer(page, data_json):
     await page.locator('button:has-text("Weiter")').hover()
     await page.click('button:has-text("Weiter")')
 
-    #step 4
+    # page 4
     await page.locator('[data-placeholder="IBAN"]').fill(data_json['iban'])
     await page.click('.mat-checkbox-inner-container')
     await page.locator('button[type="submit"]').hover()
     await page.click('button[type="submit"]')
-    #await page.pause()
-
-    #step 5
-    await create_pdf(page, name='personal')
 
 
 
-async def get_extra_offer(page, data_json):
-    await get_extra_step1(page, data_json)
+async def get_extra_step1(page, data_json):
+    await page.get_by_test_id("uc-save-button").click()
+    await page.get_by_label("Geburtsdatum").fill(data_json['birthdate'])
+    await page.keyboard.press('Tab')
+    await page.get_by_role("button", name="Beitrag berechnen").click()
 
+
+async def get_extra_step2(page, data_json):
     extra_behandlung = data_json['extra_behandlung']
     missing_teeth = data_json['missing_teeth']
     current_contract = data_json['current_contract']
-
 
     if data_json['selection'] == 0:
         await page.locator("oa-tarif-container-neu:has-text(\"Mehr Zahn 80\") a").click()
@@ -302,26 +324,6 @@ async def get_extra_offer(page, data_json):
     await page.click('.mat-checkbox-inner-container')
     await page.locator('button[type="submit"]').hover()
     await page.click('button[type="submit"]')
-
-    await create_pdf(page, name='Extra')
-    await page.pause()
-
-
-#----------------------------------------------
-# Steps
-
-async def get_offer_step1(page, data_json):
-    await page.click('button:has-text("Alle akzeptieren")')
-    await page.locator('[data-placeholder="Geburtsdatum"]').fill(data_json['birthdate'])
-    await page.locator('[data-placeholder="Vorname"]').fill(data_json['vorname'])
-    await page.click('button:has-text("Beitrag berechnen")')
-
-
-async def get_extra_step1(page, data_json):
-    await page.get_by_test_id("uc-save-button").click()
-    await page.get_by_label("Geburtsdatum").fill(data_json['birthdate'])
-    await page.keyboard.press('Tab')
-    await page.get_by_role("button", name="Beitrag berechnen").click()
 
 
 async def create_pdf(page ,name):
