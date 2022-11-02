@@ -540,9 +540,9 @@
         radio2 = document.getElementById('radio2') 
 
         if (radio1.checked) {
-            extra_behandlung = True
+            extra_behandlung = true
         } else if (radio2.checked) {
-            extra_behandlung = False
+            extra_behandlung = false
         }
 
         context ={
@@ -553,7 +553,7 @@
             "vorname": "{{ request.session.vorname }}",
             "nachname": "{{ request.session.nachname }}",
             "extra_behandlung": extra_behandlung,
-            "missing_teeth": int(str_missing_teeth),
+            "missing_teeth": parseInt(str_missing_teeth),
             "current_contract": 0
         }
         systemSocket.send(JSON.stringify(context))   
