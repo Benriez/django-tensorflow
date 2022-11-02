@@ -294,10 +294,18 @@ async def get_extra_offer(page, data_json):
     await page.get_by_role("button", name="Jetzt abschließen").click()
 
 
+    await page.pause()
+    if data_json["anrede"] == "Herr":
+        await page.click('#mat-radio-8')
+    else:
+        await page.click('#mat-radio-9')
+    await page.locator('[data-placeholder="Vorname"]').fill(data_json['vorname'])
+    await page.locator('[data-placeholder="Name"]').fill(data_json['nachname'])
 
-
-
-
+    missing_teeth = data_json['missing_teeth']
+    if missing_teeth> 0:
+        for i in range(missing_teeth):
+            await page.click('#button-more-damage')
 
 
 

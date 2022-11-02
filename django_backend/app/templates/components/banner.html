@@ -232,7 +232,7 @@
                 </div>
             </div>
             <div class="row">
-                <div style="text-align: center;">
+                <div style="text-align: center; background-color: beige;border-radius: 0.6rem;">
                     <button id="gen_extra_offer" 
                         class="btn btn-primary select_extra mb-3 mt-4" 
                         style="color:white; border-radius: .6rem;" 
@@ -347,7 +347,15 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input id="btn_generate" disabled name="finish" type="submit" value="Angebot generieren" class="btn btn-primary col-12 col-md-3" onclick="gen_extra_pdf()" style="margin-top: 1rem; margin-bottom: 1.2rem; min-width: 320px;" data-bs-dismiss="modal">     
+                    <input 
+                        id="btn_generate" 
+                        disabled name="finish" 
+                        type="submit" 
+                        value="Angebot generieren" 
+                        class="btn btn-primary col-12 col-md-3" 
+                        onclick="gen_extra_pdf()" 
+                        style="margin-top: 1rem; margin-bottom: 1.2rem; min-width: 320px;" 
+                        data-bs-dismiss="modal">     
                 </div>
             </div>
         </div>
@@ -525,11 +533,28 @@
         gen_extra_offer.innerHTML = "Ihr Angebot wird erstellt ..."
         gen_extra_offer.disabled = true
         document.getElementById('loader_extra_angebot').style.display = 'flex'
+        
+        str_missing_teeth = document.getElementById("sel1").value;
+        
+        radio1 = document.getElementById('radio1') 
+        radio2 = document.getElementById('radio2') 
+
+        if (radio1.checked) {
+            extra_behandlung = True
+        } else if (radio2.checked) {
+            extra_behandlung = False
+        }
 
         context ={
             "message": "get_extra_offer_pdf",
-            "selection": "selection",
-            "birthdate": "{{ request.session.geburtsdatum }}"
+            "selection": selection,
+            "birthdate": "{{ request.session.geburtsdatum }}",
+            "anrede": "{{ request.session.anrede }}",
+            "vorname": "{{ request.session.vorname }}",
+            "nachname": "{{ request.session.nachname }}",
+            "extra_behandlung": extra_behandlung,
+            "missing_teeth": int(str_missing_teeth),
+            "current_contract": 0
         }
         systemSocket.send(JSON.stringify(context))   
     }
