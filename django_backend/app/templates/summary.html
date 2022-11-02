@@ -172,17 +172,27 @@
                 </div>
             </div>
             <div style="display: flex; justify-content: center;">
-                <input id="finish" name="next" type="submit" value="Bitte warten" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-primary col-12 col-md-3" style="margin-top: 1rem; margin-bottom: 1.2rem;" disabled>
+                <input 
+                    id="finish" 
+                    onclick="finish_order()"
+                    name="next" 
+                    type="submit" 
+                    value="Bitte warten" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#finishModal" 
+                    class="btn btn-primary col-12 col-md-3" 
+                    style="margin-top: 1rem; margin-bottom: 1.2rem;" 
+                    disabled>
             </div>
 
             
             <!-- Modal -->
-            <div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="finishModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="finishModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header" style="justify-content: center;">
-                                <h5 class="modal-title text-center" id="exampleModalLabel">Glückwunsch</h5>
+                                <h5 class="modal-title text-center" id="finishModalLabel">Glückwunsch</h5>
                             </div>
                             <div class="modal-body text-center">
                                 Ihr Antragsvorgang wurde erfolgreich durchgeführt.
@@ -192,7 +202,7 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Wie geht es jetzt weiter?</h5>
+                            <h5 class="modal-title" id="finishModalLabel">Wie geht es jetzt weiter?</h5>
                             </div>
                             <div class="modal-body">
                                 <p>1. Ihr Versicherungsschein wird Ihnen innerhalb von einem Werktag per E-Mail zugestellt.</p>
@@ -200,7 +210,13 @@
                                 <p>3. Rechnungen reichen Sie schnell und bequem per Smartphone-App oder per Email bei der Barmenia Krankenversicherung ein.</p>
                             </div>
                             <div class="modal-footer" style="display: flex;justify-content: center;">
-                                <input id="finish" name="next" type="submit" value="Verstanden" class="btn btn-primary col-12 col-md-3" style="margin-top: 1rem; margin-bottom: 1.2rem; min-width: 260px;">
+                                <input 
+                                    id="finish" 
+                                    name="next" 
+                                    type="submit" 
+                                    value="Verstanden" 
+                                    class="btn btn-primary col-12 col-md-3" 
+                                    style="margin-top: 1rem; margin-bottom: 1.2rem; min-width: 260px;">
                             </div>
                         </div>
                     </div>
@@ -355,6 +371,10 @@
             banner.style.display = "none";
         }
 
+    }
+
+    function finish_order(){
+        console.log('lets do this shit')
     }
     
 </script>

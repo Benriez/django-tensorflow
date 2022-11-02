@@ -227,8 +227,9 @@ async def get_extra_pdf(page, data_json):
 
 
 
-#----------------------------------------------
-# Steps
+#------------------------------------------------------------------------
+# STEPS - OFFER
+#
 
 async def get_offer_step1(page, data_json):
     await page.click('button:has-text("Alle akzeptieren")')
@@ -264,7 +265,9 @@ async def get_offer_step2(page, data_json):
     await page.click('button[type="submit"]')
 
 
-
+#------------------------------------------------------------------------
+# STEPS - EXTRA
+#
 async def get_extra_step1(page, data_json):
     await page.get_by_test_id("uc-save-button").click()
     await page.get_by_label("Geburtsdatum").fill(data_json['birthdate'])
@@ -326,6 +329,9 @@ async def get_extra_step2(page, data_json):
     await page.click('button[type="submit"]')
 
 
+#------------------------------------------------------------------------
+#
+#
 async def create_pdf(page ,name):
     async with page.expect_popup() as popup:
         await page.click('baf-link', modifiers=["Alt",])
