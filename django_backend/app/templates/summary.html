@@ -195,7 +195,7 @@
             
             <!-- Modal -->
             <div class="modal fade" id="finishModalLoader" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="finishModalLoaderLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
+                <div id="finish-dialog-loader" class="modal-dialog" role="document">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header" style="justify-content: center;">
@@ -209,6 +209,41 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div id="finish-dialog" class="modal-dialog" role="document" style="display: none; flex-direction: column;">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header" style="justify-content: center;">
+                                <h5 class="modal-title text-center" id="finishModalLabel">Glückwunsch</h5>
+                            </div>
+                            <div class="modal-body text-center">
+                                Ihr Antragsvorgang wurde erfolgreich durchgeführt.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-dialog" style="">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="finishModalLabel">Wie geht es jetzt weiter?</h5>
+                            </div>
+                            <div class="modal-body">
+                                <p>1. Ihr Versicherungsschein wird Ihnen innerhalb von einem Werktag per E-Mail zugestellt.</p>
+                                <p>2. Alle versicherten Leistungen können Sie ab Erhalt Ihrer Vertragsdokumente direkt in Anspruch nehmen.</p>
+                                <p>3. Rechnungen reichen Sie schnell und bequem per Smartphone-App oder per Email bei der Barmenia Krankenversicherung ein.</p>
+                            </div>
+                            <div class="modal-footer" style="display: flex;justify-content: center;">
+                                <input 
+                                    id="close_process" 
+                                    name="next" 
+                                    type="submit" 
+                                    value="Verstanden" 
+                                    class="btn btn-primary col-12 col-md-3" 
+                                    style="margin-top: 1rem; margin-bottom: 1.2rem; min-width: 260px;">
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -259,6 +294,10 @@
     let state_offer_pdf =false
     let state_extra_pdf =false
     let extra_order = false
+    let extra_behandlung
+    let str_missing_teeth
+    let current_contract
+    let selection
 
     if ( window.history.replaceState ) {
          window.history.replaceState( null, null, window.location.href );
@@ -291,6 +330,8 @@
         console.log(data)
         if (data.message == "Congrats"){
             console.log('you son of a bitch, youre all set up')
+            document.getElementById('finish-dialog-loader').style.display='none'
+            document.getElementById('finish-dialog').style.display='flex'
         }
         if (data.message == "Done"){
             document.getElementById('loader_angebot').style.display = 'none'
@@ -433,7 +474,22 @@
 
     function finish_order(){
         context ={
-            "message": "finish_orders"
+            "message": "finish_orders",
+            "birthdate": "{{ request.session.geburtsdatum }}",
+            "anrede": "{{ request.session.anrede }}",
+            "vorname": "{{ request.session.vorname }}",
+            "nachname": "{{ request.session.nachname }}",
+            "plz": "{{ request.session.plz }}",
+            "ort": "{{ request.session.ort }}",
+            "strasse": "{{ request.session.strasse }}",
+            "hausnr": "{{ request.session.hausnr }}",
+            "email": "{{ request.session.email }}",
+            "iban": "{{ request.session.iban }}",
+            "extra_behandlung": extra_behandlung,
+            "missing_teeth": parseInt(str_missing_teeth),
+            "current_contract": current_contract,
+            "selection": selection
+
         }
         systemSocket.send(JSON.stringify(context))
     }
