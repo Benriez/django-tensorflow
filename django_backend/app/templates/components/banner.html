@@ -336,11 +336,11 @@
                         </p>
                         <div style="display: flex;">
                             <div class="form-check">
-                                <input type="radio" class="form-check-input" id="radio3" name="optradio2" value="option1">Ja
+                                <input type="radio" class="form-check-input" id="radio3" name="optradio2" value="1" onclick="accept_extra3()">Ja
                                 <label class="form-check-label" for="radio1"></label>
                             </div>
                             <div class="form-check ml-3">
-                                <input type="radio" class="form-check-input" id="radio4" name="optradio2" value="option2">Nein
+                                <input type="radio" class="form-check-input" id="radio4" name="optradio2" value="2" onclick="accept_extra3()">Nein
                                 <label class="form-check-label" for="radio2"></label>
                             </div>
                         </div>
@@ -349,7 +349,8 @@
                 <div class="modal-footer">
                     <input 
                         id="btn_generate" 
-                        disabled name="finish" 
+                        disabled 
+                        name="finish" 
                         type="submit" 
                         value="Angebot generieren" 
                         class="btn btn-primary col-12 col-md-3" 
@@ -369,6 +370,18 @@
     let step3=false
     let selection
 
+    function accept_extra3(){
+        radio3 = document.getElementById('radio3')
+        radio4 = document.getElementById('radio4')
+
+        if (radio3.checked || radio4.checked){
+            step3 = true
+        } else {
+            step3 = false
+        }
+        can_generate()
+    }
+
     function accept_warning(id){
         warning = document.getElementById('accept_damaged_'+id)
         if (warning.checked){
@@ -382,7 +395,7 @@
     // check all conditions before generating pdf
     function can_generate(){
         btn_generate = document.getElementById('btn_generate')
-        if (step1 && step2){
+        if (step1 && step2 && step3){
             btn_generate.disabled = false
         } else {
             btn_generate.disabled = true
@@ -392,6 +405,8 @@
     function select_extra(identifier){
         btn_gen_extra_offer = document.getElementById('gen_extra_offer')
         loader_extra_offer = document.getElementById('loader_extra_angebot')
+        extra_check = document.getElementById('extra_check')
+        extra_pdf = document.getElementById('extra_PDF')
 
         if (document.getElementById(identifier).innerText.toUpperCase() == "AUSGEWÄHLT") {
             el = document.getElementById(identifier)
@@ -401,6 +416,9 @@
             btn_gen_extra_offer.innerHTML = "Angebot generieren"
             loader_extra_offer.style.display = 'none'
 
+            extra_check.style.display ='none'
+            extra_pdf.style.display ='none'
+
         } else if (identifier == "extra_small"){
             select_extra_el(identifier) 
             deselect_extras(identifier)
@@ -408,6 +426,8 @@
             btn_gen_extra_offer.disabled = false
             btn_gen_extra_offer.innerHTML = "Angebot generieren"
             loader_extra_offer.style.display = 'none'
+            extra_check.style.display ='none'
+            extra_pdf.style.display ='none'
 
         } else if (identifier == "extra_medium") {
             select_extra_el(identifier) 
@@ -416,6 +436,8 @@
             btn_gen_extra_offer.disabled = false
             btn_gen_extra_offer.innerHTML = "Angebot generieren"
             loader_extra_offer.style.display = 'none'
+            extra_check.style.display ='none'
+            extra_pdf.style.display ='none'
 
         } else {            
             select_extra_el(identifier) 
@@ -424,6 +446,8 @@
             btn_gen_extra_offer.disabled = false
             btn_gen_extra_offer.innerHTML = "Angebot generieren"
             loader_extra_offer.style.display = 'none'
+            extra_check.style.display ='none'
+            extra_pdf.style.display ='none'
         }   
     }
 

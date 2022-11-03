@@ -128,30 +128,37 @@
             </div>
             <div class="card col-12 shadow-sm">
                 <h5><i class="fas fa-file"></i>Ihre Dokumente</h5>
-                <div id="loader_extra_angebot" style="display: none;margin-bottom: 1rem; ">
+                <div id="loader_extra_angebot" style="display: none;">
                     <div class="loader"></div>
                     <p class="loading-text">Ihr Zahnersatzangebot wird erstellt ...</p>
                 </div>
                 <div id="extra_PDF" style="display: none;">
                     <i class="fas fa-regular fa-file-pdf" style="font-size: 1.7rem; color: #3e1a1a;"></i>
-                    <a href="/media/pdfs/Mein_Extra_Angebot.pdf" style="margin-bottom: 1rem;" download> Download - Ihr Zahnersatz Angebot</a>
+                    <a href="/media/pdfs/Mein_Extra_Angebot.pdf" download> Download - Ihr Zahnersatz Angebot</a>
+                </div>
+                <div id="extra_check" class="form-check mb-3"  style="margin-bottom: 2rem; margin-top: 1rem; display: none;" onclick="check_finish()">
+                    <input class="form-check-input" type="checkbox" value="" id="input_extra_check">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        Ja, ich habe die Extra Vertragsunterlagen zur Kenntnis genommen.
+                    </label>
+                </div>
+
+
+                <div id="loader_angebot" style="display: none;">
+                    <div class="loader"></div>
+                    <p class="loading-text">Ihr Angebot wird erstellt ...</p>
                 </div>
                 <div id="personalizedPDF" style="display: none;">
                     <i class="fas fa-regular fa-file-pdf" style="font-size: 1.7rem; color: #3e1a1a;"></i>
                     <a href="/media/pdfs/Mein_Angebot.pdf" style="margin-bottom: 0px;" download> Download - Ihr Persönliches Angebot</a>
                 </div>
-                <div id="loader_angebot" style="display: none;">
-                    <div class="loader"></div>
-                    <p class="loading-text">Ihr Angebot wird erstellt ...</p>
-                </div>
-
-
                 <div id="angebot_check" class="form-check" style="margin-bottom: 2rem; margin-top: 1rem; display: none;" onclick="check_finish()">
                     <input class="form-check-input" type="checkbox" value="" id="input_angebot_check">
                     <label class="form-check-label" for="flexCheckDefault">
                         Ja, ich habe die Vertragsunterlagen zur Kenntnis genommen.
                     </label>
                 </div>
+
 
                 <div style="display: flex; margin-bottom: 1rem;">
                     <i class="fas fa-regular fa-file-pdf" style="font-size: 1.7rem; color: #3e1a1a;"></i>
@@ -228,11 +235,12 @@
 </div>
 
 <script>
-    iban = "{{ request.session.iban }}"
-    bic = ""
-    bankname = ""
-    state_offer_pdf =false
-    state_extra_pdf =false
+    let iban = "{{ request.session.iban }}"
+    let bic = ""
+    let bankname = ""
+    let state_offer_pdf =false
+    let state_extra_pdf =false
+    let extra_order = false
 
     if ( window.history.replaceState ) {
          window.history.replaceState( null, null, window.location.href );
@@ -274,6 +282,7 @@
         if (data.message == "extra_done"){
             document.getElementById('loader_extra_angebot').style.display = 'none'
             document.getElementById('extra_PDF').style.display = 'flex'
+            document.getElementById('extra_check').style.display ='flex'
 
             // document.getElementById('finish').disabled = false;
             // document.getElementById('finish').value = 'Abschließen';
@@ -282,7 +291,6 @@
             document.getElementById('beitrag').innerText = data.price + ' € / Monat'
             document.getElementById('loader_beitrag').style.display = "none"
             document.getElementById('beitrag').style.display = 'block' 
-
 
             document.getElementById('insurance_begin').innerText = data.date
             document.getElementById('loader_begin').style.display = "none"
@@ -310,8 +318,7 @@
             document.getElementById('offer-small-eur').innerText = data.small
             document.getElementById('loader-col-small').style.display = "none"
             document.getElementById('offer-small').style.display = "flex"
-            document.getElementById('extra_small').disabled = false
-            
+            document.getElementById('extra_small').disabled = false        
 
             document.getElementById('offer-medium-eur').innerText = data.medium
             document.getElementById('loader-col-medium').style.display = "none"
@@ -365,32 +372,41 @@
             "birthdate": "{{ request.session.geburtsdatum }}"
         }
         systemSocket.send(JSON.stringify(context))
-
-
         banner = document.getElementById('zusatz')
         extra = document.getElementById('extra_PDF')
+
         if (banner.style.display == "none"){
             banner.style.display = "block";
+            extra_order = true
         } else {
             banner.style.display = "none";
-            extra.style.display = "none"
-
+            extra.style.display = "none";
+            extra_order =false
         }
 
     }
 
 
     function check_finish(){
+        extra_check = document.getElementById('input_extra_check').checked
         angebot_check = document.getElementById('input_angebot_check').checked
         einwilligung_check = document.getElementById('input_einwilligung_check').checked
         privacy_check = document.getElementById('input_privacy_check').checked
-        
-        if (angebot_check && einwilligung_check && privacy_check){
-            document.getElementById('finish').disabled = false;
-            document.getElementById('finish').value = 'Abschließen';
+        btn_finish = document.getElementById('finish')
+
+        console.log(extra_order)
+
+        if (extra_order ==true && extra_check && angebot_check && einwilligung_check && privacy_check){
+            btn_finish.disabled = false;
+            btn_finish.value = 'Abschließen';
+
+        } else if (extra_order == false && angebot_check && einwilligung_check && privacy_check){
+            btn_finish.disabled = false;
+            btn_finish.value = 'Abschließen';
+
         } else {
-            document.getElementById('finish').disabled = true;
-            document.getElementById('finish').value = 'Bitte warten';          
+            btn_finish.disabled = true;
+            btn_finish.value = 'Bitte warten';          
         }
     }
 
