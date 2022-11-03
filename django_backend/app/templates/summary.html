@@ -186,7 +186,7 @@
                     type="submit" 
                     value="Bitte warten" 
                     data-bs-toggle="modal" 
-                    data-bs-target="#finishModal" 
+                    data-bs-target="#finishModalLoader" 
                     class="btn btn-primary col-12 col-md-3" 
                     style="margin-top: 1rem; margin-bottom: 1.2rem;" 
                     disabled>
@@ -194,7 +194,25 @@
 
             
             <!-- Modal -->
-            <div class="modal fade" id="finishModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="finishModalLabel" aria-hidden="true">
+            <div class="modal fade" id="finishModalLoader" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="finishModalLoaderLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header" style="justify-content: center;">
+                                <h5 class="modal-title text-center" id="finishModalLabel">Ihr Vorgang wird bearbeitet</h5>
+                            </div>
+                            <div class="modal-body text-center" style="display: flex; justify-content: center;">
+                                <div id="loader_finish">
+                                    <div class="loader" style="width: 2rem; height: 2rem"></div>
+                                    <p class="loading-text"></p>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="modal fade" id="finishModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="finishModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -229,7 +247,7 @@
                     </div>
 
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
@@ -271,6 +289,9 @@
     systemSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
         console.log(data)
+        if (data.message == "Congrats"){
+            console.log('you son of a bitch, youre all set up')
+        }
         if (data.message == "Done"){
             document.getElementById('loader_angebot').style.display = 'none'
             document.getElementById('angebot_check').style.display = 'flex'
@@ -411,7 +432,10 @@
     }
 
     function finish_order(){
-        console.log('lets do this shit')
+        context ={
+            "message": "finish_orders"
+        }
+        systemSocket.send(JSON.stringify(context))
     }
     
 </script>

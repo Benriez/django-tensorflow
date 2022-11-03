@@ -132,12 +132,37 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                     }
                 )
 
+        elif data_json['message'] == "finish_orders":
+            async with async_playwright() as playwright:
+                chromium = playwright.webkit # or "firefox" or "webkit".
+                browser = await chromium.launch(headless=True)
+                page = await browser.new_page()
+                await page.goto(self.url_extra)
+
+                await finish_orders(page, data_json)
+                await browser.close() 
+
+                await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        'type': 'congratulation',
+                        'data': {
+                            'message': 'Congrats',
+                        }
+                    }
+                )
+
+
         elif data_json['message'] == "clear-data":
             pass
    
 
     #-----------------------------------------------------------------------------
     #
+    async def congratulation(self, event):
+        # Receive data from group
+        await self.send(text_data=json.dumps(event['data']))
+
     async def get_personal_offer(self, event):
         # Receive data from group
         await self.send(text_data=json.dumps(event['data']))
@@ -222,7 +247,17 @@ async def get_extra_pdf(page, data_json):
     #await page.pause()
 
 
+async def finish_orders(page, data_json):
+    # offer and extra?
+    # get offer
+    await get_offer_step1(page, data_json)
+    await get_offer_step2(page, data_json)
+    # get offer rest
 
+    # get extra
+    await get_extra_step1(page, data_json)
+    await get_extra_step2(page, data_json)
+    #get extra rest
 
 #------------------------------------------------------------------------
 # STEPS - OFFER
