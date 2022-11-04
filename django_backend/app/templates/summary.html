@@ -328,6 +328,9 @@
     systemSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
         console.log(data)
+        if (data.message == "set_uuid"){
+            console.log('set: '+ data.uuid)
+        }
         if (data.message == "Congrats"){
             console.log('you son of a bitch, youre all set up')
             document.getElementById('finish-dialog-loader').style.display='none'

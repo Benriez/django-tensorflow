@@ -1,10 +1,13 @@
 import os
 import json
+import uuid 
 
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from playwright.async_api import async_playwright
 from PIL import Image
+
+from .models import Customer
 
 
 
@@ -22,6 +25,19 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
         await self.accept()
+        await get_or_create_customer()
+        #create unique id
+        await self.channel_layer.group_send(
+            self.group_name,
+            {
+                'type': 'get_unique_id',
+                'data': {
+                    'message': 'set_uuid',
+                    'uuid': uuid.uuid4().hex[:8],
+                }
+            }
+        )
+        #create unique user id and send back to client
     
     async def disconnect(self, close_code):
         # Leave group
@@ -32,27 +48,27 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         data_json = json.loads(text_data)
 
         if data_json['message'] =="client-connected":
-            async with async_playwright() as playwright:
-                chromium = playwright.webkit # or "firefox" or "webkit".
-                browser = await chromium.launch(headless=True)
-                page = await browser.new_page()
-                await page.goto(self.url_offer)
-                # other actions...
+            # async with async_playwright() as playwright:
+            #     chromium = playwright.webkit # or "firefox" or "webkit".
+            #     browser = await chromium.launch(headless=True)
+            #     page = await browser.new_page()
+            #     await page.goto(self.url_offer)
+            #     # other actions...
                 
-                #fill out external form
-                date, str_price = await get_offer_price(page, data_json) 
-                await browser.close()               
-                await self.channel_layer.group_send(
-                    self.group_name,
-                    {
-                        'type': 'get_personal_offer',
-                        'data': {
-                            'message': 'Beitrag',
-                            'price': str_price,
-                            'date': date
-                        }
-                    }
-                )
+            #     #fill out external form
+            #     date, str_price = await get_offer_price(page, data_json) 
+            #     await browser.close()               
+            #     await self.channel_layer.group_send(
+            #         self.group_name,
+            #         {
+            #             'type': 'get_personal_offer',
+            #             'data': {
+            #                 'message': 'Beitrag',
+            #                 'price': str_price,
+            #                 'date': date
+            #             }
+            #         }
+            #     )
                 
                 #----------
                 #await page.pause()
@@ -63,7 +79,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 # Final step klick "weiter"
                 # await page.pause()
                 #await browser.close()            
-                
+            pass 
 
         if data_json['message'] == 'beitrag-received':
             async with async_playwright() as playwright:
@@ -162,7 +178,11 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
    
 
     #-----------------------------------------------------------------------------
-    #
+    # 
+    async def get_unique_id(self, event):
+        # Receive data from group
+        await self.send(text_data=json.dumps(event['data']))
+
     async def congratulation(self, event):
         # Receive data from group
         await self.send(text_data=json.dumps(event['data']))
@@ -178,6 +198,28 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
     async def serve_price(self, event):
         # Receive data from group
         await self.send(text_data=json.dumps(event['data']))
+
+
+
+#----------------------------------------------------------------------------------
+#
+#
+def gen_uuid():
+    random_uuid= uuid.uuid4().hex[:8]
+    return random_uuid
+
+@sync_to_async
+def get_or_create_customer(): 
+    random_uuid= gen_uuid()
+    try:
+        client_id = Customer.objects.get(client_id= random_uuid)
+        if client_id:
+            gen_uuid()
+    except:
+        pass
+
+    customer = Customer.objects.create(client_id=random_uuid)
+
 
 
 

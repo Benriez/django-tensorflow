@@ -62,7 +62,7 @@ def get_standard_pdf_storage():
 
 #-----------------------------------------------------------------------------------------------------------------
 class Customer(models.Model):
-    client_id   = models.CharField(max_length=30)
+    client_id   = models.CharField(max_length=30, null=True, unique=True)
     offer_pdf   = models.FileField(storage=get_pdf_storage(), upload_to=get_upload_path, blank=True, null=True) #upload_to='documents/'
     extra_pdf   = models.FileField(storage=get_pdf_storage(), upload_to=get_upload_path,blank=True, null=True)
     success     = models.BooleanField(default=False)
