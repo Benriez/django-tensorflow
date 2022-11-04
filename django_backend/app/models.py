@@ -6,11 +6,12 @@ from django.utils.timezone import now
 
 class Customer(models.Model):
     client_id   = models.CharField(max_length=30)
-    offer_pdf   = models.FileField(blank=True, null=True)
+    offer_pdf   = models.FileField(blank=True, null=True) #upload_to='documents/'
     extra_pdf   = models.FileField(blank=True, null=True)
     success     = models.BooleanField(default=False)
     email       = models.EmailField(('email address'), blank=True)
     date        = models.DateTimeField("Erstellt am", auto_now=True) 
+
 
     def __str__(self):
         return self.client_id
