@@ -1,6 +1,12 @@
 """environment agnostic django settings"""
 
 import os
+import environ
+
+from django.core.exceptions import ImproperlyConfigured
+
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -15,7 +21,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'rest_framework',
-
+    # 'private_storage',
     # Add your apps here
     "app",
     "authentication",
@@ -135,6 +141,21 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Media file handling
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+try:
+    AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
+    AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")
+    AWS_S3_ENDPOINT_URL = env("AWS_S3_ENDPOINT_URL")
+except:
+    AWS_ACCESS_KEY_ID = os.environ.get("CR_AWS_ACCESS_KEY_ID") or ImproperlyConfigured("CR_AWS_ACCESS_KEY_ID not set")
+    AWS_SECRET_ACCESS_KEY = os.environ.get("CR_AWS_SECRET_ACCESS_KEY")  or ImproperlyConfigured("CR_AWS_SECRET_ACCESS_KEY not set")
+    AWS_STORAGE_BUCKET_NAME = os.environ.get("CR_AWS_STORAGE_BUCKET_NAME") or ImproperlyConfigured("CR_AWS_STORAGE_BUCKET_NAME not set")
+    AWS_S3_ENDPOINT_URL = os.environ.get("CR_AWS_S3_ENDPOINT_URL") or ImproperlyConfigured("CR_AWS_S3_ENDPOINT_URL not set")
+
+
 
 print("""\
                          ,&&&                                              
