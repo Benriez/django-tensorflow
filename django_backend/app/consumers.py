@@ -18,6 +18,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
     group_name = "scraper"
     url_offer = "https://ssl.barmenia.de/online-versichern/#/zahnversicherung/Beitrag?tarif=2&adm=00232070&app=makler"
     url_extra = "https://ssl.barmenia.de/online-versichern/#/zahnversicherung/Beitrag?tarif=1&app=makler&ADM=00232070"
+    user_uuid = ""
 
     async def connect(self):
         await self.channel_layer.group_add(
@@ -25,7 +26,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
         await self.accept()
-        await get_or_create_customer()
+        self.user_uuid = await get_or_create_customer()
         #create unique id
         await self.channel_layer.group_send(
             self.group_name,
@@ -33,7 +34,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 'type': 'get_unique_id',
                 'data': {
                     'message': 'set_uuid',
-                    'uuid': uuid.uuid4().hex[:8],
+                    'uuid': self.user_uuid,
                 }
             }
         )
@@ -46,6 +47,33 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         # Receive data from WebSocket
         data_json = json.loads(text_data)
+
+        if data_json['message'] == "check-uuid-exists":
+            registered = await check_customer_exists(data_json['uuid'])
+            if registered:
+                await delete_customer(self.user_uuid)
+                await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        'type': 'checked_uuid',
+                        'data': {
+                            'message': 'checked-uuid',
+                            'checked': True
+                        }
+                    }
+                )
+            else:
+                await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        'type': 'checked_uuid',
+                        'data': {
+                            'message': 'checked-uuid',
+                            'checked': False,
+                            'uuid': self.user_uuid
+                        }
+                    }
+                )
 
         if data_json['message'] =="client-connected":
             # async with async_playwright() as playwright:
@@ -179,6 +207,10 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
 
     #-----------------------------------------------------------------------------
     # 
+    async def checked_uuid(self, event):
+        # Receive data from group
+        await self.send(text_data=json.dumps(event['data']))
+    
     async def get_unique_id(self, event):
         # Receive data from group
         await self.send(text_data=json.dumps(event['data']))
@@ -216,12 +248,25 @@ def get_or_create_customer():
         if client_id:
             gen_uuid()
     except:
-        pass
+        Customer.objects.create(client_id=random_uuid)
 
-    customer = Customer.objects.create(client_id=random_uuid)
+    return random_uuid
 
+@sync_to_async
+def check_customer_exists(str_uuid): 
+    try:
+        Customer.objects.get(client_id= str_uuid)
+        return True
+    except:
+        return False
 
-
+@sync_to_async
+def delete_customer(user_uuid):
+    try:
+        customer = Customer.objects.get(client_id= user_uuid)
+        customer.delete()
+    except:
+        print('something went wrong')
 
 #----------------------------------------------------------------------------------
 #

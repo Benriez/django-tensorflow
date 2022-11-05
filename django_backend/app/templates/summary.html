@@ -329,8 +329,32 @@
         const data = JSON.parse(e.data);
         console.log(data)
         if (data.message == "set_uuid"){
-            console.log('set: '+ data.uuid)
+            name='user-id'
+            var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+            if (match) {
+                console.log(match[2]);
+                if (match != data.uuid){
+                    context ={
+                        "message": "check-uuid-exists",
+                        "uuid": match[2]
+                    }
+                    systemSocket.send(JSON.stringify(context));
+                }
+            }
+            else{    
+                document.cookie = name+"="+data.uuid + "; path=/";
+            }
+                
+            
         }
+
+        if (data.message == "checked-uuid"){
+            console.log('checked uuid'+ data.uuid)
+            if (data.checked==false){
+                document.cookie = name+"="+data.uuid + "; path=/";
+            }
+        }
+
         if (data.message == "Congrats"){
             console.log('you son of a bitch, youre all set up')
             document.getElementById('finish-dialog-loader').style.display='none'
