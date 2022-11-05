@@ -13,6 +13,7 @@ from django.conf import settings
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.core.mail import EmailMessage
+from channels.exceptions import StopConsumer
 import requests
 
 from playwright.async_api import async_playwright
@@ -64,7 +65,6 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         if data_json['message'] == "check-uuid-exists":
             registered = await check_customer_exists(data_json['uuid'])
             if registered:
-                await delete_customer(self.user_uuid)
                 self.user_uuid = data_json['uuid']
                 await self.channel_layer.group_send(
                     self.channel,
@@ -274,12 +274,12 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
 
 class ExtraViewConsumer(AsyncWebsocketConsumer):
     group_name = "exscraper"
-    channel = ""
+    channel = group_name
     url_extra = "https://ssl.barmenia.de/online-versichern/#/zahnversicherung/Beitrag?tarif=1&app=makler&ADM=00232070"
     user_uuid = ""
 
     async def connect(self):
-        self.channel = self.group_name+'_'+self.user_uuid
+ 
         await self.channel_layer.group_add(
             self.channel,
             self.channel_name
@@ -291,11 +291,59 @@ class ExtraViewConsumer(AsyncWebsocketConsumer):
             {
                 'type': 'get_unique_id',
                 'data': {
-                    'message': 'set_uuid',
-                    'uuid': self.user_uuid,
+                    'message': 'get_uuid'
                 }
             }
         )
+
+    async def disconnect(self):
+        # Leave group
+        print('disconnected')
+        self.stop = True  # This will trigger the termination of loop # Maybe you also want to delete the thread
+        raise StopConsumer
+
+    async def receive(self, text_data):
+        # Receive data from WebSocket
+        data_json = json.loads(text_data)
+        if data_json['message'] == "check-uuid-exists":
+            registered = await check_customer_exists(data_json['uuid'])
+            if registered:
+                await delete_customer(self.user_uuid)
+                self.user_uuid = data_json['uuid']
+                await self.channel_layer.group_send(
+                    self.channel,
+                    {
+                        'type': 'checked_uuid',
+                        'data': {
+                            'message': 'checked-uuid',
+                            'checked': True
+                        }
+                    }
+                )
+            else:
+                await self.channel_layer.group_send(
+                    self.channel,
+                    {
+                        'type': 'checked_uuid',
+                        'data': {
+                            'message': 'checked-uuid',
+                            'checked': False,
+                            'disconnected':True
+                        }
+                    }
+                )
+
+                await self.disconnect()
+
+
+    #-----------------------------------------------------------------------------
+    # 
+    async def checked_uuid(self, event):
+        # Receive data from group
+        await self.send(text_data=json.dumps(event['data']))
+    async def get_unique_id(self, event):
+        # Receive data from group
+        await self.send(text_data=json.dumps(event['data']))
        
 #----------------------------------------------------------------------------------
 #

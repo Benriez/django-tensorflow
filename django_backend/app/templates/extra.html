@@ -15,8 +15,53 @@
                     </div>
                 </div>
             </div>
+            <div class="card col-12 shadow-sm">
+                {% include 'components/dokumente.html' %}
+                
+            </div>
         </div>
     </div>
 </div>
+
+
+<script>
+    const systemSocket = new WebSocket(`ws://${window.location.host}/ws/extra-scraper/`);
+    systemSocket.onopen = function(e) {   
+        console.log('systemsocket connected');
+		uuid = window.location.pathname.split('/')[2]
+
+        name='user-id'
+        document.cookie = name+"="+uuid + "; path=/";
+    };
+
+    systemSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        console.log(data)
+        if (data.message == "get_uuid"){
+            name='user-id'
+            var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+            if (match) {
+                if (match != data.uuid){
+                    context ={
+                        "message": "check-uuid-exists",
+                        "uuid": match[2]
+                    }
+                    systemSocket.send(JSON.stringify(context));
+                }
+            }
+            else{    
+                document.cookie = name+"="+data.uuid + "; path=/";
+            }
+        }
+
+        if (data.message == "get_uuid"){
+            systemSocket.close()
+        }
+    }
+
+    systemSocket.onclose = function (e) {
+        console.log('Systemsocket closed');
+    };
+</script>
 
 {% endblock %}
