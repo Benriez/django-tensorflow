@@ -56,10 +56,10 @@ STATICFILES_DIRS = [
 # ----------------------------------------------------------------------------------------------------------------------------
 # EMAIL SETTINGS
 #
-EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND_PROD") or ImproperlyConfigured("EMAIL_BACKEND_PROD not set")
-EMAIL_HOST = os.environ.get("EMAIL_HOST_PROD") or ImproperlyConfigured("EMAIL_HOST_PROD not set")
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER_PROD") or ImproperlyConfigured("EMAIL_HOST_USER_PROD not set")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD_PROD") or ImproperlyConfigured("EMAIL_HOST_PASSWORD_PROD not set")
-EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL_PROD") or ImproperlyConfigured("EMAIL_USE_SSL_PROD not set")
-EMAIL_PORT = os.environ.get("EMAIL_PORT_PROD") or ImproperlyConfigured("EMAIL_PORT_PROD not set")
+EMAIL_BACKEND = os.environ.get("CR_EMAIL_BACKEND_PROD") or ImproperlyConfigured("CR_EMAIL_BACKEND_PROD not set")
+EMAIL_HOST = os.environ.get("CR_EMAIL_HOST_PROD") or ImproperlyConfigured("CR_EMAIL_HOST_PROD not set")
+EMAIL_HOST_USER = os.environ.get("CR_EMAIL_HOST_USER_PROD") or ImproperlyConfigured("CR_EMAIL_HOST_USER_PROD not set")
+EMAIL_HOST_PASSWORD = os.environ.get("CR_EMAIL_HOST_PASSWORD_PROD") or ImproperlyConfigured("CR_EMAIL_HOST_PASSWORD_PROD not set")
+EMAIL_USE_SSL = os.environ.get("CR_EMAIL_USE_SSL_PROD") or ImproperlyConfigured("CR_EMAIL_USE_SSL_PROD not set")
+EMAIL_PORT = os.environ.get("CR_EMAIL_PORT_PROD") or ImproperlyConfigured("CR_EMAIL_PORT_PROD not set")
 EMAIL_TIMEOUT = 30
