@@ -311,19 +311,20 @@ def send_email(user_uuid, data_json):
     offer_pdf = customer.offer_pdf.url
     extra_pdf = None
 
-    if data_json["extra_order"]==True:
-        extra_pdf = customer.extra_pdf.url
-
-
     context = {
         "user": data_json["anrede"] + ' ' + data_json["vorname"] + ' ' +data_json["nachname"],
         "domain": SITE_URL,
         "offer_pdf": offer_pdf,
-        "extra_pdf": extra_pdf,
         # "uid":  urlsafe_base64_encode(force_bytes(user_pk)),
         # "token": account_activation_token.make_token(user),
         "paste_text": "Hello dear friend ...."
     }
+    if data_json["extra_order"]==True:
+        extra_pdf = customer.extra_pdf.url
+        context["extra_pdf"]=extra_pdf
+        context["extra_order"] = data_json["extra_order"]
+
+    print(data_json["extra_order"])
     message = render_to_string('email/send_offer.html', context)   
     html_content = get_template("email/send_offer.html").render(context)
     msg = EmailMultiAlternatives(subject=mail_subject, body=message, from_email=from_email, to=['testreceiver@mail.com'])
