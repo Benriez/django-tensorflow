@@ -103,21 +103,29 @@
             document.getElementById('text3_damage3').innerText = data.damage_text.text3_damage3
             
             
-            // context ={
-            //     "message": "extra-price-received",
-            //     "birthdate": "{{ request.session.geburtsdatum }}",
-            //     "vorname": "{{ request.session.vorname }}",
-            //     "anrede": "{{ request.session.anrede }}",
-            //     "nachname": "{{ request.session.nachname }}",
-            //     "plz": "{{ request.session.plz }}",
-            //     "ort": "{{ request.session.ort }}",
-            //     "strasse": "{{ request.session.strasse }}",
-            //     "hausnr": "{{ request.session.hausnr }}",
-            //     "email": "{{ request.session.email }}",
-            //     "iban": "{{ request.session.iban }}"
-            // }
-            // systemSocket.send(JSON.stringify(context));            
+            context ={
+                "message": "extra-price-received",
+                "birthdate": "{{ request.session.geburtsdatum }}",
+                "vorname": "{{ request.session.vorname }}",
+                "anrede": "{{ request.session.anrede }}",
+                "nachname": "{{ request.session.nachname }}",
+                "plz": "{{ request.session.plz }}",
+                "ort": "{{ request.session.ort }}",
+                "strasse": "{{ request.session.strasse }}",
+                "hausnr": "{{ request.session.hausnr }}",
+                "email": "{{ request.session.email }}",
+                "iban": "{{ request.session.iban }}"
+            }
+            systemSocket.send(JSON.stringify(context));            
             
+        }
+        if (data.message == "extra_done"){
+            document.getElementById('loader_extra_angebot').style.display = 'none'
+            document.getElementById('extra_PDF').style.display = 'flex'
+            document.getElementById('extra_check').style.display ='flex'
+
+            // document.getElementById('finish').disabled = false;
+            // document.getElementById('finish').value = 'Abschließen';
         }
     }
 

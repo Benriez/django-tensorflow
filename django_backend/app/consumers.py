@@ -382,6 +382,27 @@ class ExtraViewConsumer(AsyncWebsocketConsumer):
                         }
                     }
                 )  
+
+        if data_json['message'] == 'get_extra_offer_pdf':
+             async with async_playwright() as playwright:
+                chromium = playwright.webkit # or "firefox" or "webkit".
+                browser = await chromium.launch(headless=True)
+                page = await browser.new_page()
+                await page.goto(self.url_extra)
+
+                await get_extra_pdf(page, data_json, self.user_uuid)
+                #await page.pause()
+                await browser.close() 
+                
+                await self.channel_layer.group_send(
+                    self.channel,
+                    {
+                        'type': 'serve_extra_pdf',
+                        'data': {
+                            'message': 'extra_done',
+                        }
+                    }
+                )
         
 
 
@@ -395,6 +416,10 @@ class ExtraViewConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps(event['data']))
 
     async def serve_extra_price(self, event):
+        # Receive data from group
+        await self.send(text_data=json.dumps(event['data']))
+
+    async def serve_extra_pdf(self, event):
         # Receive data from group
         await self.send(text_data=json.dumps(event['data']))
 #----------------------------------------------------------------------------------
