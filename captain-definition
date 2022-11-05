@@ -1,12 +1,17 @@
 {
   "schemaVersion": 2,
   "dockerfileLines": [
-    "FROM library/python:3.6.3-alpine",
-    "RUN apk update && apk upgrade && apk add --no-cache make g++ bash git openssh postgresql-dev curl",
+    "FROM ubuntu:20.04",
+    "RUN apt update && apt upgrade -y",
+    "RUN apt install python3 -y",
+    "RUN apt install python3-pip -y",
     "RUN mkdir -p /usr/src/app",
     "WORKDIR /usr/src/app",
-    "COPY ./django_backend/ /usr/src/app",
+    "COPY ./django_project/ /usr/src/app",
     "RUN pip install -r requirements.txt",
+    "RUN playwright install",
+
+
     "COPY ./utils/ /usr/src/utils",
     "EXPOSE 80",
     "CMD sh /usr/src/utils/run.sh"
