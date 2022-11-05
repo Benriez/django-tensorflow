@@ -467,14 +467,14 @@ def upload_pdf(user_uuid, im_con, name, image_list):
     media_path = './media/pdfs/'
 
     if name =="Extra":
-        im_con.save(media_path+extra_filename, save_all=True, append_images=image_list)
+        im_con.save(media_path + extra_filename, save_all=True, append_images=image_list)
         local_file = open(media_path+extra_filename)
         extra_pdf = File(local_file)
         customer.extra_pdf.save(extra_filename, File(open(str(extra_pdf),'rb')))
         local_file.close()
     else:
-        im_con.save(media_path+ filename, save_all=True, append_images=image_list)
-        local_file = open(media_path+filename)
+        im_con.save(media_path + filename, save_all=True, append_images=image_list)
+        local_file = open(media_path + filename)
         offer_pdf = File(local_file)
         customer.offer_pdf.save(filename, File(open(str(offer_pdf),'rb')))
         local_file.close()
