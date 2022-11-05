@@ -5,6 +5,13 @@ import uuid
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.core.files import File
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import get_template
+from django.conf import settings
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 
 from playwright.async_api import async_playwright
 from PIL import Image
@@ -15,6 +22,7 @@ from .models import Customer
 
 email = "admin@mail.com"
 print_pages = 29
+SITE_URL = getattr(settings, "SITE_URL", None)
 
 class ScraperViewConsumer(AsyncWebsocketConsumer):
     group_name = "scraper"
@@ -210,6 +218,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
 
                 #send email to customer
                 print('send email')
+                await send_email()
 
                 await self.channel_layer.group_send(
                     self.group_name,
@@ -291,6 +300,25 @@ def delete_customer(user_uuid):
         customer.delete()
     except:
         print('something went wrong')
+
+
+@sync_to_async
+def send_email():
+    mail_subject = 'Account confirmation'
+    from_email = 'webmailer@zahnidee.de'
+    context = {
+        "user": 'Username',
+        "domain": SITE_URL,
+        # "uid":  urlsafe_base64_encode(force_bytes(user_pk)),
+        # "token": account_activation_token.make_token(user),
+        'paste_text': 'Hello dear friend ....'
+    }
+    message = render_to_string('email/send_offer.html', context)   
+    html_content = get_template("email/send_offer.html").render(context)
+    msg = EmailMultiAlternatives(subject=mail_subject, body=message, from_email=from_email, to=['testreceiver@mail.com'])
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
+   
 
 #----------------------------------------------------------------------------------
 #
