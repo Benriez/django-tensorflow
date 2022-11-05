@@ -219,7 +219,6 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 await browser.close() 
 
                 #send email to customer
-                print('send email')
                 await send_email(self.user_uuid, data_json)
 
                 await self.channel_layer.group_send(
@@ -317,7 +316,7 @@ def send_email(user_uuid, data_json):
 
 
     context = {
-        "user": data_json["anrede"] + ' ' + data_json["vorname"] + '' +data_json["nachname"],
+        "user": data_json["anrede"] + ' ' + data_json["vorname"] + ' ' +data_json["nachname"],
         "domain": SITE_URL,
         "offer_pdf": offer_pdf,
         "extra_pdf": extra_pdf,
