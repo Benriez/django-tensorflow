@@ -49,7 +49,6 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         # Receive data from WebSocket
         data_json = json.loads(text_data)
-
         if data_json['message'] == "check-uuid-exists":
             registered = await check_customer_exists(data_json['uuid'])
             if registered:
@@ -78,7 +77,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                     }
                 )
 
-        if data_json['message'] =="client-connected":
+        if data_json['message'] =="get-offer-price":
             async with async_playwright() as playwright:
                 chromium = playwright.webkit # or "firefox" or "webkit".
                 browser = await chromium.launch(headless=True)
@@ -92,27 +91,41 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 await self.channel_layer.group_send(
                     self.group_name,
                     {
-                        'type': 'get_personal_offer',
+                        'type': 'get_offer_price',
                         'data': {
-                            'message': 'Beitrag',
+                            'message': 'Offer_Price',
                             'price': str_price,
                             'date': date
                         }
                     }
                 )
+        
+        if data_json['message'] == 'offer-price-received':
+            async with async_playwright() as playwright:
+                chromium = playwright.chromium # or "firefox" or "webkit".
+                browser = await chromium.launch(headless=True)
+                page = await browser.new_page()
+                await page.goto(self.url_extra)
                 
-                #----------
-                #await page.pause()
-                # await page.locator(".mat-checkbox-inner-container").first.click()
-                # await page.locator("#mat-checkbox-5 > .mat-checkbox-layout > .mat-checkbox-inner-container").click()
-                # await page.locator("#mat-checkbox-4 > .mat-checkbox-layout > .mat-checkbox-inner-container").click()
-                
-                # Final step klick "weiter"
-                # await page.pause()
-                #await browser.close()            
-            pass 
+                #fill out external form
+                small_price, medium_price, large_price, damage_text = await get_extra_price(page, data_json)           
+                await browser.close()               
+                # send result back to client
+                await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        'type': 'serve_extra_price',
+                        'data': {
+                            'message': 'serve_extra_price',
+                            'small': small_price,
+                            'medium': medium_price,
+                            'large': large_price,
+                            'damage_text': damage_text
+                        }
+                    }
+                )  
 
-        if data_json['message'] == 'beitrag-received':
+        if data_json['message'] == 'extra-price-received':
             async with async_playwright() as playwright:
                 chromium = playwright.webkit # or "firefox" or "webkit".
                 browser = await chromium.launch(headless=True)
@@ -222,7 +235,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         # Receive data from group
         await self.send(text_data=json.dumps(event['data']))
 
-    async def get_personal_offer(self, event):
+    async def get_offer_price(self, event):
         # Receive data from group
         await self.send(text_data=json.dumps(event['data']))
 
@@ -231,6 +244,10 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps(event['data']))
 
     async def serve_price(self, event):
+        # Receive data from group
+        await self.send(text_data=json.dumps(event['data']))
+
+    async def serve_extra_price(self, event):
         # Receive data from group
         await self.send(text_data=json.dumps(event['data']))
 

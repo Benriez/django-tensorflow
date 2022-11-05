@@ -20,7 +20,6 @@ def index(request):
 
 
         strasse = request.POST.get("strasse")
-        print('strasse: ', strasse)
         hausnr = request.POST.get('hausnr')
         plz = request.POST.get("plz")
         ort = request.POST.get("ort")
@@ -42,8 +41,6 @@ def index(request):
         request.session["bankname"] = bankname
 
 
-        # get BIC
-        # get bank name
         return redirect("summary")
 
     return render(request, 'index.html')

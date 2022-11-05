@@ -303,26 +303,11 @@
          window.history.replaceState( null, null, window.location.href );
     }
 
-
     const systemSocket = new WebSocket(`ws://${window.location.host}/ws/scraper/`);
+
 
     systemSocket.onopen = function(e) {   
         console.log('systemsocket connected');
-        context ={
-            "message": "client-connected",
-            "birthdate": "{{ request.session.geburtsdatum }}",
-            "anrede": "{{ request.session.anrede }}",
-            "vorname": "{{ request.session.vorname }}",
-            "nachname": "{{ request.session.nachname }}",
-            "plz": "{{ request.session.plz }}",
-            "ort": "{{ request.session.ort }}",
-            "strasse": "{{ request.session.strasse }}",
-            "hausnr": "{{ request.session.hausnr }}",
-            "email": "{{ request.session.email }}",
-            "iban": "{{ request.session.iban }}"
-        }
-        systemSocket.send(JSON.stringify(context));
-
     };
 
     systemSocket.onmessage = function (e) {
@@ -349,7 +334,24 @@
             if (data.checked==false){
                 document.cookie = name+"="+data.uuid + "; path=/";
             }
-        }
+
+            // START PROCESS
+            context ={
+                "message": "get-offer-price",
+                "birthdate": "{{ request.session.geburtsdatum }}",
+                "vorname": "{{ request.session.vorname }}",
+                "anrede": "{{ request.session.anrede }}"
+
+                // "nachname": "{{ request.session.nachname }}",
+                // "plz": "{{ request.session.plz }}",
+                // "ort": "{{ request.session.ort }}",
+                // "strasse": "{{ request.session.strasse }}",
+                // "hausnr": "{{ request.session.hausnr }}",
+                // "email": "{{ request.session.email }}",
+                // "iban": "{{ request.session.iban }}"
+            }
+            systemSocket.send(JSON.stringify(context));
+            }
 
         if (data.message == "Congrats"){
             console.log('you son of a bitch, youre all set up')
@@ -372,7 +374,7 @@
             // document.getElementById('finish').disabled = false;
             // document.getElementById('finish').value = 'Abschließen';
         }
-        if (data.message == "Beitrag"){
+        if (data.message == "Offer_Price"){
             document.getElementById('beitrag').innerText = data.price + ' € / Monat'
             document.getElementById('loader_beitrag').style.display = "none"
             document.getElementById('beitrag').style.display = 'block' 
@@ -382,10 +384,10 @@
             document.getElementById('insurance_begin').style.display = 'block' 
 
             context ={
-                "message": "beitrag-received",
+                "message": "offer-price-received",
                 "birthdate": "{{ request.session.geburtsdatum }}",
-                "anrede": "{{ request.session.anrede }}",
                 "vorname": "{{ request.session.vorname }}",
+                "anrede": "{{ request.session.anrede }}",
                 "nachname": "{{ request.session.nachname }}",
                 "plz": "{{ request.session.plz }}",
                 "ort": "{{ request.session.ort }}",
@@ -399,7 +401,7 @@
 
 
         }
-        if (data.message == "serve_zahnzusatz_pricelist"){    
+        if (data.message == "serve_extra_price"){    
             document.getElementById('offer-small-eur').innerText = data.small
             document.getElementById('loader-col-small').style.display = "none"
             document.getElementById('offer-small').style.display = "flex"
@@ -422,7 +424,25 @@
             document.getElementById('text2_damage3').innerText = data.damage_text.text2_damage3
             document.getElementById('text3_damage3').innerText = data.damage_text.text3_damage3
             
+            
+            context ={
+                "message": "extra-price-received",
+                "birthdate": "{{ request.session.geburtsdatum }}",
+                "vorname": "{{ request.session.vorname }}",
+                "anrede": "{{ request.session.anrede }}",
+                "nachname": "{{ request.session.nachname }}",
+                "plz": "{{ request.session.plz }}",
+                "ort": "{{ request.session.ort }}",
+                "strasse": "{{ request.session.strasse }}",
+                "hausnr": "{{ request.session.hausnr }}",
+                "email": "{{ request.session.email }}",
+                "iban": "{{ request.session.iban }}"
+            }
+            systemSocket.send(JSON.stringify(context));            
+            
         }
+
+        
 
         // if (data.message == "Finish"){
         //     context ={
@@ -435,28 +455,14 @@
     systemSocket.onclose = function (e) {
         console.log('Chat socket closed');
     };
-
-    // function send_message(){        
-    //     systemSocket.send(JSON.stringify({"message": 'start'}));
-    //     console.log()
-    // }
-    // function change_timeout(){        
-    //     systemSocket.send(JSON.stringify({"message": 30}));
-    // }
-    // function stop_carrousel(){        
-    //     systemSocket.send(JSON.stringify({"message": 'stop'}));
-    // }
-    // function reset(){        
-    //     systemSocket.send(JSON.stringify({"message": 'reset'}));
-    // }
         
 
     function show_zusatz(){
-        context ={
-            "message": "get_extra_pricelist",
-            "birthdate": "{{ request.session.geburtsdatum }}"
-        }
-        systemSocket.send(JSON.stringify(context))
+        // context ={
+        //     "message": "get_extra_pricelist",
+        //     "birthdate": "{{ request.session.geburtsdatum }}"
+        // }
+        // systemSocket.send(JSON.stringify(context))
         banner = document.getElementById('zusatz')
         extra = document.getElementById('extra_PDF')
 
