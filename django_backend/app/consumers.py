@@ -363,8 +363,7 @@ class ExtraViewConsumer(AsyncWebsocketConsumer):
                 browser = await chromium.launch(headless=True)
                 page = await browser.new_page()
                 await page.goto(self.url_extra)
-                
-                print(data_json)
+    
                 #fill out external form
                 small_price, medium_price, large_price, damage_text = await get_extra_price(page, data_json)           
                 await browser.close()               
@@ -489,13 +488,13 @@ def delete_customer(user_uuid):
 @sync_to_async
 def send_email(user_uuid, data_json, extra_only=False):
     customer = Customer.objects.get(client_id = user_uuid)
-    mail_subject = 'Angebot'
     from_email = 'webmailer@zahnidee.de'
     extra_pdf = None
     offer_pdf = None
 
     if extra_only:
         extra_pdf = customer.extra_pdf.url
+        mail_subject = 'Krankenzusatzversicherung'
         context = {
             "user": data_json["anrede"] + ' ' + data_json["vorname"] + ' ' +data_json["nachname"],
             "domain": SITE_URL,
@@ -507,11 +506,12 @@ def send_email(user_uuid, data_json, extra_only=False):
         }
     else:
         offer_pdf = customer.offer_pdf.url
-
+        mail_subject = 'Angebot'
         context = {
             "user": data_json["anrede"] + ' ' + data_json["vorname"] + ' ' +data_json["nachname"],
             "domain": SITE_URL,
             "offer_pdf": offer_pdf,
+            "extra_url": SITE_URL + '/extra/'+ str(user_uuid) + '/',
             # "uid":  urlsafe_base64_encode(force_bytes(user_pk)),
             # "token": account_activation_token.make_token(user),
             "paste_text": "Hello dear friend ...."
@@ -526,6 +526,9 @@ def send_email(user_uuid, data_json, extra_only=False):
     msg = EmailMultiAlternatives(subject=mail_subject, body=message, from_email=from_email, to=['testreceiver@mail.com'])
     msg.attach_alternative(html_content, "text/html")
     msg.send()
+
+    customer.success= True
+    customer.save()
 
 
 
