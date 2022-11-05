@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render, redirect
-
+from .models import StandardPDF
 
 def index(request):
     if "next" in request.POST:
@@ -13,6 +13,15 @@ def index(request):
         list_geburtsdatum = list(str_geburtsdatum.split("-"))
         list_geburtsdatum.reverse()
         format_geburtsdatum =""
+
+
+        standard_pdfs = StandardPDF.objects.all()
+        standard_pdf_urls =[]
+        for file in standard_pdfs:
+            standard_pdf_urls.append(file.pdf.url)
+    
+
+
         for l in list_geburtsdatum:  
             format_geburtsdatum += l +'.' 
         
@@ -39,7 +48,7 @@ def index(request):
         request.session["iban"] = iban
         request.session["bic"] = bic
         request.session["bankname"] = bankname
-
+        request.session["standardPDF"] = standard_pdf_urls
 
         return redirect("summary")
 

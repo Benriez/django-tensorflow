@@ -146,6 +146,8 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                     }
                 )
 
+    
+
         elif data_json['message'] == "get_extra_pricelist":
             async with async_playwright() as playwright:
                 chromium = playwright.chromium # or "firefox" or "webkit".
