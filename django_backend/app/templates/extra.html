@@ -19,12 +19,83 @@
                 {% include 'components/dokumente.html' %}
                 
             </div>
+            <div style="display: flex; justify-content: center;">
+                <input 
+                    id="finish" 
+                    onclick="finish_order()"
+                    name="next" 
+                    type="submit" 
+                    value="Bitte warten" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#finishModalLoader" 
+                    class="btn btn-primary col-12 col-md-3" 
+                    style="margin-top: 1rem; margin-bottom: 1.2rem;" 
+                    >
+            </div>
         </div>
     </div>
 </div>
 
 
+<!-- Modal -->
+<div class="modal fade" id="finishModalLoader" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="finishModalLoaderLabel" aria-hidden="true">
+    <div id="finish-dialog-loader" class="modal-dialog" role="document">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="justify-content: center;">
+                    <h5 class="modal-title text-center" id="finishModalLabel">Ihr Vorgang wird bearbeitet</h5>
+                </div>
+                <div class="modal-body text-center" style="display: flex; justify-content: center;">
+                    <div id="loader_finish">
+                        <div class="loader" style="width: 2rem; height: 2rem"></div>
+                        <p class="loading-text"></p>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="finish-dialog" class="modal-dialog" role="document" style="display: none; flex-direction: column;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="justify-content: center;">
+                    <h5 class="modal-title text-center" id="finishModalLabel">Glückwunsch</h5>
+                </div>
+                <div class="modal-body text-center">
+                    Ihr Antragsvorgang wurde erfolgreich durchgeführt.
+                </div>
+            </div>
+        </div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="finishModalLabel">Wie geht es jetzt weiter?</h5>
+                </div>
+                <div class="modal-body">
+                    <p>1. Ihr Versicherungsschein wird Ihnen innerhalb von einem Werktag per E-Mail zugestellt.</p>
+                    <p>2. Alle versicherten Leistungen können Sie ab Erhalt Ihrer Vertragsdokumente direkt in Anspruch nehmen.</p>
+                    <p>3. Rechnungen reichen Sie schnell und bequem per Smartphone-App oder per Email bei der Barmenia Krankenversicherung ein.</p>
+                </div>
+                <div class="modal-footer" style="display: flex;justify-content: center;">
+                    <input 
+                        id="close_process" 
+                        name="next"
+                        type="submit" 
+                        value="Verstanden" 
+                        class="btn btn-primary col-12 col-md-3" 
+                        style="margin-top: 1rem; margin-bottom: 1.2rem; min-width: 260px;">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 <script>
+    let extra_behandlung
+    let str_missing_teeth
+    let current_contract
+    let selection
     window.onload = function(e){ 
         document.getElementById('loader-col-small').style.display = "flex"
         document.getElementById('loader-col-medium').style.display = "flex"
@@ -127,11 +198,43 @@
             // document.getElementById('finish').disabled = false;
             // document.getElementById('finish').value = 'Abschließen';
         }
+
+        if (data.message == "Congrats"){
+            console.log('youre all set up')
+            document.getElementById('finish-dialog-loader').style.display='none'
+            document.getElementById('finish-dialog').style.display='flex'
+        }
     }
 
     systemSocket.onclose = function (e) {
         console.log('Systemsocket closed');
     };
+
+
+
+    function finish_order(){
+        context ={
+            "message": "finish_orders",
+            "birthdate": "{{ request.session.geburtsdatum }}",
+            "anrede": "{{ request.session.anrede }}",
+            "vorname": "{{ request.session.vorname }}",
+            "nachname": "{{ request.session.nachname }}",
+            "plz": "{{ request.session.plz }}",
+            "ort": "{{ request.session.ort }}",
+            "strasse": "{{ request.session.strasse }}",
+            "hausnr": "{{ request.session.hausnr }}",
+            "email": "{{ request.session.email }}",
+            "iban": "{{ request.session.iban }}",
+            "extra_behandlung": extra_behandlung,
+            "missing_teeth": parseInt(str_missing_teeth),
+            "current_contract": current_contract,
+            "selection": selection,
+            "extra_order": extra_order
+
+        }
+        console.log(context)
+        systemSocket.send(JSON.stringify(context))
+    }
 </script>
 
 <style>

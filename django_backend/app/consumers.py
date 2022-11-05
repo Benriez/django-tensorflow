@@ -403,6 +403,29 @@ class ExtraViewConsumer(AsyncWebsocketConsumer):
                         }
                     }
                 )
+
+        if data_json['message'] == "finish_orders":
+            async with async_playwright() as playwright:
+                chromium = playwright.webkit # or "firefox" or "webkit".
+                browser = await chromium.launch(headless=True)
+                page_extra = await browser.new_page()
+                await page_extra.goto(self.url_extra)
+
+                await finish_extra_order(page_extra, data_json)  
+                await browser.close() 
+
+                #send email to customer
+                await send_email(self.user_uuid, data_json)
+
+                await self.channel_layer.group_send(
+                    self.channel,
+                    {
+                        'type': 'congratulation',
+                        'data': {
+                            'message': 'Congrats',
+                        }
+                    }
+                )
         
 
 
@@ -422,6 +445,11 @@ class ExtraViewConsumer(AsyncWebsocketConsumer):
     async def serve_extra_pdf(self, event):
         # Receive data from group
         await self.send(text_data=json.dumps(event['data']))
+    
+    async def congratulation(self, event):
+        # Receive data from group
+        await self.send(text_data=json.dumps(event['data']))
+
 #----------------------------------------------------------------------------------
 #
 #
@@ -553,6 +581,10 @@ async def get_extra_price(page, data_json):
     return small_price, medium_price, large_price, damage_text
 
 
+
+#-------------------------------------------------------------------
+# STEPS
+#
 async def get_offer_pdf(page, data_json, user_uuid):
     await get_offer_step1(page, data_json)
     await get_offer_step2(page, data_json)
@@ -579,6 +611,11 @@ async def finish_orders(page_offer, page_extra, data_json):
         await get_extra_step1(page_extra, data_json)
         await get_extra_step2(page_extra, data_json)
     #get extra rest
+
+
+async def finish_extra_order(page_extra, data_json):
+    await get_extra_step1(page_extra, data_json)
+    await get_extra_step2(page_extra, data_json)
 
 #------------------------------------------------------------------------
 # STEPS - OFFER
