@@ -148,7 +148,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
 
     
 
-        elif data_json['message'] == "get_extra_pricelist":
+        if data_json['message'] == "get_extra_pricelist":
             async with async_playwright() as playwright:
                 chromium = playwright.chromium # or "firefox" or "webkit".
                 browser = await chromium.launch(headless=True)
@@ -173,7 +173,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                     }
                 )
 
-        elif data_json['message'] == "get_extra_offer_pdf":
+        if data_json['message'] == "get_extra_offer_pdf":
             async with async_playwright() as playwright:
                 chromium = playwright.webkit # or "firefox" or "webkit".
                 browser = await chromium.launch(headless=True)
@@ -194,7 +194,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                     }
                 )
 
-        elif data_json['message'] == "finish_orders":
+        if data_json['message'] == "finish_orders":
             async with async_playwright() as playwright:
                 chromium = playwright.webkit # or "firefox" or "webkit".
                 browser = await chromium.launch(headless=True)
@@ -208,6 +208,9 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 
                 await browser.close() 
 
+                #send email to customer
+                print('send email')
+
                 await self.channel_layer.group_send(
                     self.group_name,
                     {
@@ -217,7 +220,6 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                         }
                     }
                 )
-
 
         elif data_json['message'] == "clear-data":
             pass

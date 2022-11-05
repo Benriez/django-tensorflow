@@ -237,7 +237,7 @@
                             <div class="modal-footer" style="display: flex;justify-content: center;">
                                 <input 
                                     id="close_process" 
-                                    name="next" 
+                                    name="next"
                                     type="submit" 
                                     value="Verstanden" 
                                     class="btn btn-primary col-12 col-md-3" 
@@ -457,7 +457,7 @@
     systemSocket.onclose = function (e) {
         console.log('Chat socket closed');
     };
-        
+
 
     function show_zusatz(){
         // context ={
@@ -520,6 +520,7 @@
             "selection": selection
 
         }
+        console.log(context)
         systemSocket.send(JSON.stringify(context))
     }
     

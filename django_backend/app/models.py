@@ -29,7 +29,6 @@ class PDFStorage(S3Boto3Storage):
 
     def get_upload_path(self, instance, filename):
         upload_path = str(instance.id) + "/"+ filename
-        print('pdf upload path=[' + upload_path + ']')
         return upload_path
 
 
@@ -40,7 +39,6 @@ class StandardPDFStorage(S3Boto3Storage):
     print('---> PDFstorage location=[' + location + "]")
 
     def get_upload_path(self, instance, filename):
-        print('standard pdf upload path=[' + filename + ']')
         return filename
 
 
