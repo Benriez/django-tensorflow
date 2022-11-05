@@ -324,7 +324,6 @@ def send_email(user_uuid, data_json):
         context["extra_pdf"]=extra_pdf
         context["extra_order"] = data_json["extra_order"]
 
-    print(data_json["extra_order"])
     message = render_to_string('email/send_offer.html', context)   
     html_content = get_template("email/send_offer.html").render(context)
     msg = EmailMultiAlternatives(subject=mail_subject, body=message, from_email=from_email, to=['testreceiver@mail.com'])
