@@ -58,3 +58,7 @@ def index(request):
 def summary(request):
     # validate user data exists before accepting else -> redirect index
     return render(request, 'summary.html')
+
+
+def extra(request, uuid):
+    return render (request, 'extra.html')

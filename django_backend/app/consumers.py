@@ -271,6 +271,32 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
 
 
 
+
+class ExtraViewConsumer(AsyncWebsocketConsumer):
+    group_name = "exscraper"
+    channel = ""
+    url_extra = "https://ssl.barmenia.de/online-versichern/#/zahnversicherung/Beitrag?tarif=1&app=makler&ADM=00232070"
+    user_uuid = ""
+
+    async def connect(self):
+        self.channel = self.group_name+'_'+self.user_uuid
+        await self.channel_layer.group_add(
+            self.channel,
+            self.channel_name
+        )
+        await self.accept() 
+        #create unique id
+        await self.channel_layer.group_send(
+            self.channel,
+            {
+                'type': 'get_unique_id',
+                'data': {
+                    'message': 'set_uuid',
+                    'uuid': self.user_uuid,
+                }
+            }
+        )
+       
 #----------------------------------------------------------------------------------
 #
 #

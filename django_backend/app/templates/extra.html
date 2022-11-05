@@ -1,0 +1,22 @@
+{%  extends 'main.html' %}
+
+{% load static %}
+{% block content %}
+
+<div class="row">
+    <div class="col-12 col-md-10 offset-md-1" style="max-width: 1500px;margin-left: auto;margin-right: auto;">
+        <div class="form-content">
+            <div class="card col-12 shadow-sm">
+                <h5><i class="fas fa-tooth"></i>Zahnersatz</h5>
+
+                <div class="row">
+                    <div id="zusatz">
+                        {% include 'components/banner.html' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
