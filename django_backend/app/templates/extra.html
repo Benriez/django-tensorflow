@@ -30,7 +30,7 @@
                     data-bs-target="#finishModalLoader" 
                     class="btn btn-primary col-12 col-md-3" 
                     style="margin-top: 1rem; margin-bottom: 1.2rem;" 
-                    >
+                    disabled>
             </div>
         </div>
     </div>
@@ -234,6 +234,23 @@
         }
         console.log(context)
         systemSocket.send(JSON.stringify(context))
+    }
+
+    function check_finish(){
+        extra_check = document.getElementById('input_extra_check').checked
+        angebot_check = document.getElementById('input_angebot_check').checked
+        einwilligung_check = document.getElementById('input_einwilligung_check').checked
+        privacy_check = document.getElementById('input_privacy_check').checked
+        btn_finish = document.getElementById('finish')
+
+        if (extra_check && einwilligung_check && privacy_check){
+            btn_finish.disabled = false;
+            btn_finish.value = 'Abschließen';
+
+        } else {
+            btn_finish.disabled = true;
+            btn_finish.value = 'Bitte warten';          
+        }
     }
 </script>
 
