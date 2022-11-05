@@ -4,6 +4,8 @@ import uuid
 
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
+from django.core.files import File
+
 from playwright.async_api import async_playwright
 from PIL import Image
 
@@ -52,6 +54,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
             registered = await check_customer_exists(data_json['uuid'])
             if registered:
                 await delete_customer(self.user_uuid)
+                self.user_uuid = data_json['uuid']
                 await self.channel_layer.group_send(
                     self.group_name,
                     {
@@ -76,27 +79,27 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 )
 
         if data_json['message'] =="client-connected":
-            # async with async_playwright() as playwright:
-            #     chromium = playwright.webkit # or "firefox" or "webkit".
-            #     browser = await chromium.launch(headless=True)
-            #     page = await browser.new_page()
-            #     await page.goto(self.url_offer)
-            #     # other actions...
+            async with async_playwright() as playwright:
+                chromium = playwright.webkit # or "firefox" or "webkit".
+                browser = await chromium.launch(headless=True)
+                page = await browser.new_page()
+                await page.goto(self.url_offer)
+                # other actions...
                 
-            #     #fill out external form
-            #     date, str_price = await get_offer_price(page, data_json) 
-            #     await browser.close()               
-            #     await self.channel_layer.group_send(
-            #         self.group_name,
-            #         {
-            #             'type': 'get_personal_offer',
-            #             'data': {
-            #                 'message': 'Beitrag',
-            #                 'price': str_price,
-            #                 'date': date
-            #             }
-            #         }
-            #     )
+                #fill out external form
+                date, str_price = await get_offer_price(page, data_json) 
+                await browser.close()               
+                await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        'type': 'get_personal_offer',
+                        'data': {
+                            'message': 'Beitrag',
+                            'price': str_price,
+                            'date': date
+                        }
+                    }
+                )
                 
                 #----------
                 #await page.pause()
@@ -118,7 +121,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 # other actions...
                 
                 #fill out external form
-                await get_offer_pdf(page, data_json) 
+                await get_offer_pdf(page, data_json, self.user_uuid) 
                 await browser.close() 
                 await self.channel_layer.group_send(
                     self.group_name,
@@ -162,7 +165,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 page = await browser.new_page()
                 await page.goto(self.url_extra)
 
-                await get_extra_pdf(page, data_json)
+                await get_extra_pdf(page, data_json, self.user_uuid)
                 #await page.pause()
                 await browser.close() 
 
@@ -324,17 +327,17 @@ async def get_extra_price(page, data_json):
     return small_price, medium_price, large_price, damage_text
 
 
-async def get_offer_pdf(page, data_json):
+async def get_offer_pdf(page, data_json, user_uuid):
     await get_offer_step1(page, data_json)
     await get_offer_step2(page, data_json)
-    await create_pdf(page, name='personal')
+    await create_pdf(page, user_uuid, name='personal')
 
 
 
-async def get_extra_pdf(page, data_json):
+async def get_extra_pdf(page, data_json, user_uuid):
     await get_extra_step1(page, data_json)
     await get_extra_step2(page, data_json)
-    await create_pdf(page, name='Extra')
+    await create_pdf(page, user_uuid , name='Extra')
     #await page.pause()
 
 
@@ -455,7 +458,28 @@ async def get_extra_step2(page, data_json):
 #------------------------------------------------------------------------
 #
 #
-async def create_pdf(page ,name):
+
+@sync_to_async
+def upload_pdf(user_uuid, im_con, name, image_list):
+    customer = Customer.objects.get(client_id = user_uuid)
+    if name =="Extra":
+        im_con.save('./media/pdfs/Mein_'+name+'_Angebot.pdf', save_all=True, append_images=image_list)
+        # customer.extra_pdf = im_con.save('Mein_'+name+'_Angebot.pdf', save_all=True, append_images=image_list)
+    else:
+        im_con.save('./media/pdfs/Mein_Angebot.pdf', save_all=True, append_images=image_list)
+        local_file = open('./media/pdfs/Mein_Angebot.pdf')
+        offer_pdf = File(local_file)
+        customer.offer_pdf.save('new', File(open(str(offer_pdf),'rb')))
+        local_file.close()
+        print(str(offer_pdf))
+        # customer.offer_pdf = im_con.save('Mein_Angebot.pdf', save_all=True, append_images=image_list)
+
+    print('SAVED')
+
+
+
+
+async def create_pdf(page, user_uuid ,name):
     async with page.expect_popup() as popup:
         await page.click('baf-link', modifiers=["Alt",])
 
@@ -471,12 +495,7 @@ async def create_pdf(page ,name):
         im_con = image.convert('RGB')
         image_list.append(im_con)
     
-    if name =="Extra":
-        im_con.save('./media/pdfs/Mein_'+name+'_Angebot.pdf', save_all=True, append_images=image_list)
-    else:
-        im_con.save('./media/pdfs/Mein_Angebot.pdf', save_all=True, append_images=image_list)
-
-
+    await upload_pdf(user_uuid, im_con, name, image_list)
     # delete screenshots after pdf is created
     for p in range(print_pages):
         screenshot_path = name+"screenshot"+str(p)+".png"

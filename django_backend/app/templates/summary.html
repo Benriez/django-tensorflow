@@ -349,7 +349,6 @@
         }
 
         if (data.message == "checked-uuid"){
-            console.log('checked uuid'+ data.uuid)
             if (data.checked==false){
                 document.cookie = name+"="+data.uuid + "; path=/";
             }
