@@ -3,6 +3,7 @@ from django.db import models
 from django.utils.timezone import now
 from django.core.validators import deconstructible 
 from storages.backends.s3boto3 import S3Boto3Storage
+from django.contrib.auth.hashers import make_password
 
 FOLDER_PDF   = 'users/'
 FOLDER_STANDARD_PDF = 'standards/'
@@ -67,6 +68,15 @@ class Customer(models.Model):
     email       = models.EmailField(('email address'), blank=True)
     date        = models.DateTimeField("Erstellt am", auto_now=True) 
 
+    anrede      = models.CharField(max_length=10, null=True)
+    vorname     = models.CharField(max_length=30, null=True)
+    nachname    = models.CharField(max_length=30, null=True)
+    plz         = models.CharField(max_length=8, null=True)
+    ort         = models.CharField(max_length=30, null=True)
+    strasse     = models.CharField(max_length=30, null=True)
+    hausnr      = models.CharField(max_length=30, null=True)
+    iban        = models.BinaryField(default=b'\x08')
+    birthdate   = models.CharField(max_length=50, null=True)
 
     def __str__(self):
         return self.client_id

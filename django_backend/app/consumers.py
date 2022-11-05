@@ -15,6 +15,7 @@ from django.utils.encoding import force_bytes
 from django.core.mail import EmailMessage
 from channels.exceptions import StopConsumer
 import requests
+import base64
 
 from playwright.async_api import async_playwright
 from PIL import Image
@@ -65,6 +66,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         if data_json['message'] == "check-uuid-exists":
             registered = await check_customer_exists(data_json['uuid'])
             if registered:
+                await delete_customer(self.user_uuid)
                 self.user_uuid = data_json['uuid']
                 await self.channel_layer.group_send(
                     self.channel,
@@ -90,6 +92,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 )
 
         if data_json['message'] =="get-offer-price":
+            await update_customer(self.user_uuid, data_json)
             async with async_playwright() as playwright:
                 chromium = playwright.webkit # or "firefox" or "webkit".
                 browser = await chromium.launch(headless=True)
@@ -269,6 +272,25 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         # Receive data from group
         await self.send(text_data=json.dumps(event['data']))
 
+@sync_to_async
+def update_customer(user_id, data_json):
+    customer = Customer.objects.get(client_id= user_id)
+    customer.anrede = data_json["anrede"]
+    customer.vorname = data_json["vorname"]
+    customer.nachname = data_json["nachname"]
+    customer.plz = data_json["plz"]
+    customer.ort = data_json["ort"]
+    customer.strasse = data_json["strasse"]
+    customer.hausnr = data_json["hausnr"]
+    customer.email = data_json["email"]
+    customer.birthdate = data_json["birthdate"]
+    # str to byte
+    byteIban = bytes(data_json["iban"], encoding='utf8')
+    # encode bytes
+    encodedIban = base64.b64encode(byteIban)
+    customer.iban = encodedIban
+    customer.save()
+
 
 
 
@@ -296,7 +318,7 @@ class ExtraViewConsumer(AsyncWebsocketConsumer):
             }
         )
 
-    async def disconnect(self):
+    async def disconnect(self, close_code):
         # Leave group
         print('disconnected')
         self.stop = True  # This will trigger the termination of loop # Maybe you also want to delete the thread
@@ -305,10 +327,10 @@ class ExtraViewConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         # Receive data from WebSocket
         data_json = json.loads(text_data)
+
         if data_json['message'] == "check-uuid-exists":
             registered = await check_customer_exists(data_json['uuid'])
             if registered:
-                await delete_customer(self.user_uuid)
                 self.user_uuid = data_json['uuid']
                 await self.channel_layer.group_send(
                     self.channel,
@@ -327,13 +349,40 @@ class ExtraViewConsumer(AsyncWebsocketConsumer):
                         'type': 'checked_uuid',
                         'data': {
                             'message': 'checked-uuid',
-                            'checked': False,
-                            'disconnected':True
+                            'checked': False
                         }
                     }
                 )
 
                 await self.disconnect()
+
+         
+        if data_json['message'] == 'get-extra-price':
+            async with async_playwright() as playwright:
+                chromium = playwright.chromium # or "firefox" or "webkit".
+                browser = await chromium.launch(headless=False)
+                page = await browser.new_page()
+                await page.goto(self.url_extra)
+                
+                print(data_json)
+                #fill out external form
+                small_price, medium_price, large_price, damage_text = await get_extra_price(page, data_json)           
+                await browser.close()               
+                # send result back to client
+                await self.channel_layer.group_send(
+                    self.channel,
+                    {
+                        'type': 'serve_extra_price',
+                        'data': {
+                            'message': 'serve_extra_price',
+                            'small': small_price,
+                            'medium': medium_price,
+                            'large': large_price,
+                            'damage_text': damage_text
+                        }
+                    }
+                )  
+        
 
 
     #-----------------------------------------------------------------------------
@@ -344,7 +393,10 @@ class ExtraViewConsumer(AsyncWebsocketConsumer):
     async def get_unique_id(self, event):
         # Receive data from group
         await self.send(text_data=json.dumps(event['data']))
-       
+
+    async def serve_extra_price(self, event):
+        # Receive data from group
+        await self.send(text_data=json.dumps(event['data']))
 #----------------------------------------------------------------------------------
 #
 #

@@ -53,9 +53,66 @@
                 document.cookie = name+"="+data.uuid + "; path=/";
             }
         }
+        if (data.message == "checked-uuid"){
+            if (data.checked==false){
+                systemSocket.close()
+            } else {
+                context ={
+                    "message": "get-extra-price",
+                    "birthdate": "{{ request.session.geburtsdatum }}",
+                    "vorname": "{{ request.session.vorname }}",
+                    "anrede": "{{ request.session.anrede }}",
+                    "nachname": "{{ request.session.nachname }}",
+                    "plz": "{{ request.session.plz }}",
+                    "ort": "{{ request.session.ort }}",
+                    "strasse": "{{ request.session.strasse }}",
+                    "hausnr": "{{ request.session.hausnr }}",
+                    "email": "{{ request.session.email }}",
+                    "iban": "{{ request.session.iban }}"
+                }
+                systemSocket.send(JSON.stringify(context));
+                console.log(context)
+            }
+        }
+        if (data.message == "serve_extra_price"){    
+            document.getElementById('offer-small-eur').innerText = data.small
+            document.getElementById('loader-col-small').style.display = "none"
+            document.getElementById('offer-small').style.display = "flex"
+            document.getElementById('extra_small').disabled = false        
 
-        if (data.message == "get_uuid"){
-            systemSocket.close()
+            document.getElementById('offer-medium-eur').innerText = data.medium
+            document.getElementById('loader-col-medium').style.display = "none"
+            document.getElementById('offer-medium').style.display = "flex"
+            document.getElementById('extra_medium').disabled = false
+
+            document.getElementById('offer-large-eur').innerText = data.large
+            document.getElementById('loader-col-large').style.display = "none"
+            document.getElementById('offer-large').style.display = "flex"
+            document.getElementById('extra_large').disabled = false
+
+            document.getElementById('text1_damage2').innerText = data.damage_text.text1_damage2
+            document.getElementById('text2_damage2').innerText = data.damage_text.text2_damage2
+            document.getElementById('text3_damage2').innerText = data.damage_text.text3_damage2
+            document.getElementById('text1_damage3').innerText = data.damage_text.text1_damage3
+            document.getElementById('text2_damage3').innerText = data.damage_text.text2_damage3
+            document.getElementById('text3_damage3').innerText = data.damage_text.text3_damage3
+            
+            
+            context ={
+                "message": "extra-price-received",
+                "birthdate": "{{ request.session.geburtsdatum }}",
+                "vorname": "{{ request.session.vorname }}",
+                "anrede": "{{ request.session.anrede }}",
+                "nachname": "{{ request.session.nachname }}",
+                "plz": "{{ request.session.plz }}",
+                "ort": "{{ request.session.ort }}",
+                "strasse": "{{ request.session.strasse }}",
+                "hausnr": "{{ request.session.hausnr }}",
+                "email": "{{ request.session.email }}",
+                "iban": "{{ request.session.iban }}"
+            }
+            systemSocket.send(JSON.stringify(context));            
+            
         }
     }
 

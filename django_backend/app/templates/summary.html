@@ -292,15 +292,14 @@
                 "message": "get-offer-price",
                 "birthdate": "{{ request.session.geburtsdatum }}",
                 "vorname": "{{ request.session.vorname }}",
-                "anrede": "{{ request.session.anrede }}"
-
-                // "nachname": "{{ request.session.nachname }}",
-                // "plz": "{{ request.session.plz }}",
-                // "ort": "{{ request.session.ort }}",
-                // "strasse": "{{ request.session.strasse }}",
-                // "hausnr": "{{ request.session.hausnr }}",
-                // "email": "{{ request.session.email }}",
-                // "iban": "{{ request.session.iban }}"
+                "anrede": "{{ request.session.anrede }}",
+                "nachname": "{{ request.session.nachname }}",
+                "plz": "{{ request.session.plz }}",
+                "ort": "{{ request.session.ort }}",
+                "strasse": "{{ request.session.strasse }}",
+                "hausnr": "{{ request.session.hausnr }}",
+                "email": "{{ request.session.email }}",
+                "iban": "{{ request.session.iban }}"
             }
             systemSocket.send(JSON.stringify(context));
             }

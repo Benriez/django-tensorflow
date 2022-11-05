@@ -1,6 +1,7 @@
 from datetime import datetime
 from django.shortcuts import render, redirect
-from .models import StandardPDF
+from .models import StandardPDF, Customer
+import base64
 
 def index(request):
     if "next" in request.POST:
@@ -61,4 +62,21 @@ def summary(request):
 
 
 def extra(request, uuid):
-    return render (request, 'extra.html')
+    customer = Customer.objects.get(client_id=uuid)
+    if customer:
+        request.session["anrede"] = customer.anrede
+        request.session["vorname"] = customer.vorname
+        request.session["nachname"] = customer.nachname
+        request.session["strasse"] = customer.strasse
+        request.session["hausnr"] = customer.hausnr
+        request.session["plz"] = customer.plz
+        request.session["ort"] = customer.ort
+        request.session["email"] = customer.email
+        request.session["geburtsdatum"] = customer.birthdate
+
+        # decode to str
+        decodeIban = base64.b64decode(b''+customer.iban).decode('utf-8')
+        request.session["iban"] = decodeIban
+
+
+        return render (request, 'extra.html')
