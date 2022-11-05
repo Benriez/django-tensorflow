@@ -36,7 +36,7 @@
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                     <tr>
                         <td bgcolor="#F6FDFF" align="left" style="padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">{{ paste_text }}</p>
+                            <p style="margin: 0;">{{ paste_text }}Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
                         </td>
                     </tr>
                     <tr>
@@ -46,11 +46,53 @@
                                     <td bgcolor="#F6FDFF" align="center" style="padding: 20px 30px 60px 30px;">
                                         <table border="0" cellspacing="0" cellpadding="0">
                                             <tr>
-                                                <td align="center" style="border-radius: 3px;" bgcolor="#00212D"><a href="https://{{ domain }}" target="_blank" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #82d0f5; display: inline-block;">Benutzerkonto bestätigen</a></td>
+                                                <td 
+                                                    align="center" 
+                                                    style="border-radius: 3px;" bgcolor="#00212D">
+                                                        <a 
+                                                            href="{{ offer_pdf }}" 
+                                                            target="_blank" 
+                                                            style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #82d0f5; display: inline-block;"
+                                                            >
+                                                                Ihr Persönliches Angebot herunterladen
+                                                        </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        {% if extra_pdf %}
+                                            <table border="0" cellspacing="0" cellpadding="0">
+                                                <tr>
+                                                    <td 
+                                                        align="center" 
+                                                        style="border-radius: 3px;" bgcolor="#00212D">
+                                                            <a 
+                                                                href="{{ extra_pdf }}" 
+                                                                target="_blank" 
+                                                                style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #82d0f5; display: inline-block;"
+                                                                >
+                                                                    Ihr extra Angebot herunterladen
+                                                            </a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        {% endif %}
+                                        <table border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td 
+                                                    align="center" 
+                                                    style="border-radius: 3px;" bgcolor="#00212D">
+                                                        <a 
+                                                            href="{{ offer_pdf }}" 
+                                                            target="_blank" 
+                                                            style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #82d0f5; display: inline-block;"
+                                                            >
+                                                                Jetzt Zahnzusatzversicherung abschließen
+                                                        </a>
+                                                </td>
                                             </tr>
                                         </table>
                                     </td>
-                                </tr>
+                                </tr>                              
                             </table>
                         </td>
                     </tr> <!-- COPY -->
@@ -60,13 +102,8 @@
                         </td>
                     </tr> <!-- COPY -->
                     <tr>
-                        <td bgcolor="#F6FDFF" align="left" style="padding: 20px 30px 20px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;"><a href="https://{{ domain }}" target="_blank" style="color: #00212D;">https://{{ domain }}</a></p>
-                        </td>
-                    </tr>
-                    <tr>
                         <td bgcolor="#F6FDFF" align="left" style="padding: 0px 30px 40px 30px; border-radius: 0px 0px 4px 4px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">Beste Grüße,<br>Ihre Fahrschule 360 GmbH </p>
+                            <p style="margin: 0;">Beste Grüße,<br>Ihre Zahnidee</p>
                         </td>
                     </tr>
                 </table>

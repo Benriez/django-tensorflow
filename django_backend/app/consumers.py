@@ -12,6 +12,8 @@ from django.template.loader import get_template
 from django.conf import settings
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
+from django.core.mail import EmailMessage
+import requests
 
 from playwright.async_api import async_playwright
 from PIL import Image
@@ -218,7 +220,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
 
                 #send email to customer
                 print('send email')
-                await send_email()
+                await send_email(self.user_uuid, data_json)
 
                 await self.channel_layer.group_send(
                     self.group_name,
@@ -303,21 +305,33 @@ def delete_customer(user_uuid):
 
 
 @sync_to_async
-def send_email():
-    mail_subject = 'Account confirmation'
+def send_email(user_uuid, data_json):
+    customer = Customer.objects.get(client_id = user_uuid)
+    mail_subject = 'Angebot'
     from_email = 'webmailer@zahnidee.de'
+    offer_pdf = customer.offer_pdf.url
+    extra_pdf = None
+
+    if data_json["extra_order"]==True:
+        extra_pdf = customer.extra_pdf.url
+
+
     context = {
-        "user": 'Username',
+        "user": data_json["anrede"] + ' ' + data_json["vorname"] + '' +data_json["nachname"],
         "domain": SITE_URL,
+        "offer_pdf": offer_pdf,
+        "extra_pdf": extra_pdf,
         # "uid":  urlsafe_base64_encode(force_bytes(user_pk)),
         # "token": account_activation_token.make_token(user),
-        'paste_text': 'Hello dear friend ....'
+        "paste_text": "Hello dear friend ...."
     }
     message = render_to_string('email/send_offer.html', context)   
     html_content = get_template("email/send_offer.html").render(context)
     msg = EmailMultiAlternatives(subject=mail_subject, body=message, from_email=from_email, to=['testreceiver@mail.com'])
     msg.attach_alternative(html_content, "text/html")
     msg.send()
+
+
    
 
 #----------------------------------------------------------------------------------
@@ -398,8 +412,9 @@ async def finish_orders(page_offer, page_extra, data_json):
     # get offer rest
 
     # get extra
-    await get_extra_step1(page_extra, data_json)
-    await get_extra_step2(page_extra, data_json)
+    if data_json["extra_order"]:
+        await get_extra_step1(page_extra, data_json)
+        await get_extra_step2(page_extra, data_json)
     #get extra rest
 
 #------------------------------------------------------------------------
@@ -516,13 +531,13 @@ def upload_pdf(user_uuid, im_con, name, image_list):
     media_path = './media/pdfs/'
 
     if name =="Extra":
-        im_con.save(media_path + extra_filename, save_all=True, append_images=image_list)
+        im_con.save(media_path + extra_filename, save_all=True, append_images=image_list, optimize=True, quality=80)
         local_file = open(media_path+extra_filename)
         extra_pdf = File(local_file)
         customer.extra_pdf.save(extra_filename, File(open(str(extra_pdf),'rb')))
         local_file.close()
     else:
-        im_con.save(media_path + filename, save_all=True, append_images=image_list)
+        im_con.save(media_path + filename, save_all=True, append_images=image_list,optimize=True,quality=80)
         local_file = open(media_path + filename)
         offer_pdf = File(local_file)
         customer.offer_pdf.save(filename, File(open(str(offer_pdf),'rb')))
@@ -540,7 +555,7 @@ async def create_pdf(page, user_uuid ,name):
     await loader_page.wait_for_url("blob:**")
     await loader_page.set_viewport_size({"width": 2480, "height": 3496})
     for p in range(print_pages):
-        screenshot_path = user_uuid + '_' +name+"screenshot"+str(p)+".png"
+        screenshot_path = user_uuid + '_' +name+"screenshot"+str(p)+".jpg"
 
         await loader_page.screenshot(path=screenshot_path, full_page=True)
         await loader_page.mouse.wheel(0, 3496)
@@ -551,7 +566,7 @@ async def create_pdf(page, user_uuid ,name):
     await upload_pdf(user_uuid, im_con, name, image_list)
     # delete screenshots after pdf is created
     for p in range(print_pages):
-        screenshot_path = user_uuid + '_' +name+"screenshot"+str(p)+".png"
+        screenshot_path = user_uuid + '_' +name+"screenshot"+str(p)+".jpg"
         os.remove(r''+screenshot_path)
 
 
