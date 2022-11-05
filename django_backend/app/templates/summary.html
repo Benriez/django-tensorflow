@@ -134,7 +134,12 @@
                 </div>
                 <div id="extra_PDF" style="display: none;">
                     <i class="fas fa-regular fa-file-pdf" style="font-size: 1.7rem; color: #3e1a1a;"></i>
-                    <a href="/media/pdfs/Mein_Extra_Angebot.pdf" download> Download - Ihr Zahnersatz Angebot</a>
+                    <a 
+                        href="/media/pdfs/Mein_Extra_Angebot.pdf" 
+                        target="_blank" rel="noopener noreferrer" 
+                        download>
+                            Download - Ihr Zahnersatz Angebot
+                    </a>
                 </div>
                 <div id="extra_check" class="form-check mb-3"  style="margin-bottom: 2rem; margin-top: 1rem; display: none;" onclick="check_finish()">
                     <input class="form-check-input" type="checkbox" value="" id="input_extra_check">
@@ -150,7 +155,14 @@
                 </div>
                 <div id="personalizedPDF" style="display: none;">
                     <i class="fas fa-regular fa-file-pdf" style="font-size: 1.7rem; color: #3e1a1a;"></i>
-                    <a href="/media/pdfs/Mein_Angebot.pdf" style="margin-bottom: 0px;" download> Download - Ihr Persönliches Angebot</a>
+                    <a 
+                        id="offer_link" 
+                        href="" 
+                        style="margin-bottom: 0px;" 
+                        target="_blank" rel="noopener noreferrer" 
+                        download> 
+                            Download - Ihr Persönliches Angebot
+                    </a>
                 </div>
                 <div id="angebot_check" class="form-check" style="margin-bottom: 2rem; margin-top: 1rem; display: none;" onclick="check_finish()">
                     <input class="form-check-input" type="checkbox" value="" id="input_angebot_check">
@@ -163,7 +175,13 @@
                 {% for file in request.session.standardPDF %}
                     <div style="display: flex; margin-bottom: 1rem;">
                         <i class="fas fa-regular fa-file-pdf" style="font-size: 1.7rem; color: #3e1a1a;"></i>
-                        <a href="{{file}}" style="margin-bottom: 0px;" download>Download - Schweigepflichtsentbindungserklärung</a>
+                        <a 
+                            href="{{file}}" 
+                            style="margin-bottom: 0px;" 
+                            target="_blank" rel="noopener noreferrer" 
+                            download>
+                                Download - Schweigepflichtsentbindungserklärung
+                        </a>
                     </div>    
                 {% endfor %}
 
@@ -363,6 +381,7 @@
         if (data.message == "Done"){
             document.getElementById('loader_angebot').style.display = 'none'
             document.getElementById('angebot_check').style.display = 'flex'
+            document.getElementById('offer_link').href = data.offer_link
             document.getElementById('personalizedPDF').style.display = 'flex'
 
             // document.getElementById('finish').disabled = false;

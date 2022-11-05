@@ -28,20 +28,22 @@ SITE_URL = getattr(settings, "SITE_URL", None)
 
 class ScraperViewConsumer(AsyncWebsocketConsumer):
     group_name = "scraper"
+    channel = ""
     url_offer = "https://ssl.barmenia.de/online-versichern/#/zahnversicherung/Beitrag?tarif=2&adm=00232070&app=makler"
     url_extra = "https://ssl.barmenia.de/online-versichern/#/zahnversicherung/Beitrag?tarif=1&app=makler&ADM=00232070"
     user_uuid = ""
 
     async def connect(self):
+        self.user_uuid = await get_or_create_customer()
+        self.channel = self.group_name+'_'+self.user_uuid
         await self.channel_layer.group_add(
-            self.group_name,
+            self.channel,
             self.channel_name
         )
         await self.accept()
-        self.user_uuid = await get_or_create_customer()
         #create unique id
         await self.channel_layer.group_send(
-            self.group_name,
+            self.channel,
             {
                 'type': 'get_unique_id',
                 'data': {
@@ -65,7 +67,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 await delete_customer(self.user_uuid)
                 self.user_uuid = data_json['uuid']
                 await self.channel_layer.group_send(
-                    self.group_name,
+                    self.channel,
                     {
                         'type': 'checked_uuid',
                         'data': {
@@ -76,7 +78,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 )
             else:
                 await self.channel_layer.group_send(
-                    self.group_name,
+                    self.channel,
                     {
                         'type': 'checked_uuid',
                         'data': {
@@ -99,7 +101,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 date, str_price = await get_offer_price(page, data_json) 
                 await browser.close()               
                 await self.channel_layer.group_send(
-                    self.group_name,
+                    self.channel,
                     {
                         'type': 'get_offer_price',
                         'data': {
@@ -122,7 +124,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 await browser.close()               
                 # send result back to client
                 await self.channel_layer.group_send(
-                    self.group_name,
+                    self.channel,
                     {
                         'type': 'serve_extra_price',
                         'data': {
@@ -145,13 +147,15 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 
                 #fill out external form
                 await get_offer_pdf(page, data_json, self.user_uuid) 
+                offer_link = await get_offer_link(self.user_uuid)
                 await browser.close() 
                 await self.channel_layer.group_send(
-                    self.group_name,
+                    self.channel,
                     {
                         'type': 'serve_personal_offer',
                         'data': {
-                            'message': 'Done'
+                            'message': 'Done',
+                            'offer_link': offer_link
                         }
                     }
                 )
@@ -170,7 +174,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 await browser.close()               
                 # send result back to client
                 await self.channel_layer.group_send(
-                    self.group_name,
+                    self.channel,
                     {
                         'type': 'serve_price',
                         'data': {
@@ -193,9 +197,9 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 await get_extra_pdf(page, data_json, self.user_uuid)
                 #await page.pause()
                 await browser.close() 
-
+                
                 await self.channel_layer.group_send(
-                    self.group_name,
+                    self.channel,
                     {
                         'type': 'serve_price',
                         'data': {
@@ -222,7 +226,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 await send_email(self.user_uuid, data_json)
 
                 await self.channel_layer.group_send(
-                    self.group_name,
+                    self.channel,
                     {
                         'type': 'congratulation',
                         'data': {
@@ -331,7 +335,16 @@ def send_email(user_uuid, data_json):
     msg.send()
 
 
-   
+@sync_to_async
+def get_offer_link(user_uuid):
+    url = ''
+    try:
+        customer= Customer.objects.get(client_id = user_uuid)
+        url=customer.offer_pdf.url
+    except:
+        pass
+
+    return url
 
 #----------------------------------------------------------------------------------
 #
