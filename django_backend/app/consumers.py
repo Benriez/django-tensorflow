@@ -462,19 +462,22 @@ async def get_extra_step2(page, data_json):
 @sync_to_async
 def upload_pdf(user_uuid, im_con, name, image_list):
     customer = Customer.objects.get(client_id = user_uuid)
-    if name =="Extra":
-        im_con.save('./media/pdfs/Mein_'+name+'_Angebot.pdf', save_all=True, append_images=image_list)
-        # customer.extra_pdf = im_con.save('Mein_'+name+'_Angebot.pdf', save_all=True, append_images=image_list)
-    else:
-        im_con.save('./media/pdfs/Mein_Angebot.pdf', save_all=True, append_images=image_list)
-        local_file = open('./media/pdfs/Mein_Angebot.pdf')
-        offer_pdf = File(local_file)
-        customer.offer_pdf.save('new', File(open(str(offer_pdf),'rb')))
-        local_file.close()
-        print(str(offer_pdf))
-        # customer.offer_pdf = im_con.save('Mein_Angebot.pdf', save_all=True, append_images=image_list)
+    filename = 'Mein_Angebot.pdf'
+    extra_filename = 'Mein_'+name+'_Angebot.pdf'
+    media_path = './media/pdfs/'
 
-    print('SAVED')
+    if name =="Extra":
+        im_con.save(media_path+extra_filename, save_all=True, append_images=image_list)
+        local_file = open(media_path+extra_filename)
+        extra_pdf = File(local_file)
+        customer.extra_pdf.save(extra_filename, File(open(str(extra_pdf),'rb')))
+        local_file.close()
+    else:
+        im_con.save(media_path+ filename, save_all=True, append_images=image_list)
+        local_file = open(media_path+filename)
+        offer_pdf = File(local_file)
+        customer.offer_pdf.save(filename, File(open(str(offer_pdf),'rb')))
+        local_file.close()
 
 
 
@@ -488,7 +491,8 @@ async def create_pdf(page, user_uuid ,name):
     await loader_page.wait_for_url("blob:**")
     await loader_page.set_viewport_size({"width": 2480, "height": 3496})
     for p in range(print_pages):
-        screenshot_path = name+"screenshot"+str(p)+".png"
+        screenshot_path = user_uuid + '_' +name+"screenshot"+str(p)+".png"
+
         await loader_page.screenshot(path=screenshot_path, full_page=True)
         await loader_page.mouse.wheel(0, 3496)
         image = Image.open(r''+screenshot_path)
@@ -498,7 +502,7 @@ async def create_pdf(page, user_uuid ,name):
     await upload_pdf(user_uuid, im_con, name, image_list)
     # delete screenshots after pdf is created
     for p in range(print_pages):
-        screenshot_path = name+"screenshot"+str(p)+".png"
+        screenshot_path = user_uuid + '_' +name+"screenshot"+str(p)+".png"
         os.remove(r''+screenshot_path)
 
 
