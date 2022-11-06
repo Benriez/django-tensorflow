@@ -52,7 +52,6 @@ def get_standard_pdf_storage():
     return standard_pdf_storage
 
 
-
 #-----------------------------------------------------------------------------------------------------------------
 class Customer(models.Model):
     client_id   = models.CharField(max_length=30, null=True, unique=True)
@@ -72,7 +71,7 @@ class Customer(models.Model):
     iban        = models.BinaryField(default=b'\x08')
     birthdate   = models.CharField(max_length=50, null=True)
     class Meta:
-        app_label = 'Customer'
+        app_label = 'app'
 
     def __str__(self):
         return self.client_id
@@ -83,7 +82,7 @@ class StandardPDF(models.Model):
     pdf     = models.FileField(storage=get_standard_pdf_storage(), upload_to=get_standard_upload_path, blank=True, null=True)
 
     class Meta:
-        app_label = 'StandardPDF'
+        app_label = 'app'
 
     def __str__(self):
         return self.name

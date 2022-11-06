@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render, redirect
-from .models import StandardPDF, Customer
+# from .models import StandardPDF, Customer
 import base64
 
 def index(request):
@@ -15,13 +15,13 @@ def index(request):
         list_geburtsdatum.reverse()
         format_geburtsdatum =""
 
-        try:
-            standard_pdfs = StandardPDF.objects.all()
-            standard_pdf_urls =[]
-            for file in standard_pdfs:
-                standard_pdf_urls.append(file.pdf.url)
-        except:
-            pass
+        # try:
+        #     standard_pdfs = StandardPDF.objects.all()
+        #     standard_pdf_urls =[]
+        #     for file in standard_pdfs:
+        #         standard_pdf_urls.append(file.pdf.url)
+        # except:
+            
 
 
         for l in list_geburtsdatum:  
@@ -50,7 +50,7 @@ def index(request):
         request.session["iban"] = iban
         request.session["bic"] = bic
         request.session["bankname"] = bankname
-        request.session["standardPDF"] = standard_pdf_urls
+        # request.session["standardPDF"] = standard_pdf_urls
 
         return redirect("summary")
 
@@ -63,21 +63,22 @@ def summary(request):
 
 
 def extra(request, uuid):
-    customer = Customer.objects.get(client_id=uuid)
-    if customer:
-        request.session["anrede"] = customer.anrede
-        request.session["vorname"] = customer.vorname
-        request.session["nachname"] = customer.nachname
-        request.session["strasse"] = customer.strasse
-        request.session["hausnr"] = customer.hausnr
-        request.session["plz"] = customer.plz
-        request.session["ort"] = customer.ort
-        request.session["email"] = customer.email
-        request.session["geburtsdatum"] = customer.birthdate
+    pass
+    # customer = Customer.objects.get(client_id=uuid)
+    # if customer:
+    #     request.session["anrede"] = customer.anrede
+    #     request.session["vorname"] = customer.vorname
+    #     request.session["nachname"] = customer.nachname
+    #     request.session["strasse"] = customer.strasse
+    #     request.session["hausnr"] = customer.hausnr
+    #     request.session["plz"] = customer.plz
+    #     request.session["ort"] = customer.ort
+    #     request.session["email"] = customer.email
+    #     request.session["geburtsdatum"] = customer.birthdate
 
-        # decode to str
-        decodeIban = base64.b64decode(b''+customer.iban).decode('utf-8')
-        request.session["iban"] = decodeIban
+    #     # decode to str
+    #     decodeIban = base64.b64decode(b''+customer.iban).decode('utf-8')
+    #     request.session["iban"] = decodeIban
 
 
-        return render (request, 'extra.html')
+    #     return render (request, 'extra.html')

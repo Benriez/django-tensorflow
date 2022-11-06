@@ -35,7 +35,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         self.user_uuid = await get_or_create_customer()
         self.channel = self.group_name+'_'+self.user_uuid
         await self.channel_layer.group_add(
-            self.group_name,
+            self.channel,
             self.channel_name
         )
         await self.accept()
