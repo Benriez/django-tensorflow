@@ -453,7 +453,7 @@ class ExtraViewConsumer(AsyncWebsocketConsumer):
 #
 #
 def gen_uuid():
-    random_uuid= uuid.uuid4().hex[:8]
+    random_uuid= uuid.uuid4().hex[:16]
     return random_uuid
 
 @sync_to_async
