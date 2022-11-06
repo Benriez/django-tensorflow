@@ -217,8 +217,8 @@
     if ( window.history.replaceState ) {
          window.history.replaceState( null, null, window.location.href );
     }
-
-    const systemSocket = new WebSocket(`ws://${window.location.host}/ws/scraper/`);
+    let ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+    const systemSocket = new WebSocket(ws_scheme+'://' + window.location.host + '/ws/scraper/');
 
 
     systemSocket.onopen = function(e) {   

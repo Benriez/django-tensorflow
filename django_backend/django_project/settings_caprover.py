@@ -13,7 +13,10 @@ try:
         DEBUG = True
 except:
     DEBUG = False
+
 # allowed hosts get parsed from a comma-separated list
+trust_orgins = os.environ.get("CR_TRUSTED_ORIGINS") or ImproperlyConfigured("CR_TRUSTED_ORIGINS not set")
+CSRF_TRUSTED_ORIGINS = [trust_orgins]
 hosts = os.environ.get("CR_HOSTS") or ImproperlyConfigured("CR_HOSTS not set")
 try:
     ALLOWED_HOSTS = hosts.split(",")
