@@ -103,6 +103,7 @@
     }
     let ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
     const systemSocket = new WebSocket(ws_scheme + window.location.host+ '/ws/extra-scraper/');
+    
     systemSocket.onopen = function(e) {   
         console.log('systemsocket connected');
 		uuid = window.location.pathname.split('/')[2]
