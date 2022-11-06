@@ -21,10 +21,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'rest_framework',
+    'storages',
     # 'private_storage',
     # Add your apps here
     "app",
-    'storages',
     "authentication",
     "system",
     "djmoney",
@@ -76,14 +76,7 @@ TEMPLATES = [
     },
 ]
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
-        },
-    },
-}
+
 
 
 #WSGI_APPLICATION = "django_project.wsgi.application"
