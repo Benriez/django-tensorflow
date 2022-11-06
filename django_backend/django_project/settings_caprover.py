@@ -8,7 +8,11 @@ from .settings import BASE_DIR
 
 # key and debugging settings should not changed without care
 SECRET_KEY = os.environ.get("CR_SECRET_KEY") or ImproperlyConfigured("CR_SECRET_KEY not set")
-DEBUG = False
+try:
+    if os.environ.get("CR_DEBUG", True):
+        DEBUG = True
+except:
+    DEBUG = False
 # allowed hosts get parsed from a comma-separated list
 hosts = os.environ.get("CR_HOSTS") or ImproperlyConfigured("CR_HOSTS not set")
 try:
@@ -75,3 +79,9 @@ EMAIL_HOST_PASSWORD = os.environ.get("CR_EMAIL_HOST_PASSWORD_PROD") or Improperl
 EMAIL_USE_SSL = os.environ.get("CR_EMAIL_USE_SSL_PROD") or ImproperlyConfigured("CR_EMAIL_USE_SSL_PROD not set")
 EMAIL_PORT = os.environ.get("CR_EMAIL_PORT_PROD") or ImproperlyConfigured("CR_EMAIL_PORT_PROD not set")
 EMAIL_TIMEOUT = 30
+
+
+AWS_ACCESS_KEY_ID = os.environ.get("CR_AWS_ACCESS_KEY_ID") or ImproperlyConfigured("CR_AWS_ACCESS_KEY_ID not set")
+AWS_SECRET_ACCESS_KEY = os.environ.get("CR_AWS_SECRET_ACCESS_KEY")  or ImproperlyConfigured("CR_AWS_SECRET_ACCESS_KEY not set")
+AWS_STORAGE_BUCKET_NAME = os.environ.get("CR_AWS_STORAGE_BUCKET_NAME") or ImproperlyConfigured("CR_AWS_STORAGE_BUCKET_NAME not set")
+AWS_S3_ENDPOINT_URL = os.environ.get("CR_AWS_S3_ENDPOINT_URL") or ImproperlyConfigured("CR_AWS_S3_ENDPOINT_URL not set")
