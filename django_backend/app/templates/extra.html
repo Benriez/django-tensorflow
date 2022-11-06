@@ -101,8 +101,8 @@
         document.getElementById('loader-col-medium').style.display = "flex"
         document.getElementById('loader-col-large').style.display = "flex"
     }
-    // let ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-    const systemSocket = new WebSocket(`ws://${window.location.host}/ws/extra-scraper/`);
+    let ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+    let systemSocket = new WebSocket(ws_scheme +'://'+window.location.host+ '/ws/extra-scraper/');
     systemSocket.onopen = function(e) {   
         console.log('systemsocket connected');
 		uuid = window.location.pathname.split('/')[2]
