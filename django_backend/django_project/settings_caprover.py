@@ -43,6 +43,18 @@ else:
     }
 
 
+redis_host = os.environ.get("CR_REDIS_HOST") or ImproperlyConfigured("CR_REDIS_HOST not set")
+redis_pass = os.environ.get("CR_REDIS_PASS") or ImproperlyConfigured("CR_REDIS_PASS not set")
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis://:" + redis_pass + "@" + redis_host + ":6379/0")],
+        }
+    },
+}
+
+
 # Static Files
 STATIC_ROOT = os.path.join(BASE_DIR, "public/static")
 STATIC_URL = "/static/"
