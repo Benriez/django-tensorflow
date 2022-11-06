@@ -4,14 +4,14 @@ from channels.security.websocket import AllowedHostsOriginValidator
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
 
-import app.routing
-import system.routing
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_project.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_project.settings.main')
+import django
+django.setup()
+import app.routing
 
 websocket_urls = []
 websocket_urls.extend(app.routing.websocket_urlpatterns)
-websocket_urls.extend(system.routing.websocket_urlpatterns)
 
 
 application = ProtocolTypeRouter({

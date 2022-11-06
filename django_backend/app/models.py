@@ -1,9 +1,6 @@
-from django.utils.html import mark_safe
 from django.db import models
-from django.utils.timezone import now
-from django.core.validators import deconstructible 
+from django.core.validators import deconstructible
 from storages.backends.s3boto3 import S3Boto3Storage
-from django.contrib.auth.hashers import make_password
 
 FOLDER_PDF   = 'users/'
 FOLDER_STANDARD_PDF = 'standards/'
@@ -56,9 +53,6 @@ def get_standard_pdf_storage():
 
 
 
-
-
-
 #-----------------------------------------------------------------------------------------------------------------
 class Customer(models.Model):
     client_id   = models.CharField(max_length=30, null=True, unique=True)
@@ -77,6 +71,8 @@ class Customer(models.Model):
     hausnr      = models.CharField(max_length=30, null=True)
     iban        = models.BinaryField(default=b'\x08')
     birthdate   = models.CharField(max_length=50, null=True)
+    class Meta:
+        app_label = 'Customer'
 
     def __str__(self):
         return self.client_id
@@ -85,6 +81,9 @@ class Customer(models.Model):
 class StandardPDF(models.Model):
     name    = models.CharField(max_length=30)
     pdf     = models.FileField(storage=get_standard_pdf_storage(), upload_to=get_standard_upload_path, blank=True, null=True)
+
+    class Meta:
+        app_label = 'StandardPDF'
 
     def __str__(self):
         return self.name

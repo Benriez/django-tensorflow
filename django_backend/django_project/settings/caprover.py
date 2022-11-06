@@ -4,7 +4,7 @@ import os
 
 from django.core.exceptions import ImproperlyConfigured
 
-from .settings import BASE_DIR
+from .main import BASE_DIR
 
 # key and debugging settings should not changed without care
 SECRET_KEY = os.environ.get("CR_SECRET_KEY") or ImproperlyConfigured("CR_SECRET_KEY not set")
@@ -67,7 +67,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "public/static")
 STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, '../static')
 ]
 
 

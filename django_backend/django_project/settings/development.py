@@ -3,7 +3,7 @@
 import os
 import environ
 
-from .settings import BASE_DIR
+from .main import BASE_DIR
 
 
 env = environ.Env()
@@ -40,7 +40,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "public/static")
 STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [
-	os.path.join(BASE_DIR, 'static')
+	os.path.join(BASE_DIR, '../static')
 ]
 
 

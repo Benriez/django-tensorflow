@@ -21,12 +21,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'rest_framework',
-    'storages',
-    # 'private_storage',
+
     # Add your apps here
-    "app",
+    "app.apps.AppConfig",
+    "storages",
     "authentication",
-    "system",
     "djmoney",
 ]
 
@@ -126,12 +125,6 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Media file handling
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -163,7 +156,13 @@ print("""\
                                                 """)
 
 if os.environ.get("CAPROVER") is None:
-    from .settings_dev import *
+    print("\n------------------------------------")
+    print("------START DEVELOPMENT SERVER------")
+    print("------------------------------------\n")
+    from .development import *
 else:
-    from .settings_caprover import *
+    print("\n------------------------------------")
+    print("------START PRODUCTION SERVER------")
+    print("------------------------------------\n")
+    from .caprover import *
 

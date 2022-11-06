@@ -21,10 +21,9 @@ from django.conf import settings
 from django.views.static import serve
 
 urlpatterns = [
-    path('admin/',  admin.site.urls),
-    path('system/', include('system.urls')),
+    path('', include('app.urls')),
+    path('admin/', admin.site.urls),
     path('auth/', include('authentication.urls')),
-    path('',        include('app.urls')),
 
     #path('',        views.index),
     # path('login/', views.loginPage, name='loginPage'),

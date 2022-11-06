@@ -1,25 +1,21 @@
 import os
 import json
 import uuid 
+import base64
 
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
-from django.core.files import File
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import get_template
-from django.conf import settings
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
-from django.core.mail import EmailMessage
 from channels.exceptions import StopConsumer
-import requests
-import base64
+
+from django.core.files import File
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string, get_template
+from django.conf import settings
 
 from playwright.async_api import async_playwright
 from PIL import Image
 
+#
 from .models import Customer
 
 
@@ -39,7 +35,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         self.user_uuid = await get_or_create_customer()
         self.channel = self.group_name+'_'+self.user_uuid
         await self.channel_layer.group_add(
-            self.channel,
+            self.group_name,
             self.channel_name
         )
         await self.accept()
@@ -54,7 +50,6 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 }
             }
         )
-        #create unique user id and send back to client
     
     async def disconnect(self, close_code):
         # Leave group

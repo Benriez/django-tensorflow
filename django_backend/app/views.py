@@ -15,12 +15,13 @@ def index(request):
         list_geburtsdatum.reverse()
         format_geburtsdatum =""
 
-
-        standard_pdfs = StandardPDF.objects.all()
-        standard_pdf_urls =[]
-        for file in standard_pdfs:
-            standard_pdf_urls.append(file.pdf.url)
-    
+        try:
+            standard_pdfs = StandardPDF.objects.all()
+            standard_pdf_urls =[]
+            for file in standard_pdfs:
+                standard_pdf_urls.append(file.pdf.url)
+        except:
+            pass
 
 
         for l in list_geburtsdatum:  
