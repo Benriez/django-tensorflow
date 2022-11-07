@@ -775,10 +775,11 @@ async def create_pdf(page, user_uuid ,name):
     print(pdf_page.url)
 
     #await pdf_page.wait_for_url(r"blob:**")
-    await pdf_page.wait_for_selector("embed")
+    print('try wait for selector "embed"...')
+    await pdf_page.wait_for_selector("embed", timeout = 100000)
     print(pdf_page.url)
 
-    
+
     await pdf_page.set_viewport_size({"width": 2480, "height": 3496})
     for p in range(print_pages):
         screenshot_path = user_uuid + '_' +name+"screenshot"+str(p)+".jpg"
