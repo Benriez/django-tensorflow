@@ -139,7 +139,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         if data_json['message'] == 'extra-price-received':
             async with async_playwright() as playwright:
                 chromium = playwright.webkit # or "firefox" or "webkit".
-                browser = await chromium.launch(headless=True)
+                browser = await chromium.launch(headless=False)
                 page = await browser.new_page()
                 await page.goto(self.url_offer)
                 # other actions...
@@ -759,6 +759,9 @@ def upload_pdf(user_uuid, im_con, name, image_list):
         local_file.close()
 
 
+async def handle_popup(popup):
+    await popup.wait_for_load_state()
+    print(await popup.title())
 
 
 async def create_pdf(page, user_uuid ,name):
@@ -767,9 +770,8 @@ async def create_pdf(page, user_uuid ,name):
     image_list =[]
     # await page.pause()
     pdf_page = await popup.value
-    await pdf_page.wait_for_load_state()
-    await pdf_page.wait_for_url(r"blob:**")
-
+    pdf_page.on("popup", handle_popup)
+    #await pdf_page.wait_for_url(r"blob:**")
     #await pdf_page.wait_for_selector("embed")
 
     await pdf_page.set_viewport_size({"width": 2480, "height": 3496})
