@@ -759,11 +759,6 @@ def upload_pdf(user_uuid, im_con, name, image_list):
         local_file.close()
 
 
-async def handle_popup(popup):
-    print('handle popup')
-    await popup.wait_for_load_state()
-    print(await popup.title())
-
 
 async def create_pdf(page, user_uuid ,name):
     async with page.expect_popup() as popup:
@@ -776,9 +771,13 @@ async def create_pdf(page, user_uuid ,name):
 
     #await pdf_page.wait_for_url(r"blob:**")
     print('try wait for selector "embed"...')
-    await pdf_page.wait_for_selector("embed", timeout = 100000)
-    print(pdf_page.url)
-
+    try:
+        await pdf_page.wait_for_selector("embed", timeout = 100000)
+    except:
+        print('cant wait for selector [embed] at url: ', pdf_page.url)
+        print('try wait for url [blob]')
+        await pdf_page.wait_for_url(r"blob:**")
+        
 
     await pdf_page.set_viewport_size({"width": 2480, "height": 3496})
     for p in range(print_pages):
