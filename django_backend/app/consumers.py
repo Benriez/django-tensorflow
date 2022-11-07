@@ -2,6 +2,7 @@ import os
 import json
 import uuid 
 import base64
+import re
 
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
@@ -89,8 +90,8 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         if data_json['message'] =="get-offer-price":
             await update_customer(self.user_uuid, data_json)
             async with async_playwright() as playwright:
-                chromium = playwright.webkit # or "firefox" or "webkit".
-                browser = await chromium.launch(headless=True)
+                chromium = playwright.chromium # or "firefox" or "webkit".
+                browser = await chromium.launch(headless=False)
                 page = await browser.new_page()
                 await page.goto(self.url_offer)
                 # other actions...
@@ -761,14 +762,14 @@ def upload_pdf(user_uuid, im_con, name, image_list):
 
 
 async def create_pdf(page, user_uuid ,name):
-    await page.pause()
     async with page.expect_popup() as popup:
         await page.click('baf-link', modifiers=["Alt",])
     image_list =[]
     pdf_page = await popup.value
 
-    #await pdf_page.wait_for_url("blob:**")
-    #await expect(page).toContainUrl('embed');
+    #await pdf_page.wait_for_url(r"blob:**")
+    await pdf_page.wait_for_selector("embed")
+
     await pdf_page.set_viewport_size({"width": 2480, "height": 3496})
     for p in range(print_pages):
         screenshot_path = user_uuid + '_' +name+"screenshot"+str(p)+".jpg"
