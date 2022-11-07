@@ -760,6 +760,7 @@ def upload_pdf(user_uuid, im_con, name, image_list):
 
 
 async def handle_popup(popup):
+    print('handle popup')
     await popup.wait_for_load_state()
     print(await popup.title())
 
@@ -770,10 +771,14 @@ async def create_pdf(page, user_uuid ,name):
     image_list =[]
     # await page.pause()
     pdf_page = await popup.value
-    pdf_page.on("popup", handle_popup)
-    #await pdf_page.wait_for_url(r"blob:**")
-    #await pdf_page.wait_for_selector("embed")
 
+    print(pdf_page.url)
+
+    #await pdf_page.wait_for_url(r"blob:**")
+    await pdf_page.wait_for_selector("embed")
+    print(pdf_page.url)
+
+    
     await pdf_page.set_viewport_size({"width": 2480, "height": 3496})
     for p in range(print_pages):
         screenshot_path = user_uuid + '_' +name+"screenshot"+str(p)+".jpg"
