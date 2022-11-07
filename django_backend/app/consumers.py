@@ -12,7 +12,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string, get_template
 from django.conf import settings
 
-from playwright.async_api import async_playwright
+from playwright.async_api import async_playwright, expect
 from PIL import Image
 
 #
@@ -138,7 +138,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         if data_json['message'] == 'extra-price-received':
             async with async_playwright() as playwright:
                 chromium = playwright.webkit # or "firefox" or "webkit".
-                browser = await chromium.launch(headless=True)
+                browser = await chromium.launch(headless=False)
                 page = await browser.new_page()
                 await page.goto(self.url_offer)
                 # other actions...
@@ -761,18 +761,20 @@ def upload_pdf(user_uuid, im_con, name, image_list):
 
 
 async def create_pdf(page, user_uuid ,name):
+    await page.pause()
     async with page.expect_popup() as popup:
         await page.click('baf-link', modifiers=["Alt",])
-
     image_list =[]
-    loader_page = await popup.value
-    await loader_page.wait_for_url("blob:**")
-    await loader_page.set_viewport_size({"width": 2480, "height": 3496})
+    pdf_page = await popup.value
+
+    #await pdf_page.wait_for_url("blob:**")
+    #await expect(page).toContainUrl('embed');
+    await pdf_page.set_viewport_size({"width": 2480, "height": 3496})
     for p in range(print_pages):
         screenshot_path = user_uuid + '_' +name+"screenshot"+str(p)+".jpg"
 
-        await loader_page.screenshot(path=screenshot_path, full_page=True)
-        await loader_page.mouse.wheel(0, 3496)
+        await pdf_page.screenshot(path=screenshot_path, full_page=True)
+        await pdf_page.mouse.wheel(0, 3496)
         image = Image.open(r''+screenshot_path)
         im_con = image.convert('RGB')
         image_list.append(im_con)
