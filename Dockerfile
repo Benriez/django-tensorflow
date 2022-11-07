@@ -38,7 +38,6 @@ RUN apt-get install libxcb1 -y
 RUN apt-get install libxcursor1 -y
 RUN apt-get install libxi6 -y
 RUN apt-get install -y gstreamer1.0-libav libnss3-tools libatk-bridge2.0-0 libcups2-dev libxkbcommon-x11-0 libxcomposite-dev libxrandr2 libgbm-dev libgtk-3-0
-RUN apt-get install -y libEGL.so.1 libevent-2.1.so.7 libxslt.so.1 libOpenGL.so.0 libGLX.so.0 libwoff2dec.so.1.0.2 libharfbuzz-icu.so.0 libgstgl-1.0.so.0 libwebpdemux.so.2 libenchant-2.so.2 libsecret-1.so.0 libhyphen.so.0 libevdev.so.2 libgudev-1.0.so.0 libGLESv2.so.2
 
 COPY ./utils/ /usr/src/utils
 EXPOSE 80
