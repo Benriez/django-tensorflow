@@ -91,7 +91,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
             await update_customer(self.user_uuid, data_json)
             async with async_playwright() as playwright:
                 chromium = playwright.chromium # or "firefox" or "webkit".
-                browser = await chromium.launch(headless=False)
+                browser = await chromium.launch(headless=True)
                 page = await browser.new_page()
                 await page.goto(self.url_offer)
                 # other actions...
