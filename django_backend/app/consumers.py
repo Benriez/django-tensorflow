@@ -765,12 +765,12 @@ async def create_pdf(page, user_uuid ,name):
     async with page.expect_popup() as popup:
         await page.click('baf-link', modifiers=["Alt",])
     image_list =[]
+    # await page.pause()
     pdf_page = await popup.value
-
-    
+    await pdf_page.wait_for_load_state()
     await pdf_page.wait_for_url(r"blob:**")
 
-        #await pdf_page.wait_for_selector("embed")
+    #await pdf_page.wait_for_selector("embed")
 
     await pdf_page.set_viewport_size({"width": 2480, "height": 3496})
     for p in range(print_pages):
