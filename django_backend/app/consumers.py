@@ -767,8 +767,10 @@ async def create_pdf(page, user_uuid ,name):
     image_list =[]
     pdf_page = await popup.value
 
-    #await pdf_page.wait_for_url(r"blob:**")
-    await pdf_page.wait_for_selector("embed", timeout=100000)
+    try:
+        await pdf_page.wait_for_url(r"blob:**")
+    except:
+        await pdf_page.wait_for_selector("embed")
 
     await pdf_page.set_viewport_size({"width": 2480, "height": 3496})
     for p in range(print_pages):
