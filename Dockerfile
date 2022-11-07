@@ -9,6 +9,7 @@ WORKDIR /usr/src/app
 COPY ./django_backend/ /usr/src/app
 RUN pip install -r requirements.txt
 RUN playwright install
+RUN playwright install-deps
 
 RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install tzdata
 RUN apt-get install libgtk-3-0 -y
