@@ -139,7 +139,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         if data_json['message'] == 'extra-price-received':
             async with async_playwright() as playwright:
                 chromium = playwright.webkit # or "firefox" or "webkit".
-                browser = await chromium.launch(headless=False)
+                browser = await chromium.launch(headless=True)
                 page = await browser.new_page()
                 await page.goto(self.url_offer)
                 # other actions...
