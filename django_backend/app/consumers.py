@@ -19,7 +19,7 @@ from PIL import Image
 from PyPDF2 import PdfFileWriter, PdfFileReader,PdfMerger
 import io
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4, letter
+from reportlab.lib.pagesizes import letter
 #
 from .models import Customer, StandardPDF
 
@@ -506,22 +506,17 @@ def send_email(user_uuid, data_json, extra_only=False):
             "domain": SITE_URL,
             "offer_pdf": extra_pdf,
             "offer_only": True,
-            # "uid":  urlsafe_base64_encode(force_bytes(user_pk)),
-            # "token": account_activation_token.make_token(user),
             "paste_text": "Hello dear friend ...."
         }
     else:
         offer_pdf = customer.offer_pdf.url
         mail_subject = 'Angebot'
-        print('id: ', str(user_uuid))
         print('SITE_URL: ', SITE_URL)
         context = {
             "user": data_json["anrede"] + ' ' + data_json["vorname"] + ' ' +data_json["nachname"],
             "domain": SITE_URL,
             "offer_pdf": offer_pdf,
-            "extra_url": SITE_URL + '/extra/'+ str(user_uuid) + '/',
-            # "uid":  urlsafe_base64_encode(force_bytes(user_pk)),
-            # "token": account_activation_token.make_token(user),
+            "extra_url": 'https://'+ SITE_URL + '/extra/'+ str(user_uuid) + '/',
             "paste_text": "Hello dear friend ...."
         }
         if data_json["extra_order"]==True:

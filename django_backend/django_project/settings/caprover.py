@@ -62,6 +62,8 @@ CHANNEL_LAYERS = {
 }
 
 
+SITE_URL=os.environ.get("CR_HOSTS") or ImproperlyConfigured("CR_HOSTS not set")
+
 # Static Files
 STATIC_ROOT = os.path.join(BASE_DIR, "public/static")
 STATIC_URL = "/static/"
