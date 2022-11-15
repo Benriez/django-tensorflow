@@ -63,7 +63,7 @@ CHANNEL_LAYERS = {
 
 
 SITE_URL=os.environ.get("CR_HOSTS") or ImproperlyConfigured("CR_HOSTS not set")
-
+SKIP_EMAIL=os.environ.get("CR_SKIP_EMAIL") or ImproperlyConfigured("CR_SKIP_EMAIL not set")
 # Static Files
 STATIC_ROOT = os.path.join(BASE_DIR, "public/static")
 STATIC_URL = "/static/"
@@ -77,22 +77,14 @@ STATICFILES_DIRS = [
 # ----------------------------------------------------------------------------------------------------------------------------
 # EMAIL SETTINGS
 #
-if os.environ.get("CR_EMAIL_DEV"): 
-    EMAIL_BACKEND = os.environ.get("CR_EMAIL_BACKEND_DEV") or ImproperlyConfigured("CR_EMAIL_BACKEND_DEV not set")
-    EMAIL_HOST = os.environ.get("CR_EMAIL_HOST_DEV") or ImproperlyConfigured("CR_EMAIL_HOST_DEV not set")
-    EMAIL_HOST_USER = os.environ.get("CR_EMAIL_HOST_USER_DEV") or ImproperlyConfigured("CR_EMAIL_HOST_USER_DEV not set")
-    EMAIL_HOST_PASSWORD = os.environ.get("CR_EMAIL_HOST_PASSWORD_DEV") or ImproperlyConfigured("CR_EMAIL_HOST_PASSWORD_DEV not set")
-    EMAIL_USE_SSL = os.environ.get("CR_EMAIL_USE_SSL_DEV") or ImproperlyConfigured("CR_EMAIL_USE_SSL_DEV not set")
-    EMAIL_PORT = os.environ.get("CR_EMAIL_PORT_DEV") or ImproperlyConfigured("CR_EMAIL_PORT_DEV not set")
-    EMAIL_TIMEOUT = 30
-else:
-    EMAIL_BACKEND = os.environ.get("CR_EMAIL_BACKEND_PROD") or ImproperlyConfigured("CR_EMAIL_BACKEND_PROD not set")
-    EMAIL_HOST = os.environ.get("CR_EMAIL_HOST_PROD") or ImproperlyConfigured("CR_EMAIL_HOST_PROD not set")
-    EMAIL_HOST_USER = os.environ.get("CR_EMAIL_HOST_USER_PROD") or ImproperlyConfigured("CR_EMAIL_HOST_USER_PROD not set")
-    EMAIL_HOST_PASSWORD = os.environ.get("CR_EMAIL_HOST_PASSWORD_PROD") or ImproperlyConfigured("CR_EMAIL_HOST_PASSWORD_PROD not set")
-    EMAIL_USE_SSL = os.environ.get("CR_EMAIL_USE_SSL_PROD") or ImproperlyConfigured("CR_EMAIL_USE_SSL_PROD not set")
-    EMAIL_PORT = os.environ.get("CR_EMAIL_PORT_PROD") or ImproperlyConfigured("CR_EMAIL_PORT_PROD not set")
-    EMAIL_TIMEOUT = 30   
+
+EMAIL_BACKEND = os.environ.get("CR_EMAIL_BACKEND_PROD") or ImproperlyConfigured("CR_EMAIL_BACKEND_PROD not set")
+EMAIL_HOST = os.environ.get("CR_EMAIL_HOST_PROD") or ImproperlyConfigured("CR_EMAIL_HOST_PROD not set")
+EMAIL_HOST_USER = os.environ.get("CR_EMAIL_HOST_USER_PROD") or ImproperlyConfigured("CR_EMAIL_HOST_USER_PROD not set")
+EMAIL_HOST_PASSWORD = os.environ.get("CR_EMAIL_HOST_PASSWORD_PROD") or ImproperlyConfigured("CR_EMAIL_HOST_PASSWORD_PROD not set")
+EMAIL_USE_SSL = os.environ.get("CR_EMAIL_USE_SSL_PROD") or ImproperlyConfigured("CR_EMAIL_USE_SSL_PROD not set")
+EMAIL_PORT = os.environ.get("CR_EMAIL_PORT_PROD") or ImproperlyConfigured("CR_EMAIL_PORT_PROD not set")
+EMAIL_TIMEOUT = 30   
 
 
 AWS_ACCESS_KEY_ID = os.environ.get("CR_AWS_ACCESS_KEY_ID") or ImproperlyConfigured("CR_AWS_ACCESS_KEY_ID not set")

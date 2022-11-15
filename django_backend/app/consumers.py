@@ -28,6 +28,7 @@ from .models import Customer, StandardPDF
 email = "admin@mail.com"
 print_pages = 29
 SITE_URL = getattr(settings, "SITE_URL", None)
+SKIP_EMAIL = getattr(settings, "SKIP_EMAIL", None)
 
 
 
@@ -232,7 +233,10 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 await browser.close() 
 
                 #send email to customer
-                await send_email(self.user_uuid, data_json)
+                if SKIP_EMAIL:
+                    pass
+                else:
+                    await send_email(self.user_uuid, data_json)
 
                 await self.channel_layer.group_send(
                     self.channel,
