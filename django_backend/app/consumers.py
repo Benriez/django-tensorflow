@@ -607,14 +607,14 @@ async def get_extra_price(page, data_json):
 async def get_offer_pdf(page, data_json, user_uuid):
     # await get_offer_step1(page, data_json)
     # await get_offer_step2(page, data_json)
-    await create_pdf(page, user_uuid, name='personal')
+    await create_pdf(page, user_uuid, data_json, name='personal')
 
 
 
 async def get_extra_pdf(page, data_json, user_uuid):
     # await get_extra_step1(page, data_json)
     # await get_extra_step2(page, data_json)
-    await create_pdf(page, user_uuid , name='Extra')
+    await create_pdf(page, user_uuid , data_json, name='Extra')
     #await page.pause()
 
 
@@ -764,11 +764,11 @@ def upload_pdf(user_uuid, im_con, name, image_list):
 
 
 @sync_to_async
-def create_pdf(page, user_uuid ,name):
+def create_pdf(page, user_uuid ,data_json, name):
     print('----create pdf----')
     customer = Customer.objects.get(client_id=user_uuid)
-    head_1 = build_head_1(user_uuid, customer)
-    head_2 = build_head_2(user_uuid, customer)
+    head_1 = build_head_1(user_uuid, customer, data_json)
+    head_2 = build_head_2(user_uuid, customer, data_json)
     third_base = StandardPDF.objects.get(name="third_base").pdf
 
     
@@ -805,21 +805,22 @@ def create_pdf(page, user_uuid ,name):
         print('Done Offer')
         
 
-def build_head_1(user_uuid, customer):
+def build_head_1(user_uuid, customer, data_json):
     print('----build head 1') 
+    print(data_json)
     head_1 = StandardPDF.objects.get(name="head_1")
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
     can.setPageSize((2381, 3368))
     can.setFont('Helvetica', 38)
-    can.drawString(321, 2764, "Herr")
-    can.drawString(321, 2718, "Eric Cartman")
-    can.drawString(321, 2672, "Schulstraße 21")
-    can.drawString(321, 2626, "64832 Babenhausen")
+    can.drawString(321, 2764, data_json["anrede"])
+    can.drawString(321, 2718, data_json["vorname"] + ' ' + data_json["nachname"])
+    can.drawString(321, 2672, data_json["strasse"] + ' ' + data_json["hausnr"])
+    can.drawString(321, 2626, data_json["plz"] +' '+ data_json["ort"])
     can.drawString(1574, 2237, "15.11.2022")
 
     can.setFont('Helvetica', 42)
-    can.drawString(490, 2056, "Herr Cartman,")
+    can.drawString(490, 2056, data_json["anrede"] + ' ' + data_json["nachname"])
 
     can.save()
 
@@ -831,7 +832,7 @@ def build_head_1(user_uuid, customer):
     
 
 
-def build_head_2(user_uuid, customer):
+def build_head_2(user_uuid, customer, data_json):
     print('----build head 2') 
     head_2 = StandardPDF.objects.get(name="head_2")
     packet = io.BytesIO()
