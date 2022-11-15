@@ -11,6 +11,7 @@ def get_upload_path(instance, filename):
     storage = get_pdf_storage()
     return storage.get_upload_path(instance, filename)
 
+
 def get_standard_upload_path(instance, filename):
     storage = get_standard_pdf_storage()
     return storage.get_upload_path(instance, filename)
@@ -34,7 +35,7 @@ class PDFStorage(S3Boto3Storage):
 class StandardPDFStorage(S3Boto3Storage):
     location = '{}'.format(FOLDER_STANDARD_PDF)
 
-    print('---> PDFstorage location=[' + location + "]")
+    print('---> StandardPDFStorage location=[' + location + "]")
 
     def get_upload_path(self, instance, filename):
         return filename
@@ -50,6 +51,7 @@ def get_pdf_storage():
 
 def get_standard_pdf_storage():
     return standard_pdf_storage
+
 
 
 #-----------------------------------------------------------------------------------------------------------------
@@ -70,6 +72,11 @@ class Customer(models.Model):
     hausnr      = models.CharField(max_length=30, null=True)
     iban        = models.BinaryField(default=b'\x08')
     birthdate   = models.CharField(max_length=50, null=True)
+
+    head_1      = models.FileField(storage=get_pdf_storage(), upload_to=get_upload_path, blank=True, null=True) 
+    head_2      = models.FileField(storage=get_pdf_storage(), upload_to=get_upload_path, blank=True, null=True) 
+
+
     class Meta:
         app_label = 'app'
 

@@ -16,8 +16,12 @@ from django.conf import settings
 from playwright.async_api import async_playwright, expect
 from PIL import Image
 
+from PyPDF2 import PdfFileWriter, PdfFileReader,PdfMerger
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4, letter
 #
-from .models import Customer
+from .models import Customer, StandardPDF
 
 
 
@@ -113,7 +117,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         
         if data_json['message'] == 'offer-price-received':
             async with async_playwright() as playwright:
-                chromium = playwright.webkit # or "firefox" or "webkit".
+                chromium = playwright.chromium # or "firefox" or "webkit".
                 browser = await chromium.launch(headless=True)
                 page = await browser.new_page()
                 await page.goto(self.url_extra)
@@ -379,7 +383,7 @@ class ExtraViewConsumer(AsyncWebsocketConsumer):
                 )  
 
         if data_json['message'] == 'get_extra_offer_pdf':
-             async with async_playwright() as playwright:
+            async with async_playwright() as playwright:
                 chromium = playwright.webkit # or "firefox" or "webkit".
                 browser = await chromium.launch(headless=True)
                 page = await browser.new_page()
@@ -601,15 +605,15 @@ async def get_extra_price(page, data_json):
 # STEPS
 #
 async def get_offer_pdf(page, data_json, user_uuid):
-    await get_offer_step1(page, data_json)
-    await get_offer_step2(page, data_json)
+    # await get_offer_step1(page, data_json)
+    # await get_offer_step2(page, data_json)
     await create_pdf(page, user_uuid, name='personal')
 
 
 
 async def get_extra_pdf(page, data_json, user_uuid):
-    await get_extra_step1(page, data_json)
-    await get_extra_step2(page, data_json)
+    # await get_extra_step1(page, data_json)
+    # await get_extra_step2(page, data_json)
     await create_pdf(page, user_uuid , name='Extra')
     #await page.pause()
 
@@ -759,40 +763,171 @@ def upload_pdf(user_uuid, im_con, name, image_list):
         local_file.close()
 
 
+@sync_to_async
+def create_pdf(page, user_uuid ,name):
+    print('----create pdf----')
+    customer = Customer.objects.get(client_id=user_uuid)
+    head_1 = build_head_1(user_uuid, customer)
+    head_2 = build_head_2(user_uuid, customer)
+    third_base = StandardPDF.objects.get(name="third_base").pdf
 
-async def create_pdf(page, user_uuid ,name):
-    async with page.expect_popup() as popup:
-        await page.click('baf-link', modifiers=["Alt",])
-    image_list =[]
-    # await page.pause()
-    pdf_page = await popup.value
+    
+    pdfs = [head_1, head_2, third_base]
+    merger = PdfMerger()
 
-    print(pdf_page.url)
+    for pdf in pdfs:
+        merger.append(pdf)
 
-    #await pdf_page.wait_for_url(r"blob:**")
-    print('try wait for selector "embed"...')
-    try:
-        await pdf_page.wait_for_selector("embed", timeout = 100000)
-    except:
-        print('cant wait for selector [embed] at url: ', pdf_page.url)
-        print('try wait for url [blob]')
-        await pdf_page.wait_for_url(r"blob:**")
+    if name == "Extra":
+        pdfname = "_extra.pdf"
+    else:
+        pdfname = "_offer.pdf"
+    pdf_path = user_uuid + pdfname
+
+    merger.write("./media/pdfs/"+ pdf_path)
+    merger.close()
+
+    local_file = open("./media/pdfs/"+pdf_path)
+    _pdf = File(local_file)
+    filename="Offer_"+pdf_path
+
+    if name == "Extra":
+        customer.extra_pdf.save(filename, File(open(str(_pdf),'rb')))
+    else:
+        customer.offer_pdf.save(filename, File(open(str(_pdf),'rb')))
+
+    local_file.close()
+    os.remove(r'./media/pdfs/'+pdf_path)
+
+    if name == "Extra":
+        print('Done Extra')
+    else:
+        print('Done Offer')
         
 
-    await pdf_page.set_viewport_size({"width": 2480, "height": 3496})
-    for p in range(print_pages):
-        screenshot_path = user_uuid + '_' +name+"screenshot"+str(p)+".jpg"
+def build_head_1(user_uuid, customer):
+    print('----build head 1') 
+    head_1 = StandardPDF.objects.get(name="head_1")
+    packet = io.BytesIO()
+    can = canvas.Canvas(packet, pagesize=letter)
+    can.setPageSize((2381, 3368))
+    can.setFont('Helvetica', 38)
+    can.drawString(321, 2764, "Herr")
+    can.drawString(321, 2718, "Eric Cartman")
+    can.drawString(321, 2672, "Schulstraße 21")
+    can.drawString(321, 2626, "64832 Babenhausen")
+    can.drawString(1574, 2237, "15.11.2022")
 
-        await pdf_page.screenshot(path=screenshot_path, full_page=True)
-        await pdf_page.mouse.wheel(0, 3496)
-        image = Image.open(r''+screenshot_path)
-        im_con = image.convert('RGB')
-        image_list.append(im_con)
+    can.setFont('Helvetica', 42)
+    can.drawString(490, 2056, "Herr Cartman,")
+
+    can.save()
+
+    #move to the beginning of the StringIO buffer
+    packet.seek(0)
+
+    head_obj = head_creator(packet, head_1, user_uuid, customer, iterator=1)
+    return head_obj
     
-    await upload_pdf(user_uuid, im_con, name, image_list)
-    # delete screenshots after pdf is created
-    for p in range(print_pages):
-        screenshot_path = user_uuid + '_' +name+"screenshot"+str(p)+".jpg"
-        os.remove(r''+screenshot_path)
+
+
+def build_head_2(user_uuid, customer):
+    print('----build head 2') 
+    head_2 = StandardPDF.objects.get(name="head_2")
+    packet = io.BytesIO()
+    can = canvas.Canvas(packet, pagesize=letter)
+    can.setPageSize((2381, 3368))
+    can.drawString(1574, 2237, "15.11.2022")
+    can.save()
+
+    #move to the beginning of the StringIO buffer
+    packet.seek(0)
+
+    head_obj = head_creator(packet, head_2, user_uuid, customer, iterator=2)
+    return head_obj
+
+
+
+def head_creator(packet, obj, user_uuid, customer, iterator):
+    new_pdf = PdfFileReader(packet)
+    # read your existing PDF
+    existing_pdf = PdfFileReader(obj.pdf.open())
+    output = PdfFileWriter()
+    # add the "watermark" (which is the new pdf) on the existing page
+    page = existing_pdf.getPage(0)
+    page.mergePage(new_pdf.getPage(0))
+    output.addPage(page)
+
+    # finally, write "output" to a real file
+    head_path = user_uuid + "_head"+str(iterator)+ ".pdf"
+    outputStream = open("./media/pdfs/"+head_path, "wb")
+    output.write(outputStream)
+    outputStream.close()
+    
+    local_file = open("./media/pdfs/"+head_path)
+    head_pdf = File(local_file)
+    filename="Head_"+str(iterator)+".pdf"
+
+    if iterator == 1:
+        customer.head_1.save(filename, File(open(str(head_pdf),'rb')))
+    elif iterator == 2:
+        customer.head_2.save(filename, File(open(str(head_pdf),'rb')))
+    elif iterator == 3:
+        customer.head_3.save(filename, File(open(str(head_pdf),'rb')))
+    elif iterator == 4:
+        customer.head_4.save(filename, File(open(str(head_pdf),'rb')))
+    elif iterator == 5:
+        customer.head_5.save(filename, File(open(str(head_pdf),'rb')))
+
+    
+    local_file.close()
+    os.remove(r'./media/pdfs/'+head_path)
+
+    print('Done Head: ['+ str(iterator)  +']')
+    
+    if iterator == 1:
+        return customer.head_1
+    elif iterator == 2:
+        return customer.head_2
+    elif iterator == 3:
+        return customer.head_3
+    elif iterator == 4:
+        return customer.head_4
+    elif iterator == 5:
+        return customer.head_5
+
+
+
+# async def create_pdf(page, user_uuid ,name):
+#     async with page.expect_popup() as popup:
+#         await page.click('baf-link', modifiers=["Alt",])
+#     image_list =[]
+#     pdf_page = await popup.value
+
+#     #await pdf_page.wait_for_url(r"blob:**")
+#     print('try wait for selector "embed"...')
+#     try:
+#         await pdf_page.wait_for_selector("embed", timeout = 30000)
+#     except:
+#         print('cant wait for selector [embed] at url: ', pdf_page.url)
+#         print('try wait for url [blob]')
+#         await pdf_page.wait_for_url(r"blob:**")
+        
+
+#     await pdf_page.set_viewport_size({"width": 2480, "height": 3496})
+#     for p in range(print_pages):
+#         screenshot_path = user_uuid + '_' +name+"screenshot"+str(p)+".jpg"
+
+#         await pdf_page.screenshot(path=screenshot_path, full_page=True)
+#         await pdf_page.mouse.wheel(0, 3496)
+#         image = Image.open(r''+screenshot_path)
+#         im_con = image.convert('RGB')
+#         image_list.append(im_con)
+    
+#     await upload_pdf(user_uuid, im_con, name, image_list)
+#     # delete screenshots after pdf is created
+#     for p in range(print_pages):
+#         screenshot_path = user_uuid + '_' +name+"screenshot"+str(p)+".jpg"
+#         os.remove(r''+screenshot_path)
 
 
