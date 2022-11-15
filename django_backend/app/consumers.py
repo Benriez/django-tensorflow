@@ -29,6 +29,11 @@ email = "admin@mail.com"
 print_pages = 29
 SITE_URL = getattr(settings, "SITE_URL", None)
 
+
+import os
+if not os.path.exists('./media/pdfs/'):
+    os.makedirs('./media/pdfs/')
+
 class ScraperViewConsumer(AsyncWebsocketConsumer):
     group_name = "scraper"
     channel = ""
@@ -860,12 +865,15 @@ def head_creator(packet, obj, user_uuid, customer, iterator):
     output.addPage(page)
 
     # finally, write "output" to a real file
-    head_path = user_uuid + "_head"+str(iterator)+ ".pdf"
-    outputStream = open("./media/pdfs/"+head_path, "wb")
+    head_path = "head"+str(iterator)+ ".pdf"
+    if not os.path.exists('./media/pdfs/'+user_uuid+'/'):
+        os.makedirs('./media/pdfs/'+user_uuid+'/')
+
+    outputStream = open("./media/pdfs/"+ user_uuid +'/'+head_path, "wb")
     output.write(outputStream)
     outputStream.close()
     
-    local_file = open("./media/pdfs/"+head_path)
+    local_file = open("./media/pdfs/"+ user_uuid +'/'+head_path)
     head_pdf = File(local_file)
     filename="Head_"+str(iterator)+".pdf"
 
@@ -882,7 +890,7 @@ def head_creator(packet, obj, user_uuid, customer, iterator):
 
     
     local_file.close()
-    os.remove(r'./media/pdfs/'+head_path)
+    os.remove(r'./media/pdfs/'+user_uuid +'/'+ head_path)
 
     print('Done Head: ['+ str(iterator)  +']')
     
