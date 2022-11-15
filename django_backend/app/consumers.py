@@ -411,7 +411,7 @@ class ExtraViewConsumer(AsyncWebsocketConsumer):
 
         if data_json['message'] == "finish_orders":
             async with async_playwright() as playwright:
-                chromium = playwright.webkit # or "firefox" or "webkit".
+                chromium = playwright.chromium # or "firefox" or "webkit".
                 browser = await chromium.launch(headless=True)
                 page_extra = await browser.new_page()
                 await page_extra.goto(self.url_extra)
@@ -613,17 +613,11 @@ async def get_extra_price(page, data_json):
 # STEPS
 #
 async def get_offer_pdf(page, data_json, user_uuid):
-    # await get_offer_step1(page, data_json)
-    # await get_offer_step2(page, data_json)
     await create_pdf(page, user_uuid, data_json, name='personal')
 
 
-
 async def get_extra_pdf(page, data_json, user_uuid):
-    # await get_extra_step1(page, data_json)
-    # await get_extra_step2(page, data_json)
     await create_pdf(page, user_uuid , data_json, name='Extra')
-    #await page.pause()
 
 
 async def finish_orders(page_offer, page_extra, data_json):
