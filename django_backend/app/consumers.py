@@ -778,10 +778,10 @@ def create_pdf(page, user_uuid ,data_json, name):
 
     #second base
     if name=="Extra":
-        second_base_1 = StandardPDF.objects.get(name="second_base_1").pdf
-        second_base_2 = StandardPDF.objects.get(name="second_base_2").pdf
-        second_base_3 = StandardPDF.objects.get(name="second_base_3").pdf
-        second_base_4 = StandardPDF.objects.get(name="second_base_4").pdf
+        second_base_1 = StandardPDF.objects.get(name="second_base_1_extra").pdf
+        second_base_2 = StandardPDF.objects.get(name="second_base_2_extra").pdf
+        second_base_3 = StandardPDF.objects.get(name="second_base_3_extra").pdf
+        second_base_4 = StandardPDF.objects.get(name="second_base_4_extra").pdf
     else:
         second_base_1 = StandardPDF.objects.get(name="second_base_1").pdf
         second_base_2 = StandardPDF.objects.get(name="second_base_2").pdf
