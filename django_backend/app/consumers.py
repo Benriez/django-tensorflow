@@ -768,19 +768,35 @@ def upload_pdf(user_uuid, im_con, name, image_list):
 def create_pdf(page, user_uuid ,data_json, name):
     print('----create pdf----')
     customer = Customer.objects.get(client_id=user_uuid)
+    head = []
     head_1 = build_head_1(user_uuid, customer, data_json)
     head_2 = build_head_2(user_uuid, customer, data_json)
     head_3 = build_head_3(user_uuid, customer, data_json)
     head_4 = build_head_4(user_uuid, customer, data_json)
     head_5 = build_head_5(user_uuid, customer, data_json)
+    
 
     #second base
+    if name=="Extra":
+        second_base_1 = StandardPDF.objects.get(name="second_base_1").pdf
+        second_base_2 = StandardPDF.objects.get(name="second_base_2").pdf
+        second_base_3 = StandardPDF.objects.get(name="second_base_3").pdf
+        second_base_4 = StandardPDF.objects.get(name="second_base_4").pdf
+    else:
+        second_base_1 = StandardPDF.objects.get(name="second_base_1").pdf
+        second_base_2 = StandardPDF.objects.get(name="second_base_2").pdf
+        second_base_3 = StandardPDF.objects.get(name="second_base_3").pdf
+        second_base_4 = StandardPDF.objects.get(name="second_base_4").pdf
 
-    
+
     third_base = StandardPDF.objects.get(name="third_base").pdf
 
     
-    pdfs = [head_1, head_2, head_3, head_4, head_5, third_base]
+    pdfs = [
+        head_1, head_2, head_3, head_4, head_5, 
+        second_base_1, second_base_2, second_base_3, second_base_4,
+        third_base
+    ]
     merger = PdfMerger()
 
     for pdf in pdfs:
@@ -815,7 +831,6 @@ def create_pdf(page, user_uuid ,data_json, name):
 
 def build_head_1(user_uuid, customer, data_json):
     print('----build head 1') 
-    print(data_json)
     head_1 = StandardPDF.objects.get(name="head_1")
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
