@@ -158,6 +158,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 #fill out external form
                 await get_offer_pdf(page, data_json, self.user_uuid) 
                 offer_link = await get_offer_link(self.user_uuid)
+                extra_link = await get_extra_link(self.user_uuid)
                 await browser.close() 
                 await self.channel_layer.group_send(
                     self.channel,
@@ -165,7 +166,8 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                         'type': 'serve_personal_offer',
                         'data': {
                             'message': 'Done',
-                            'offer_link': offer_link
+                            'offer_link': offer_link,
+                            'extra_link': extra_link
                         }
                     }
                 )
@@ -551,6 +553,17 @@ def get_offer_link(user_uuid):
 
     return url
 
+@sync_to_async
+def get_extra_link(user_uuid):
+    url = ''
+    try:
+        customer= Customer.objects.get(client_id = user_uuid)
+        url=customer.extra_pdf.url
+    except:
+        pass
+
+    return url
+
 #----------------------------------------------------------------------------------
 #
 #
@@ -768,12 +781,18 @@ def upload_pdf(user_uuid, im_con, name, image_list):
 def create_pdf(page, user_uuid ,data_json, name):
     print('----create pdf----')
     customer = Customer.objects.get(client_id=user_uuid)
-    head = []
-    head_1 = build_head_1(user_uuid, customer, data_json)
-    head_2 = build_head_2(user_uuid, customer, data_json)
-    head_3 = build_head_3(user_uuid, customer, data_json)
-    head_4 = build_head_4(user_uuid, customer, data_json)
-    head_5 = build_head_5(user_uuid, customer, data_json)
+    try:
+        head_1 = customer.head_1
+        head_2 = customer.head_2
+        head_3 = customer.head_3
+        head_4 = customer.head_4
+        head_5 = customer.head_5
+    except:     
+        head_1 = build_head_1(user_uuid, customer, data_json)
+        head_2 = build_head_2(user_uuid, customer, data_json)
+        head_3 = build_head_3(user_uuid, customer, data_json)
+        head_4 = build_head_4(user_uuid, customer, data_json)
+        head_5 = build_head_5(user_uuid, customer, data_json)
     
 
     #second base
@@ -813,11 +832,12 @@ def create_pdf(page, user_uuid ,data_json, name):
 
     local_file = open("./media/pdfs/"+pdf_path)
     _pdf = File(local_file)
-    filename="Offer_"+pdf_path
-
+    
     if name == "Extra":
+        filename="Extra_"+pdf_path
         customer.extra_pdf.save(filename, File(open(str(_pdf),'rb')))
     else:
+        filename="Offer_"+pdf_path
         customer.offer_pdf.save(filename, File(open(str(_pdf),'rb')))
 
     local_file.close()
