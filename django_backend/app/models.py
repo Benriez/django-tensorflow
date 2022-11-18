@@ -75,6 +75,9 @@ class Customer(models.Model):
 
     head_1      = models.FileField(storage=get_pdf_storage(), upload_to=get_upload_path, blank=True, null=True) 
     head_2      = models.FileField(storage=get_pdf_storage(), upload_to=get_upload_path, blank=True, null=True) 
+    head_3      = models.FileField(storage=get_pdf_storage(), upload_to=get_upload_path, blank=True, null=True) 
+    head_4      = models.FileField(storage=get_pdf_storage(), upload_to=get_upload_path, blank=True, null=True) 
+    head_5      = models.FileField(storage=get_pdf_storage(), upload_to=get_upload_path, blank=True, null=True) 
 
 
     class Meta:

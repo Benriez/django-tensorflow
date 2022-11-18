@@ -770,10 +770,17 @@ def create_pdf(page, user_uuid ,data_json, name):
     customer = Customer.objects.get(client_id=user_uuid)
     head_1 = build_head_1(user_uuid, customer, data_json)
     head_2 = build_head_2(user_uuid, customer, data_json)
+    head_3 = build_head_3(user_uuid, customer, data_json)
+    head_4 = build_head_4(user_uuid, customer, data_json)
+    head_5 = build_head_5(user_uuid, customer, data_json)
+
+    #second base
+
+    
     third_base = StandardPDF.objects.get(name="third_base").pdf
 
     
-    pdfs = [head_1, head_2, third_base]
+    pdfs = [head_1, head_2, head_3, head_4, head_5, third_base]
     merger = PdfMerger()
 
     for pdf in pdfs:
@@ -848,6 +855,53 @@ def build_head_2(user_uuid, customer, data_json):
     head_obj = head_creator(packet, head_2, user_uuid, customer, iterator=2)
     return head_obj
 
+
+def build_head_3(user_uuid, customer, data_json):
+    print('----build head 3') 
+    head_3 = StandardPDF.objects.get(name="head_3")
+    packet = io.BytesIO()
+    can = canvas.Canvas(packet, pagesize=letter)
+    can.setPageSize((2381, 3368))
+    can.drawString(1574, 2237, "15.11.2022")
+    can.save()
+
+    #move to the beginning of the StringIO buffer
+    packet.seek(0)
+
+    head_obj = head_creator(packet, head_3, user_uuid, customer, iterator=3)
+    return head_obj
+
+
+def build_head_4(user_uuid, customer, data_json):
+    print('----build head 4') 
+    head_4 = StandardPDF.objects.get(name="head_4")
+    packet = io.BytesIO()
+    can = canvas.Canvas(packet, pagesize=letter)
+    can.setPageSize((2381, 3368))
+    can.drawString(1574, 2237, "15.11.2022")
+    can.save()
+
+    #move to the beginning of the StringIO buffer
+    packet.seek(0)
+
+    head_obj = head_creator(packet, head_4, user_uuid, customer, iterator=4)
+    return head_obj
+
+
+def build_head_5(user_uuid, customer, data_json):
+    print('----build head 5') 
+    head_5 = StandardPDF.objects.get(name="head_5")
+    packet = io.BytesIO()
+    can = canvas.Canvas(packet, pagesize=letter)
+    can.setPageSize((2381, 3368))
+    can.drawString(1574, 2237, "15.11.2022")
+    can.save()
+
+    #move to the beginning of the StringIO buffer
+    packet.seek(0)
+
+    head_obj = head_creator(packet, head_5, user_uuid, customer, iterator=5)
+    return head_obj
 
 
 def head_creator(packet, obj, user_uuid, customer, iterator):
