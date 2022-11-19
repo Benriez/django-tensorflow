@@ -20,8 +20,8 @@
                 <div class="card col-12">
                     <h5><i class="fas fa-user"></i>Wer wird versichert?</h5>
                     <div class="row">
-                        <select id="andrede" name="anrede" class="select col-12 col-md-2" aria-label="Default select example">
-                            <option selected>Anrede</option>
+                        <select id="anrede" name="anrede" class="select col-12 col-md-2" aria-label="Default select example" onfocusout="validateSelection()">
+                            <option value="Anrede" selected>Anrede</option>
                             <option value="Frau">Frau</option>
                             <option value="Herr">Herr</option>
                         </select>
@@ -64,7 +64,7 @@
          window.history.replaceState( null, null, window.location.href );
     }
 
-
+    let anrede = false;
     let vorname = false;
     let nachname = false;
     let email = false;
@@ -73,6 +73,16 @@
     let hausnr = false;
     let plz = false;
     let ort = false;
+
+    function validateSelection() {
+        let element = document.getElementById("anrede");
+        if (element.value != "Anrede") {
+            anrede = true
+        } else {
+            anrede = false
+        }
+        validateStart()
+    }
     
     function validateForm(str_obj) {
         let element = document.getElementById(str_obj);
@@ -116,7 +126,7 @@
 
     function validateStart(){
         let button = document.getElementById("start");
-        if (vorname && nachname &&email && geburtsdatum && strasse && hausnr && plz && ort) {
+        if (anrede && vorname && nachname &&email && geburtsdatum && strasse && hausnr && plz && ort) {
             button.disabled = false;
         } else {
             button.disabled = true;
