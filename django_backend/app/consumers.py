@@ -812,8 +812,7 @@ def create_pdf(page, user_uuid ,data_json, name):
 
     
     pdfs = [
-        head_1, head_2, head_4, head_5, 
-        second_base_1, second_base_2, second_base_3, second_base_4,
+        head_1, head_2, 
         third_base
     ]
     merger = PdfMerger()
