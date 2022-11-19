@@ -781,18 +781,12 @@ def upload_pdf(user_uuid, im_con, name, image_list):
 def create_pdf(page, user_uuid ,data_json, name):
     print('----create pdf----')
     customer = Customer.objects.get(client_id=user_uuid)
-    try:
-        head_1 = customer.head_1
-        head_2 = customer.head_2
-        head_3 = customer.head_3
-        head_4 = customer.head_4
-        head_5 = customer.head_5
-    except:     
-        head_1 = build_head_1(user_uuid, customer, data_json)
-        head_2 = build_head_2(user_uuid, customer, data_json)
-        #head_3 = build_head_3(user_uuid, customer, data_json)
-        head_4 = build_head_4(user_uuid, customer, data_json)
-        head_5 = build_head_5(user_uuid, customer, data_json)
+  
+    head_1 = build_head_1(user_uuid, customer, data_json)
+    head_2 = build_head_2(user_uuid, customer, data_json)
+    head_3 = build_head_3(user_uuid, customer, data_json)
+    head_4 = build_head_4(user_uuid, customer, data_json)
+    head_5 = build_head_5(user_uuid, customer, data_json)
     
 
     #second base
@@ -812,7 +806,8 @@ def create_pdf(page, user_uuid ,data_json, name):
 
     
     pdfs = [
-        head_1, head_2, 
+        head_1, head_2, head_3, head_4, head_5,
+        second_base_1, second_base_2, second_base_3, second_base_4,
         third_base
     ]
     merger = PdfMerger()
@@ -851,6 +846,7 @@ def create_pdf(page, user_uuid ,data_json, name):
 def build_head_1(user_uuid, customer, data_json):
     print('----build head 1') 
     head_1 = StandardPDF.objects.get(name="head_1")
+    print(head_1.pdf.url)
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
     can.setPageSize((2381, 3368))
