@@ -65,19 +65,17 @@
     }
 
 
-    let vorname = document.getElementById("vorname").value;
-    let nachname = document.getElementById("nachname").value;
-    let email = document.getElementById("email").value;
-    let geburtsdatum = document.getElementById("geburtsdatum").value;
-    let strasse = document.getElementById("strasse").value;
-    let hausnr = document.getElementById("hausnr").value;
-    let plz = document.getElementById("plz").value;
-    let ort = document.getElementById("ort").value;
-
+    let vorname = false;
+    let nachname = false;
+    let email = false;
+    let geburtsdatum = false
+    let strasse = false;
+    let hausnr = false;
+    let plz = false;
+    let ort = false;
     
     function validateForm(str_obj) {
         let element = document.getElementById(str_obj);
-        console.log(element)
         if (element.value == "") {
             //alert(element.name + " must be filled out");
             element.style.borderColor = "#ffaaaa"
@@ -86,16 +84,42 @@
             element.style.borderColor = "#f6f6f6"
         }
 
+        if (str_obj == "vorname"){
+            vorname = true
+            console.log ('vorname: '+ vorname)
+        } else if (str_obj == "nachname"){
+            nachname = true
+            console.log ('nachname: '+ nachname)
+        } else if (str_obj == "email-addresse"){
+            email = true
+            console.log ('email-addresse: '+ email)
+        } else if (str_obj == "geburtsdatum"){
+            geburtsdatum = true
+            console.log ('geburtsdatum: '+ geburtsdatum)
+        } else if (str_obj == "strasse"){
+            strasse = true
+            console.log ('strasse: '+ strasse)
+        } else if (str_obj == "hausnr"){
+            hausnr = true
+            console.log ('hausnr: '+ hausnr)
+        } else if (str_obj == "plz"){
+            plz = true
+            console.log ('plz: '+ plz)
+        } else if (str_obj == "ort"){
+            ort = true
+            console.log ('ort: '+ ort)
+        }
+
         validateStart()
 
     }
 
     function validateStart(){
-        let button = document.getElementById("start").disabled = false;
+        let button = document.getElementById("start");
         if (vorname && nachname &&email && geburtsdatum && strasse && hausnr && plz && ort) {
             button.disabled = false;
         } else {
-            button.disabled = false;
+            button.disabled = true;
         }
     }
 
