@@ -25,14 +25,14 @@
                             <option value="Frau">Frau</option>
                             <option value="Herr">Herr</option>
                         </select>
-                        <input id="vorname" name="vorname" class="col-12 col-md-5" type="text" placeholder="Vorname">
-                        <input id="nachname" name="nachname" class="col-12 col-md-5" type="text" placeholder="Nachname">
-                        <input type="email" class="col-12 col-md-8" id="email-addresse" name="email-addresse" aria-describedby="emailHelp" placeholder="E-Mail Adresse">
-                        <input id="geburtsdatum" name="geburtsdatum" class="col-12 col-md-4" type="text" placeholder="Geburtsdatum" onfocus="(this.type='date')">
-                        <input id="strasse" name="strasse" class="col-9 col-md-5" type="text" placeholder="Straße">
-                        <input id="hausnr" name="hausnr" class="col-3 col-md-2" type="text" placeholder="Haus-nr">
-                        <input id="plz" name="plz" class="col-6 col-md-2" type="text" placeholder="PLZ">
-                        <input id="ort" name="ort" class="col-6 col-md-3" type="text" placeholder="Ort">
+                        <input id="vorname" name="vorname" class="col-12 col-md-5" type="text" pattern="^[a-zA-Z]+$" placeholder="Vorname" onfocusout="validateForm(str_obj='vorname')">
+                        <input id="nachname" name="nachname" class="col-12 col-md-5" type="text" placeholder="Nachname" onfocusout="validateForm(str_obj='nachname')">
+                        <input type="email" class="col-12 col-md-8" id="email-addresse" name="email-addresse" aria-describedby="emailHelp" placeholder="E-Mail Adresse" onfocusout="validateForm(str_obj='email-addresse')">
+                        <input id="geburtsdatum" name="geburtsdatum" class="col-12 col-md-4" type="text" placeholder="Geburtsdatum" onfocus="(this.type='date')" onfocusout="validateForm(str_obj='geburtsdatum')">
+                        <input id="strasse" name="strasse" class="col-9 col-md-5" type="text" placeholder="Straße" onfocusout="validateForm(str_obj='strasse')">
+                        <input id="hausnr" name="hausnr" class="col-3 col-md-2" type="text" placeholder="Haus-nr" onfocusout="validateForm(str_obj='hausnr')">
+                        <input id="plz" name="plz" class="col-6 col-md-2" type="text" placeholder="PLZ" onfocusout="validateForm(str_obj='plz')">
+                        <input id="ort" name="ort" class="col-6 col-md-3" type="text" placeholder="Ort" onfocusout="validateForm(str_obj='ort')">
                     </div>
                 </div>
 
@@ -46,7 +46,7 @@
                 </div>
 
                 <div style="text-align: end;">
-                    <input name="next" type="submit" value="Weiter" class="btn btn-primary col-12 col-md-3" style="margin-top: 5rem;">
+                    <input id="start" name="next" type="submit" value="Weiter" class="btn btn-primary col-12 col-md-3" style="margin-top: 5rem;" disabled>
                 </div>
                 
             </form>
@@ -62,6 +62,47 @@
 <script>
     if ( window.history.replaceState ) {
          window.history.replaceState( null, null, window.location.href );
+    }
+
+
+    let vorname = document.getElementById("vorname").value;
+    let nachname = document.getElementById("nachname").value;
+    let email = document.getElementById("email").value;
+    let geburtsdatum = document.getElementById("geburtsdatum").value;
+    let strasse = document.getElementById("strasse").value;
+    let hausnr = document.getElementById("hausnr").value;
+    let plz = document.getElementById("plz").value;
+    let ort = document.getElementById("ort").value;
+
+    
+    function validateForm(str_obj) {
+        let element = document.getElementById(str_obj);
+        console.log(element)
+        if (element.value == "") {
+            //alert(element.name + " must be filled out");
+            element.style.borderColor = "#ffaaaa"
+            return false;
+        } else {
+            element.style.borderColor = "#f6f6f6"
+        }
+
+        validateStart()
+
+    }
+
+    function validateStart(){
+        let button = document.getElementById("start").disabled = false;
+        if (vorname && nachname &&email && geburtsdatum && strasse && hausnr && plz && ort) {
+            button.disabled = false;
+        } else {
+            button.disabled = false;
+        }
+    }
+
+    function validateContext(element){
+        if (element.name == ""){
+
+        }
     }
 
     function validateIBAN(){
@@ -81,6 +122,8 @@
                     iban.classList.add("is-false");
                 }
             })
+
+        validateForm("iban")
         
     }
 </script>

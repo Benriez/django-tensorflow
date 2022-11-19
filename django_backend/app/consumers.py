@@ -867,9 +867,8 @@ def build_head_1(user_uuid, customer, data_json):
 
     can.save()
 
-    #move to the beginning of the StringIO buffer
+    # move to the beginning of the StringIO buffer
     packet.seek(0)
-
     head_obj = head_creator(packet, head_1, user_uuid, customer, iterator=1)
     return head_obj
     
@@ -886,7 +885,6 @@ def build_head_2(user_uuid, customer, data_json):
 
     #move to the beginning of the StringIO buffer
     packet.seek(0)
-
     head_obj = head_creator(packet, head_2, user_uuid, customer, iterator=2)
     return head_obj
 
@@ -902,7 +900,6 @@ def build_head_3(user_uuid, customer, data_json):
 
     #move to the beginning of the StringIO buffer
     packet.seek(0)
-
     head_obj = head_creator(packet, head_3, user_uuid, customer, iterator=3)
     return head_obj
 
@@ -918,7 +915,6 @@ def build_head_4(user_uuid, customer, data_json):
 
     #move to the beginning of the StringIO buffer
     packet.seek(0)
-
     head_obj = head_creator(packet, head_4, user_uuid, customer, iterator=4)
     return head_obj
 
@@ -934,7 +930,6 @@ def build_head_5(user_uuid, customer, data_json):
 
     #move to the beginning of the StringIO buffer
     packet.seek(0)
-
     head_obj = head_creator(packet, head_5, user_uuid, customer, iterator=5)
     return head_obj
 
