@@ -835,7 +835,23 @@ def create_pdf(page, user_uuid ,data_json, name):
         customer.offer_pdf.save(filename, File(open(str(_pdf),'rb')))
 
     local_file.close()
+
+    # remove offer or extra pdf loacally
     os.remove(r'./media/pdfs/'+pdf_path)
+
+    #remove custom head objs from s3 storage after merge completed
+    customer.head_1.delete(save=False)
+    customer.head_1 = None
+    customer.head_2.delete(save=False)
+    customer.head_2 = None
+    customer.head_3.delete(save=False)
+    customer.head_3 = None
+    customer.head_4.delete(save=False)
+    customer.head_4 = None
+    customer.head_5.delete(save=False)
+    customer.head_5 = None
+    customer.save()
+
 
     if name == "Extra":
         print('Done Extra')
