@@ -64,6 +64,7 @@
          window.history.replaceState( null, null, window.location.href );
     }
 
+    let bool_iban = false;
     let anrede = false;
     let vorname = false;
     let nachname = false;
@@ -96,28 +97,20 @@
 
         if (str_obj == "vorname"){
             vorname = true
-            console.log ('vorname: '+ vorname)
         } else if (str_obj == "nachname"){
             nachname = true
-            console.log ('nachname: '+ nachname)
         } else if (str_obj == "email-addresse"){
             email = true
-            console.log ('email-addresse: '+ email)
         } else if (str_obj == "geburtsdatum"){
             geburtsdatum = true
-            console.log ('geburtsdatum: '+ geburtsdatum)
         } else if (str_obj == "strasse"){
             strasse = true
-            console.log ('strasse: '+ strasse)
         } else if (str_obj == "hausnr"){
             hausnr = true
-            console.log ('hausnr: '+ hausnr)
         } else if (str_obj == "plz"){
             plz = true
-            console.log ('plz: '+ plz)
         } else if (str_obj == "ort"){
             ort = true
-            console.log ('ort: '+ ort)
         }
 
         validateStart()
@@ -126,7 +119,7 @@
 
     function validateStart(){
         let button = document.getElementById("start");
-        if (anrede && vorname && nachname &&email && geburtsdatum && strasse && hausnr && plz && ort) {
+        if (bool_iban && anrede && vorname && nachname &&email && geburtsdatum && strasse && hausnr && plz && ort) {
             button.disabled = false;
         } else {
             button.disabled = true;
@@ -144,20 +137,25 @@
         axios.get("https://openiban.com/validate/" + iban.value + "?getBIC=true")
             .then(function (response) {
                 valid = response.data.valid
-
                 document.getElementById('bic').value = response.data.bankData.bic
                 document.getElementById('bankname').value = response.data.bankData.name
 
                 if (valid){
                     iban.classList.remove("is-false");
                     iban.classList.add("is-valid");
+                    bool_iban = true
+                    validateForm("iban")
                 } else {
                     iban.classList.remove("is-valid");
                     iban.classList.add("is-false");
+                    bool_iban = false
+                    validateForm("iban")
                 }
             })
-
-        validateForm("iban")
+            .catch(function (error) {
+                bool_iban = false
+                validateForm("iban")
+            });
         
     }
 </script>
