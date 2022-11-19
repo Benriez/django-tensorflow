@@ -862,7 +862,6 @@ def create_pdf(page, user_uuid ,data_json, name):
 def build_head_1(user_uuid, customer, data_json):
     print('----build head 1') 
     head_1 = StandardPDF.objects.get(name="head_1")
-    print(head_1.pdf.url)
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
     can.setPageSize((2381, 3368))
