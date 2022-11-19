@@ -790,7 +790,7 @@ def create_pdf(page, user_uuid ,data_json, name):
     except:     
         head_1 = build_head_1(user_uuid, customer, data_json)
         head_2 = build_head_2(user_uuid, customer, data_json)
-        head_3 = build_head_3(user_uuid, customer, data_json)
+        #head_3 = build_head_3(user_uuid, customer, data_json)
         head_4 = build_head_4(user_uuid, customer, data_json)
         head_5 = build_head_5(user_uuid, customer, data_json)
     
@@ -812,7 +812,7 @@ def create_pdf(page, user_uuid ,data_json, name):
 
     
     pdfs = [
-        head_1, head_2, head_3, head_4, head_5, 
+        head_1, head_2, head_4, head_5, 
         second_base_1, second_base_2, second_base_3, second_base_4,
         third_base
     ]
