@@ -63,7 +63,10 @@ CHANNEL_LAYERS = {
 
 
 SITE_URL=os.environ.get("CR_HOSTS") or ImproperlyConfigured("CR_HOSTS not set")
-SKIP_EMAIL=os.environ.get("CR_SKIP_EMAIL") or ImproperlyConfigured("CR_SKIP_EMAIL not set")
+try:
+    SKIP_EMAIL=os.environ.get("CR_SKIP_EMAIL")
+except:
+    pass
 # Static Files
 STATIC_ROOT = os.path.join(BASE_DIR, "public/static")
 STATIC_URL = "/static/"
