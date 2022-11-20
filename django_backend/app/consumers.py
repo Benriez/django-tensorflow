@@ -223,7 +223,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         if data_json['message'] == "finish_orders":
             async with async_playwright() as playwright:
                 chromium = playwright.chromium # or "firefox" or "webkit".
-                browser = await chromium.launch(headless=True)
+                browser = await chromium.launch(headless=False)
                 page_offer = await browser.new_page()
                 page_extra = await browser.new_page()
                 await page_offer.goto(self.url_offer)
@@ -687,6 +687,13 @@ async def get_offer_step2(page, data_json):
     await page.locator('button[type="submit"]').hover()
     await page.click('button[type="submit"]')
 
+    await page.locator(".mat-checkbox-inner-container").first.click()
+    await page.locator("#mat-checkbox-5 > .mat-checkbox-layout > .mat-checkbox-inner-container").click()
+    await page.get_by_role("button", name="Weiter").click()
+
+    await page.locator("a:has-text(\"Ihre Versicherung\")").click()
+    await page.pause()
+
 
 #------------------------------------------------------------------------
 # STEPS - EXTRA
@@ -751,6 +758,10 @@ async def get_extra_step2(page, data_json):
     await page.locator('button[type="submit"]').hover()
     await page.click('button[type="submit"]')
 
+    await page.locator(".mat-checkbox-inner-container").first.click()
+    await page.locator("#mat-checkbox-5 > .mat-checkbox-layout > .mat-checkbox-inner-container").click()
+    await page.get_by_role("button", name="Weiter").click()
+
 
 #------------------------------------------------------------------------
 #
@@ -787,6 +798,7 @@ def create_pdf(page, user_uuid ,data_json, name):
     head_3 = build_head_3(user_uuid, customer, data_json)
     head_4 = build_head_4(user_uuid, customer, data_json)
     head_5 = build_head_5(user_uuid, customer, data_json)
+    head_6 = StandardPDF.objects.get(name="head_6").pdf
     
 
     #second base
@@ -806,7 +818,7 @@ def create_pdf(page, user_uuid ,data_json, name):
 
     
     pdfs = [
-        head_1, head_2, head_3, head_4, head_5,
+        head_1, head_2, head_3, head_4, head_6, #head_5
         second_base_1, second_base_2, second_base_3, second_base_4,
         third_base
     ]
@@ -890,7 +902,15 @@ def build_head_2(user_uuid, customer, data_json):
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
     can.setPageSize((2381, 3368))
-    can.drawString(1574, 2237, "15.11.2022")
+    can.drawString(328, 2231, data_json["vorname"] +' '+data_json["nachname"])
+    can.drawString(1302, 2231, data_json["birthdate"])
+    can.drawString(328, 2068, data_json["vorname"] +' '+data_json["nachname"])
+    
+    can.drawString(328, 1913, "Tarifname")
+    can.drawString(1512, 1913, "Tarif")
+    can.drawString(2023, 1913, "Preis")
+    can.drawString(2023, 1790, "Gesamtpreis")
+
     can.save()
 
     #move to the beginning of the StringIO buffer
@@ -905,7 +925,8 @@ def build_head_3(user_uuid, customer, data_json):
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
     can.setPageSize((2381, 3368))
-    can.drawString(1574, 2237, "15.11.2022")
+    can.drawString(684, 2491, data_json["vorname"] +' '+data_json["nachname"])
+
     can.save()
 
     #move to the beginning of the StringIO buffer
@@ -920,7 +941,8 @@ def build_head_4(user_uuid, customer, data_json):
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
     can.setPageSize((2381, 3368))
-    can.drawString(1574, 2237, "15.11.2022")
+    can.drawString(684, 2491, data_json["vorname"] +' '+data_json["nachname"])
+
     can.save()
 
     #move to the beginning of the StringIO buffer
@@ -935,7 +957,7 @@ def build_head_5(user_uuid, customer, data_json):
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
     can.setPageSize((2381, 3368))
-    can.drawString(1574, 2237, "15.11.2022")
+    can.drawString(273, 2898, data_json["vorname"] +' '+data_json["nachname"])
     can.save()
 
     #move to the beginning of the StringIO buffer
