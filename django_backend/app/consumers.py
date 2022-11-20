@@ -797,17 +797,17 @@ def create_pdf(page, user_uuid ,data_json, name):
     head_2 = build_head_2(user_uuid, customer, data_json)
     head_3 = build_head_3(user_uuid, customer, data_json)
     head_4 = build_head_4(user_uuid, customer, data_json)
-    head_5 = build_head_5(user_uuid, customer, data_json)
-    head_6 = StandardPDF.objects.get(name="head_6").pdf
     
-
     #second base
     if name=="Extra":
+        head_5 = build_head_5(user_uuid, customer, data_json)
+        head_6 = StandardPDF.objects.get(name="head_6_extra").pdf
         second_base_1 = StandardPDF.objects.get(name="second_base_1_extra").pdf
         second_base_2 = StandardPDF.objects.get(name="second_base_2_extra").pdf
         second_base_3 = StandardPDF.objects.get(name="second_base_3_extra").pdf
         second_base_4 = StandardPDF.objects.get(name="second_base_4_extra").pdf
     else:
+        head_6 = StandardPDF.objects.get(name="head_6").pdf
         second_base_1 = StandardPDF.objects.get(name="second_base_1").pdf
         second_base_2 = StandardPDF.objects.get(name="second_base_2").pdf
         second_base_3 = StandardPDF.objects.get(name="second_base_3").pdf
@@ -816,12 +816,19 @@ def create_pdf(page, user_uuid ,data_json, name):
 
     third_base = StandardPDF.objects.get(name="third_base").pdf
 
-    
-    pdfs = [
-        head_1, head_2, head_3, head_4, head_6, #head_5
-        second_base_1, second_base_2, second_base_3, second_base_4,
-        third_base
-    ]
+    if name=="Extra":
+        pdfs = [
+            head_1, head_2, head_5, head_4, head_6,
+            second_base_1, second_base_2, second_base_3, second_base_4,
+            third_base
+        ]
+    else:
+        pdfs = [
+            head_1, head_2, head_3, head_6,
+            second_base_1, second_base_2, second_base_3, second_base_4,
+            third_base
+        ]
+
     merger = PdfMerger()
 
     for pdf in pdfs:
