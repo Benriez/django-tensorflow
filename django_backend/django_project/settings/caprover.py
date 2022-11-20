@@ -72,6 +72,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, '../static')
 ]
 
+ARMED=os.environ.get("CR_ARMED") or ImproperlyConfigured("CR_ARMED not set")
+
 
 
 # ----------------------------------------------------------------------------------------------------------------------------
