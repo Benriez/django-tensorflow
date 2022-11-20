@@ -1038,7 +1038,21 @@ def build_extra_second_base_1(user_uuid, customer, data_json):
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
     can.setPageSize((2381, 3368))
-    can.setFont('Helvetica', 42)
+    can.setFont('Helvetica-Bold', 38)
+    can.drawString(398, 2709, data_json["tarif"])
+    can.setFont('Helvetica-Bold', 32)
+    can.setFillColorRGB(0,0.6171875,0.875)
+    can.drawString(1068, 2300, data_json["tarif"])
+    can.drawString(550, 1987, data_json["tarif"])
+    can.drawString(660, 1877, data_json["tarif"])
+    can.drawString(1219, 1877, data_json["tarif"])
+    can.drawString(1219, 1577, data_json["tarif"])
+    can.setFillColorRGB(0.34765625,0.34765625,0.34765625)
+    can.drawString(1136, 1196, data_json["tarif"])
+
+    can.setFillColorRGB(0,0.6171875,0.875)
+    can.drawString(1152, 750, data_json["tarif"])
+    can.drawString(931, 611, data_json["tarif"])
 
 
     can.save()
@@ -1054,7 +1068,11 @@ def build_extra_second_base_2(user_uuid, customer, data_json):
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
     can.setPageSize((2381, 3368))
-    can.setFont('Helvetica', 42)
+    can.setFont('Helvetica-Bold', 32)
+    can.setFillColorRGB(0,0.6171875,0.875)
+    can.drawString(1006, 3026, data_json["tarif"])
+    can.setFillColorRGB(0.34765625,0.34765625,0.34765625)
+    can.drawString(761, 2477, data_json["tarif"])
 
 
     can.save()
@@ -1069,7 +1087,11 @@ def build_extra_second_base_3(user_uuid, customer, data_json):
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
     can.setPageSize((2381, 3368))
-    can.setFont('Helvetica', 42)
+    can.setFont('Helvetica', 32)
+    can.drawString(1153, 728, data_json["tarif"])
+    can.drawString(376, 682, data_json["tarif"])
+    can.drawString(1064, 682, data_json["tarif"])
+    can.drawString(931, 590, data_json["tarif"])
 
 
     can.save()
@@ -1084,8 +1106,11 @@ def build_extra_second_base_4(user_uuid, customer, data_json):
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
     can.setPageSize((2381, 3368))
-    can.setFont('Helvetica', 42)
-
+    can.setFont('Helvetica-Bold', 32)
+    can.setFillColorRGB(0,0.6171875,0.875)
+    can.drawString(1123, 3025, data_json["tarif"])
+    can.drawString(1024, 2870, data_json["tarif"])
+    can.drawString(1645, 2708, data_json["tarif"])
 
     can.save()
     packet.seek(0)
