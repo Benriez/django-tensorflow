@@ -1048,7 +1048,13 @@ def build_extra_second_base_1(user_uuid, customer, data_json):
     can.drawString(1219, 1877, data_json["tarif"])
     can.drawString(1219, 1577, data_json["tarif"])
     can.setFillColorRGB(0.34765625,0.34765625,0.34765625)
-    can.drawString(1136, 1196, data_json["tarif"])
+    if data_json["tarif"] == "Mehr Zahn 80":
+        can.drawString(1150, 1196, "80")
+    elif data_json["tarif"] == "Mehr Zahn 90":
+        can.drawString(1150, 1196, "90")
+    elif data_json["tarif"] == "Mehr Zahn 100":
+        can.drawString(1150, 1196, "100")
+    
 
     can.setFillColorRGB(0,0.6171875,0.875)
     can.drawString(1152, 750, data_json["tarif"])
@@ -1072,8 +1078,13 @@ def build_extra_second_base_2(user_uuid, customer, data_json):
     can.setFillColorRGB(0,0.6171875,0.875)
     can.drawString(1006, 3026, data_json["tarif"])
     can.setFillColorRGB(0.34765625,0.34765625,0.34765625)
-    can.drawString(761, 2477, data_json["tarif"])
 
+    if data_json["tarif"] == "Mehr Zahn 80":
+        can.drawString(761, 2477, "80%")
+    elif data_json["tarif"] == "Mehr Zahn 90":
+        can.drawString(761, 2477, "90%")
+    elif data_json["tarif"] == "Mehr Zahn 100":
+        can.drawString(761, 2477, "100%")
 
     can.save()
     packet.seek(0)
@@ -1108,7 +1119,7 @@ def build_extra_second_base_4(user_uuid, customer, data_json):
     can.setPageSize((2381, 3368))
     can.setFont('Helvetica-Bold', 32)
     can.setFillColorRGB(0,0.6171875,0.875)
-    can.drawString(1123, 3025, data_json["tarif"])
+    can.drawString(1126, 3025, data_json["tarif"])
     can.drawString(1024, 2870, data_json["tarif"])
     can.drawString(1645, 2708, data_json["tarif"])
 
