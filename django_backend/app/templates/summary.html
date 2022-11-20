@@ -213,6 +213,7 @@
     let str_missing_teeth
     let current_contract
     let selection
+    let str_price
 
     if ( window.history.replaceState ) {
          window.history.replaceState( null, null, window.location.href );
@@ -297,6 +298,7 @@
             document.getElementById('insurance_begin').innerText = data.date
             document.getElementById('loader_begin').style.display = "none"
             document.getElementById('insurance_begin').style.display = 'block' 
+            str_price = data.price
 
             context ={
                 "message": "offer-price-received",
@@ -351,7 +353,8 @@
                 "strasse": "{{ request.session.strasse }}",
                 "hausnr": "{{ request.session.hausnr }}",
                 "email": "{{ request.session.email }}",
-                "iban": "{{ request.session.iban }}"
+                "iban": "{{ request.session.iban }}",
+                "str_price": str_price
             }
             systemSocket.send(JSON.stringify(context));            
             
@@ -430,7 +433,7 @@
             "missing_teeth": parseInt(str_missing_teeth),
             "current_contract": current_contract,
             "selection": selection,
-            "extra_order": extra_order
+            "extra_order": extra_order,
 
         }
         console.log(context)

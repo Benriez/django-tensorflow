@@ -22,17 +22,17 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 #
 from .models import Customer, StandardPDF
-
+import os
+import datetime
 
 
 email = "admin@mail.com"
 print_pages = 29
 SITE_URL = getattr(settings, "SITE_URL", None)
 SKIP_EMAIL = getattr(settings, "SKIP_EMAIL", None)
+date_today = datetime.datetime.now().strftime ("%d.%m.%Y")
 
 
-
-import os
 if not os.path.exists('./media/pdfs/'):
     os.makedirs('./media/pdfs/')
 
@@ -792,14 +792,13 @@ def upload_pdf(user_uuid, im_con, name, image_list):
 def create_pdf(page, user_uuid ,data_json, name):
     print('----create pdf----')
     customer = Customer.objects.get(client_id=user_uuid)
-  
     head_1 = build_head_1(user_uuid, customer, data_json)
-    head_2 = build_head_2(user_uuid, customer, data_json)
-    head_3 = build_head_3(user_uuid, customer, data_json)
-    head_4 = build_head_4(user_uuid, customer, data_json)
+    head_2 = build_head_2(user_uuid, customer, data_json, name)
+    third_base = StandardPDF.objects.get(name="third_base").pdf
     
     #second base
     if name=="Extra":
+        head_4 = build_head_4(user_uuid, customer, data_json)
         head_5 = build_head_5(user_uuid, customer, data_json)
         head_6 = StandardPDF.objects.get(name="head_6_extra").pdf
         second_base_1 = StandardPDF.objects.get(name="second_base_1_extra").pdf
@@ -807,6 +806,7 @@ def create_pdf(page, user_uuid ,data_json, name):
         second_base_3 = StandardPDF.objects.get(name="second_base_3_extra").pdf
         second_base_4 = StandardPDF.objects.get(name="second_base_4_extra").pdf
     else:
+        head_3 = build_head_3(user_uuid, customer, data_json)
         head_6 = StandardPDF.objects.get(name="head_6").pdf
         second_base_1 = StandardPDF.objects.get(name="second_base_1").pdf
         second_base_2 = StandardPDF.objects.get(name="second_base_2").pdf
@@ -814,7 +814,6 @@ def create_pdf(page, user_uuid ,data_json, name):
         second_base_4 = StandardPDF.objects.get(name="second_base_4").pdf
 
 
-    third_base = StandardPDF.objects.get(name="third_base").pdf
 
     if name=="Extra":
         pdfs = [
@@ -889,7 +888,7 @@ def build_head_1(user_uuid, customer, data_json):
     can.drawString(321, 2718, data_json["vorname"] + ' ' + data_json["nachname"])
     can.drawString(321, 2672, data_json["strasse"] + ' ' + data_json["hausnr"])
     can.drawString(321, 2626, data_json["plz"] +' '+ data_json["ort"])
-    can.drawString(1574, 2237, "15.11.2022")
+    can.drawString(1574, 2237, date_today)
 
     can.setFont('Helvetica', 42)
     can.drawString(490, 2056, data_json["anrede"] + ' ' + data_json["nachname"])
@@ -903,20 +902,30 @@ def build_head_1(user_uuid, customer, data_json):
     
 
 
-def build_head_2(user_uuid, customer, data_json):
+def build_head_2(user_uuid, customer, data_json, name):
     print('----build head 2') 
     head_2 = StandardPDF.objects.get(name="head_2")
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
+    print(data_json)
     can.setPageSize((2381, 3368))
+    can.setFont('Helvetica', 42)
+    can.setFillColorRGB(0,0.6171875,0.875)
     can.drawString(328, 2231, data_json["vorname"] +' '+data_json["nachname"])
     can.drawString(1302, 2231, data_json["birthdate"])
+    can.setFillColorRGB(254,255,255)
     can.drawString(328, 2068, data_json["vorname"] +' '+data_json["nachname"])
     
-    can.drawString(328, 1913, "Tarifname")
-    can.drawString(1512, 1913, "Tarif")
-    can.drawString(2023, 1913, "Preis")
-    can.drawString(2023, 1790, "Gesamtpreis")
+    can.setFillColorRGB(0.34765625,0.34765625,0.34765625)
+    if name =="Extra":
+        can.drawString(328, 1913, "Mehr Zahn ..")
+        can.drawString(1512, 1913, "ZAHN..")
+    else:
+        can.drawString(328, 1913, "Mehr Zahnvorsorge")
+        can.drawString(1512, 1913, "ZAHNV")
+
+    can.drawString(2023, 1913, data_json["str_price"])
+    can.drawString(2023, 1790, data_json["str_price"])
 
     can.save()
 
@@ -932,6 +941,8 @@ def build_head_3(user_uuid, customer, data_json):
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
     can.setPageSize((2381, 3368))
+    can.setFont('Helvetica', 42)
+    can.setFillColorRGB(0,0.6171875,0.875)
     can.drawString(684, 2491, data_json["vorname"] +' '+data_json["nachname"])
 
     can.save()
