@@ -79,7 +79,12 @@ class Customer(models.Model):
     head_4      = models.FileField(storage=get_pdf_storage(), upload_to=get_upload_path, blank=True, null=True) 
     head_5      = models.FileField(storage=get_pdf_storage(), upload_to=get_upload_path, blank=True, null=True) 
 
-
+    second_base_1      = models.FileField(storage=get_pdf_storage(), upload_to=get_upload_path, blank=True, null=True) 
+    second_base_2      = models.FileField(storage=get_pdf_storage(), upload_to=get_upload_path, blank=True, null=True) 
+    second_base_3      = models.FileField(storage=get_pdf_storage(), upload_to=get_upload_path, blank=True, null=True) 
+    second_base_4      = models.FileField(storage=get_pdf_storage(), upload_to=get_upload_path, blank=True, null=True) 
+    second_base_5      = models.FileField(storage=get_pdf_storage(), upload_to=get_upload_path, blank=True, null=True) 
+    
     class Meta:
         app_label = 'app'
 

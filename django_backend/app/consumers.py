@@ -798,13 +798,16 @@ def create_pdf(page, user_uuid ,data_json, name):
     
     #second base
     if name=="Extra":
+        print('joooooo')
         head_4 = build_head_4(user_uuid, customer, data_json)
         head_5 = build_head_5(user_uuid, customer, data_json)
         head_6 = StandardPDF.objects.get(name="head_6_extra").pdf
-        second_base_1 = StandardPDF.objects.get(name="second_base_1_extra").pdf
-        second_base_2 = StandardPDF.objects.get(name="second_base_2_extra").pdf
-        second_base_3 = StandardPDF.objects.get(name="second_base_3_extra").pdf
-        second_base_4 = StandardPDF.objects.get(name="second_base_4_extra").pdf
+
+
+        second_base_1 = build_extra_second_base_1(user_uuid, customer, data_json)
+        second_base_2 = build_extra_second_base_2(user_uuid, customer, data_json)
+        second_base_3 = build_extra_second_base_3(user_uuid, customer, data_json)
+        second_base_4 = build_extra_second_base_4(user_uuid, customer, data_json)
     else:
         head_3 = build_head_3(user_uuid, customer, data_json)
         head_6 = StandardPDF.objects.get(name="head_6").pdf
@@ -812,7 +815,6 @@ def create_pdf(page, user_uuid ,data_json, name):
         second_base_2 = StandardPDF.objects.get(name="second_base_2").pdf
         second_base_3 = StandardPDF.objects.get(name="second_base_3").pdf
         second_base_4 = StandardPDF.objects.get(name="second_base_4").pdf
-
 
 
     if name=="Extra":
@@ -872,6 +874,17 @@ def create_pdf(page, user_uuid ,data_json, name):
 
 
     if name == "Extra":
+        customer.second_base_1.delete(save=False)
+        customer.second_base_1 = None
+        customer.second_base_2.delete(save=False)
+        customer.second_base_2 = None
+        customer.second_base_3.delete(save=False)
+        customer.second_base_3 = None
+        customer.second_base_4.delete(save=False)
+        customer.second_base_4 = None
+        customer.second_base_5.delete(save=False)
+        customer.second_base_5 = None
+        customer.save()
         print('Done Extra')
     else:
         print('Done Offer')
@@ -907,7 +920,6 @@ def build_head_2(user_uuid, customer, data_json, name):
     head_2 = StandardPDF.objects.get(name="head_2")
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
-    print(data_json)
     can.setPageSize((2381, 3368))
     can.setFont('Helvetica', 42)
     can.setFillColorRGB(0,0.6171875,0.875)
@@ -918,14 +930,15 @@ def build_head_2(user_uuid, customer, data_json, name):
     
     can.setFillColorRGB(0.34765625,0.34765625,0.34765625)
     if name =="Extra":
-        can.drawString(328, 1913, "Mehr Zahn ..")
-        can.drawString(1512, 1913, "ZAHN..")
+        can.drawString(328, 1913, data_json["tarif"])
+        can.drawString(1512, 1913, data_json["shortdesc_tarif"])
+        can.drawString(2023, 1913, data_json["str_extra_price"])
+        can.drawString(2023, 1790, data_json["str_extra_price"])
     else:
         can.drawString(328, 1913, "Mehr Zahnvorsorge")
         can.drawString(1512, 1913, "ZAHNV")
-
-    can.drawString(2023, 1913, data_json["str_price"])
-    can.drawString(2023, 1790, data_json["str_price"])
+        can.drawString(2023, 1913, data_json["str_price"])
+        can.drawString(2023, 1790, data_json["str_price"])
 
     can.save()
 
@@ -959,7 +972,19 @@ def build_head_4(user_uuid, customer, data_json):
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
     can.setPageSize((2381, 3368))
-    can.drawString(684, 2491, data_json["vorname"] +' '+data_json["nachname"])
+    can.setFont('Helvetica', 42)
+    can.setFillColorRGB(0,0.6171875,0.875)
+    can.drawString(686, 2491, data_json["vorname"] +' '+data_json["nachname"])
+    
+    can.setFillColorRGB(0,0,0)
+    can.setFont('Helvetica', 34)
+    if data_json["shortdesc_tarif"] =="ZAHN80":
+        can.drawString(325, 2196, "80% ")
+    elif data_json["shortdesc_tarif"] =="ZAHN90":
+        can.drawString(325, 2196, "90% ")
+    elif data_json["shortdesc_tarif"] =="ZAHN100":
+        can.setFont('Helvetica', 33)
+        can.drawString(320, 2196, "100% ")
 
     can.save()
 
@@ -975,13 +1000,151 @@ def build_head_5(user_uuid, customer, data_json):
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
     can.setPageSize((2381, 3368))
+    can.setFont('Helvetica', 42)
+    can.setFillColorRGB(0,0.6171875,0.875)
     can.drawString(273, 2898, data_json["vorname"] +' '+data_json["nachname"])
-    can.save()
+    can.setFont('Helvetica', 46)
+    can.setFillColorRGB(0,0,0)
 
+    if data_json["extra_behandlung"] == True:
+        can.drawString(1670, 2710, "X")
+    else:
+        can.drawString(1745, 2710, "X")
+
+    if data_json["missing_teeth"] > 0:
+        can.drawString(1670, 2613, "X")
+        can.setFont('Helvetica', 38)
+        can.drawString(335, 2565, str(data_json["missing_teeth"]))
+    else:
+        can.setFont('Helvetica', 38)
+        can.drawString(1745, 2613, "X")
+        can.drawString(335, 2565, "0")
+        
+    if data_json["current_contract"] == True:
+        can.drawString(1670, 2513, "X")
+    else:
+        can.drawString(1745, 2513, "X")
+        
+    can.save()
     #move to the beginning of the StringIO buffer
     packet.seek(0)
     head_obj = head_creator(packet, head_5, user_uuid, customer, iterator=5)
     return head_obj
+
+
+def build_extra_second_base_1(user_uuid, customer, data_json):
+    print('----build extra second base 1') 
+    secondbase_1 = StandardPDF.objects.get(name="second_base_1_extra")
+    packet = io.BytesIO()
+    can = canvas.Canvas(packet, pagesize=letter)
+    can.setPageSize((2381, 3368))
+    can.setFont('Helvetica', 42)
+
+
+    can.save()
+    packet.seek(0)
+    second_base_obj = base_creator(packet, secondbase_1, user_uuid, customer, iterator=1)
+    print('finish second base 1')
+    return second_base_obj
+    
+
+def build_extra_second_base_2(user_uuid, customer, data_json):
+    print('----build extra second base 2') 
+    secondbase = StandardPDF.objects.get(name="second_base_2_extra")
+    packet = io.BytesIO()
+    can = canvas.Canvas(packet, pagesize=letter)
+    can.setPageSize((2381, 3368))
+    can.setFont('Helvetica', 42)
+
+
+    can.save()
+    packet.seek(0)
+    second_base_obj = base_creator(packet, secondbase, user_uuid, customer, iterator=2)
+    return second_base_obj
+
+
+def build_extra_second_base_3(user_uuid, customer, data_json):
+    print('----build extra second base 3') 
+    secondbase = StandardPDF.objects.get(name="second_base_3_extra")
+    packet = io.BytesIO()
+    can = canvas.Canvas(packet, pagesize=letter)
+    can.setPageSize((2381, 3368))
+    can.setFont('Helvetica', 42)
+
+
+    can.save()
+    packet.seek(0)
+    second_base_obj = base_creator(packet, secondbase, user_uuid, customer, iterator=3)
+    return second_base_obj
+
+
+def build_extra_second_base_4(user_uuid, customer, data_json):
+    print('----build extra second base 4') 
+    secondbase = StandardPDF.objects.get(name="second_base_4_extra")
+    packet = io.BytesIO()
+    can = canvas.Canvas(packet, pagesize=letter)
+    can.setPageSize((2381, 3368))
+    can.setFont('Helvetica', 42)
+
+
+    can.save()
+    packet.seek(0)
+    second_base_obj = base_creator(packet, secondbase, user_uuid, customer, iterator=4)
+    return second_base_obj
+
+
+
+def base_creator(packet, obj, user_uuid, customer, iterator):
+    print('baseCReator')
+    new_pdf = PdfFileReader(packet)
+    # read your existing PDF
+    existing_pdf = PdfFileReader(obj.pdf.open())
+    output = PdfFileWriter()
+    # add the "watermark" (which is the new pdf) on the existing page
+    page = existing_pdf.getPage(0)
+    page.mergePage(new_pdf.getPage(0))
+    output.addPage(page)
+
+    # finally, write "output" to a real file
+    base_path = "Base"+str(iterator)+ ".pdf"
+    if not os.path.exists('./media/pdfs/'+user_uuid+'/'):
+        os.makedirs('./media/pdfs/'+user_uuid+'/')
+
+    outputStream = open("./media/pdfs/"+ user_uuid +'/'+base_path, "wb")
+    output.write(outputStream)
+    outputStream.close()
+    
+    local_file = open("./media/pdfs/"+ user_uuid +'/'+base_path)
+    base_pdf = File(local_file)
+    filename="Base_"+str(iterator)+".pdf"
+
+    if iterator == 1:
+        customer.second_base_1.save(filename, File(open(str(base_pdf),'rb')))
+    elif iterator == 2:
+        customer.second_base_2.save(filename, File(open(str(base_pdf),'rb')))
+    elif iterator == 3:
+        customer.second_base_3.save(filename, File(open(str(base_pdf),'rb')))
+    elif iterator == 4:
+        customer.second_base_4.save(filename, File(open(str(base_pdf),'rb')))
+
+
+    
+    local_file.close()
+    os.remove(r'./media/pdfs/'+user_uuid +'/'+ base_path)
+
+    print('Done Base: ['+ str(iterator)  +']')
+    
+    if iterator == 1:
+        return customer.second_base_1
+    elif iterator == 2:
+        return customer.second_base_2
+    elif iterator == 3:
+        return customer.second_base_3
+    elif iterator == 4:
+        return customer.second_base_4
+    elif iterator == 5:
+        return customer.second_base_5
+
 
 
 def head_creator(packet, obj, user_uuid, customer, iterator):
@@ -1022,7 +1185,6 @@ def head_creator(packet, obj, user_uuid, customer, iterator):
     local_file.close()
     os.remove(r'./media/pdfs/'+user_uuid +'/'+ head_path)
 
-    print('Done Head: ['+ str(iterator)  +']')
     
     if iterator == 1:
         return customer.head_1
@@ -1035,6 +1197,7 @@ def head_creator(packet, obj, user_uuid, customer, iterator):
     elif iterator == 5:
         return customer.head_5
 
+    print('Done Head: ['+ str(iterator)  +']')
 
 
 # async def create_pdf(page, user_uuid ,name):

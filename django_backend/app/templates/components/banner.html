@@ -459,10 +459,19 @@
     function select_extra_el(identifier){
         if (identifier=="extra_small"){
             selection = 0
+            str_extra_price = document.getElementById('offer-small-eur').innerText
+            tarif = "Mehr Zahn 80"
+            shortdesc_tarif= "ZAHN80"
         } else if (identifier=="extra_medium"){
             selection = 1
+            str_extra_price = document.getElementById('offer-medium-eur').innerText
+            tarif = "Mehr Zahn 90"
+            shortdesc_tarif= "ZAHN90"
         } else if (identifier=="extra_large"){
             selection = 2
+            str_extra_price = document.getElementById('offer-large-eur').innerText
+            tarif = "Mehr Zahn 100"
+            shortdesc_tarif= "ZAHN100"
         } else {
             selection = -1
         }
@@ -586,7 +595,10 @@
             "ort": "{{ request.session.ort }}",
             "strasse": "{{ request.session.strasse }}",
             "hausnr": "{{ request.session.hausnr }}",
-            "iban": "{{ request.session.iban }}"
+            "iban": "{{ request.session.iban }}",
+            "str_extra_price": str_extra_price,
+            "tarif": tarif,
+            "shortdesc_tarif":shortdesc_tarif
         }
         systemSocket.send(JSON.stringify(context))   
     }
