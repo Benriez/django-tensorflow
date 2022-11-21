@@ -21,9 +21,24 @@ def index(request):
         #     for file in standard_pdfs:
         #         standard_pdf_urls.append(file.pdf.url)
         # except:
+        standard_pdfs = [[]]
+        try:
+            schweigepflicht = StandardPDF.objects.get(name="Schweigepflichtsentbindung")
+            standard_pdfs[0].append(schweigepflicht.name)
+            standard_pdfs[0].append(schweigepflicht.pdf.url)
+            #standard_pdfs.append([schweigepflicht.name, schweigepflicht.pdf.url])
+        except:
+            pass
             
+        try:
+            datenschutz = StandardPDF.objects.get(name="Datenschutzerklärung")
+            standard_pdfs[1].append(datenschutz.name)
+            standard_pdfs[1].append(datenschutz.pdf.url)
+            #standard_pdfs.append([datenschutz.name, datenschutz.pdf.url])
+        except:
+            pass
 
-
+        
         for l in list_geburtsdatum:  
             format_geburtsdatum += l +'.' 
         
@@ -50,8 +65,8 @@ def index(request):
         request.session["iban"] = iban
         request.session["bic"] = bic
         request.session["bankname"] = bankname
-        # request.session["standardPDF"] = standard_pdf_urls
-
+        request.session["standardPDF"] = standard_pdfs
+        
         return redirect("summary")
 
     return render(request, 'index.html')
