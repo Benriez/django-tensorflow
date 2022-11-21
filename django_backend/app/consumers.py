@@ -507,7 +507,7 @@ def send_email(user_uuid, data_json, extra_only=False):
 
     if extra_only:
         extra_pdf = customer.extra_pdf.url
-        mail_subject = 'Krankenzusatzversicherung'
+        mail_subject = 'Zahnversicherung'
         context = {
             "user": data_json["anrede"] + ' ' + data_json["vorname"] + ' ' +data_json["nachname"],
             "domain": SITE_URL,
@@ -517,7 +517,7 @@ def send_email(user_uuid, data_json, extra_only=False):
         }
     else:
         offer_pdf = customer.offer_pdf.url
-        mail_subject = 'Angebot'
+        mail_subject = 'Zahnversicherung'
         print('SITE_URL: ', SITE_URL)
         context = {
             "user": data_json["anrede"] + ' ' + data_json["vorname"] + ' ' +data_json["nachname"],
@@ -908,7 +908,7 @@ def build_head_1(user_uuid, customer, data_json):
     can.drawString(1574, 2237, date_today)
 
     can.setFont('Helvetica', 42)
-    can.drawString(490, 2056, data_json["anrede"] + ' ' + data_json["nachname"])
+    can.drawString(490, 2056, data_json["anrede"] + ' ' + data_json["nachname"] + ',')
 
     can.save()
 
