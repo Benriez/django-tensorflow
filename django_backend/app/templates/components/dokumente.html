@@ -47,18 +47,31 @@
 </div>
 
 
-{% for file in request.session.standardPDF %}
+{% if request.session.schweigepflicht %}
     <div style="display: flex; margin-bottom: 1rem;">
         <i class="fas fa-regular fa-file-pdf" style="font-size: 1.7rem; color: #3e1a1a;"></i>
         <a 
-            href="{{file.1}}" 
+            href="{{request.session.schweigepflicht}}" 
             style="margin-bottom: 0px;" 
             target="_blank" rel="noopener noreferrer" 
             download>
-                Download - {{file.0}}
+                Download - Schweigepflichtsentbindungserklärung
         </a>
     </div>    
-{% endfor %}
+{% endif %}
+
+{% if request.session.datenschutz %}
+    <div style="display: flex; margin-bottom: 1rem;">
+        <i class="fas fa-regular fa-file-pdf" style="font-size: 1.7rem; color: #3e1a1a;"></i>
+        <a 
+            href="{{request.session.datenschutz}}" 
+            style="margin-bottom: 0px;" 
+            target="_blank" rel="noopener noreferrer" 
+            download>
+                Download - Datenschutzerklärung
+        </a>
+    </div>    
+{% endif %}
 
 <div id="einwilligung_check" class="form-check" style="margin-bottom: 2rem;" onclick="check_finish()">
     <input class="form-check-input" type="checkbox" value="" id="input_einwilligung_check">

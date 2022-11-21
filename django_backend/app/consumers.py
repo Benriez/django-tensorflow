@@ -694,7 +694,7 @@ async def get_offer_step2(page, data_json):
     
     if ARMED == "True":
         await page.get_by_role("button", name="Beitragspflichtig abschließen").click()
-
+    
 
 #------------------------------------------------------------------------
 # STEPS - EXTRA
