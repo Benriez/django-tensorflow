@@ -46,7 +46,7 @@
                 </div>
 
                 <div style="text-align: end; padding-top: 2rem;">
-                    <p id="helperText" style="display: none ;color:#ffaaaa; font-weight: 500;">* Felder müssen ausgefüllt werden.</p>
+                    <p id="helperText" style="display: none ;color:#ffaaaa; font-weight: 500;">Hinweis: Alle Felder müssen ausgefüllt werden.</p>
                 </div>
 
                 <div style="text-align: end;">
@@ -104,19 +104,22 @@
     let error_border ="#ffaaaa"
     let error_counter = -1;
     let success_border ="#f6f6f6"
+    let succes_bg_color = "#fbfcff"
     let helper_text = document.getElementById("helperText")
 
     function validateSelection() {
         let element = document.getElementById("anrede");
         if (element.value != "Anrede") {
             element.style.borderColor = success_border
+            element.style.backgroundColor = succes_bg_color
             anrede = true
+            required_anrede = 0
             
         } else {
             anrede = false
             error_counter = error_counter+1
             element.style.borderColor = error_border
-            required_anrede = true
+            required_anrede = 1
         }
     
         validateStart()
@@ -181,22 +184,26 @@
         // check all fields not just current selected because of autofill
         if (iban_input.value != ""){
             iban = true
+            element.style.backgroundColor = succes_bg_color
             required_iban = 0
 
 
         } 
         if (anrede_input.value != ""){
             anrede = true
+            element.style.backgroundColor = succes_bg_color
             required_anrede = 0
 
         } 
         if (vorname_input.value != ""){
             vorname = true
+            element.style.backgroundColor = succes_bg_color
             required_vorname = 0
 
         } 
         if (nachname_input.value != ""){
             nachname = true
+            element.style.backgroundColor = succes_bg_color
             required_nachname = 0
 
         } 
@@ -205,6 +212,7 @@
             if (email_input.value.includes('@')){
                 if (email_input.value.includes('.')){
                     email = true
+                    element.style.backgroundColor = succes_bg_color
                     required_email = 0
                 } else {
                     email = false
@@ -220,15 +228,18 @@
         } 
         if (geburtsdatum_input.value != "" && geburtsdatum_input.value != "dd.mm.yyyy" ){
             geburtsdatum = true
+            element.style.backgroundColor = succes_bg_color
             required_geburtsdatum = 0
         } 
         if (strasse_input.value != ""){
             strasse = true
+            element.style.backgroundColor = succes_bg_color
             required_strasse = 0
 
         } 
         if (hausnr_input.value != ""){
             hausnr = true
+            element.style.backgroundColor = succes_bg_color
             required_hausnr = 0
         } 
         if (plz_input.value != ""){
@@ -239,6 +250,7 @@
                     required_plz = 1
                 } else{
                     plz = true
+                    element.style.backgroundColor = succes_bg_color
                     required_plz = 0
                 }
             } catch (error) {
@@ -250,6 +262,7 @@
         } 
         if (ort_input.value != ""){
             ort = true
+            element.style.backgroundColor = succes_bg_color
             required_ort = 0
         } 
 
@@ -276,7 +289,6 @@
             } else {
                 helper_text.style.display= "none"
             }
-            console.log(index + '; '+ element)
         }
         if (bool_iban && anrede && vorname && nachname &&email && geburtsdatum && strasse && hausnr && plz && ort) {
             button.disabled = false;
@@ -327,6 +339,9 @@
     .controls{
         display: flex;
         justify-content: space-evenly;
+    }
+    input:-webkit-autofill { 
+        -webkit-background-clip: text;
     }
 </style>
 
