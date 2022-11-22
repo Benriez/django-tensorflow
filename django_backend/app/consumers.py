@@ -26,13 +26,13 @@ import os
 import datetime
 
 
-email = "admin@mail.com"
+email = "mco@mv24.de"
 print_pages = 29
 SITE_URL = getattr(settings, "SITE_URL", None)
 SKIP_EMAIL = getattr(settings, "SKIP_EMAIL", None)
 ARMED = getattr(settings, "ARMED", False)
 date_today = datetime.datetime.now().strftime ("%d.%m.%Y")
-
+playwright_tries = 3
 
 if not os.path.exists('./media/pdfs/'):
     os.makedirs('./media/pdfs/')
@@ -109,7 +109,18 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 # other actions...
                 
                 #fill out external form
-                date, str_price = await get_offer_price(page, data_json) 
+                #try:
+                date, str_price = await get_offer_price(page, data_json)
+                #except:
+                    # await self.channel_layer.group_send(
+                    #     self.channel,
+                    #     {
+                    #         'type': 'timeout_exception',
+                    #         'data': {
+                    #             'message': 'Please reload the page'
+                    #         }
+                    #     }
+                    # )
                 await browser.close()               
                 await self.channel_layer.group_send(
                     self.channel,
