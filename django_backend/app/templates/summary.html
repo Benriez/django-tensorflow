@@ -144,6 +144,7 @@
                 <input 
                     id="finish" 
                     onclick="finish_order()"
+                    onmousedown="info_note()"
                     name="next" 
                     type="submit" 
                     value="Bitte warten" 
@@ -390,6 +391,11 @@
     systemSocket.onclose = function (e) {
         console.log('Chat socket closed');
     };
+
+
+    function info_note(){
+        console.log('eeyyy')
+    }
 
 
     function show_zusatz(){
