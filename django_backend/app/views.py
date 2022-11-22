@@ -15,14 +15,6 @@ def index(request):
         list_geburtsdatum.reverse()
         format_geburtsdatum =""
 
-        # try:
-        #     standard_pdfs = StandardPDF.objects.all()
-        #     standard_pdf_urls =[]
-        #     for file in standard_pdfs:
-        #         standard_pdf_urls.append(file.pdf.url)
-        # except:
-
-
         try:
             schweigepflicht = StandardPDF.objects.get(name="Schweigepflichtsentbindung").pdf.url
             request.session["schweigepflicht"] = schweigepflicht
@@ -34,15 +26,11 @@ def index(request):
             request.session["datenschutz"] = datenschutz
         except:
             pass
-
-
         
         for l in list_geburtsdatum:  
             format_geburtsdatum += l +'.' 
         
         format_geburtsdatum = format_geburtsdatum[:-1]
-
-
         strasse = request.POST.get("strasse")
         hausnr = request.POST.get('hausnr')
         plz = request.POST.get("plz")

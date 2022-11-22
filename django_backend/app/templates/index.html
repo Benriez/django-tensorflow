@@ -45,6 +45,10 @@
                     <input type="hidden" id="bankname" name="bankname" value="">
                 </div>
 
+                <div style="text-align: end; padding-top: 2rem;">
+                    <p id="helperText" style="display: none ;color:#ffaaaa; font-weight: 500;">* Felder müssen ausgefüllt werden.</p>
+                </div>
+
                 <div style="text-align: end;">
                     <input id="start" name="next" type="submit" value="Weiter" class="btn btn-primary col-12 col-md-3" style="margin-top: 5rem;" disabled>
                 </div>
@@ -75,56 +79,214 @@
     let plz = false;
     let ort = false;
 
+    let required_iban =-1;
+    let required_anrede =-1;
+    let required_vorname =-1;
+    let required_nachname =-1;
+    let required_email =-1;
+    let required_geburtsdatum =-1;
+    let required_strasse =-1;
+    let required_hausnr =-1;
+    let required_plz =-1;
+    let required_ort =-1;
+    
+    let iban_input = document.getElementById("iban");
+    let anrede_input = document.getElementById("anrede");
+    let vorname_input= document.getElementById("vorname");
+    let nachname_input = document.getElementById("nachname");
+    let email_input = document.getElementById("email-addresse");
+    let geburtsdatum_input = document.getElementById("geburtsdatum");
+    let strasse_input = document.getElementById("strasse");
+    let hausnr_input = document.getElementById("hausnr");
+    let plz_input = document.getElementById("plz");
+    let ort_input = document.getElementById("ort");
+
+    let error_border ="#ffaaaa"
+    let error_counter = -1;
+    let success_border ="#f6f6f6"
+    let helper_text = document.getElementById("helperText")
+
     function validateSelection() {
         let element = document.getElementById("anrede");
         if (element.value != "Anrede") {
+            element.style.borderColor = success_border
             anrede = true
+            
         } else {
             anrede = false
+            error_counter = error_counter+1
+            element.style.borderColor = error_border
+            required_anrede = true
         }
+    
         validateStart()
     }
     
     function validateForm(str_obj) {
+        console.log('-----validate Form-----')
         let element = document.getElementById(str_obj);
         if (element.value == "") {
-            //alert(element.name + " must be filled out");
-            element.style.borderColor = "#ffaaaa"
-            return false;
+            element.style.borderColor = error_border
+            // error_counter = error_counter+1
+            if (element.name == "vorname"){
+                vorname = false
+                required_vorname = 1
+            }
+            if (element.name == "nachname"){
+                nachname = false
+                required_nachname = 1
+            }
+            if (element.name == "iban"){
+                iban = false
+                required_iban = 1
+            }
+            if (element.name == "anrede"){
+                anrede = false
+                required_anrede = 1
+            }
+            if (element.name == "email-addresse"){
+                email = false
+                required_email = 1
+            }
+            if (element.name == "geburtsdatum"){
+                geburtsdatum = false
+                required_geburtsdatum = 1
+            }
+            if (element.name == "strasse"){
+                strasse = false
+                required_strasse = 1
+                
+            }
+            if (element.name == "hausnr"){
+                hausnr = false
+                required_hausnr = 1
+
+            }
+            if (element.name == "plz"){
+                plz = false
+                required_plz = 1
+
+            }
+            if (element.name == "ort"){
+                ort = false
+                required_ort = 1
+
+            }
         } else {
-            element.style.borderColor = "#f6f6f6"
+            element.style.borderColor = success_border
+            // error_counter = error_counter-1
         }
 
-        if (str_obj == "vorname"){
+
+        // check all fields not just current selected because of autofill
+        if (iban_input.value != ""){
+            iban = true
+            required_iban = 0
+
+
+        } 
+        if (anrede_input.value != ""){
+            anrede = true
+            required_anrede = 0
+
+        } 
+        if (vorname_input.value != ""){
             vorname = true
-        } else if (str_obj == "nachname"){
-            nachname = true
-        } else if (str_obj == "email-addresse"){
-            email = true
-        } else if (str_obj == "geburtsdatum"){
-            geburtsdatum = true
-        } else if (str_obj == "strasse"){
-            strasse = true
-        } else if (str_obj == "hausnr"){
-            hausnr = true
-        } else if (str_obj == "plz"){
-            plz = true
-        } else if (str_obj == "ort"){
-            ort = true
-        }
+            required_vorname = 0
 
+        } 
+        if (nachname_input.value != ""){
+            nachname = true
+            required_nachname = 0
+
+        } 
+        if (email_input.value != ""){
+            // check if string contains @ and . 
+            if (email_input.value.includes('@')){
+                if (email_input.value.includes('.')){
+                    email = true
+                    required_email = 0
+                } else {
+                    email = false
+                    required_email = 1
+                    element.style.borderColor = error_border
+                }
+            } else {
+                email = false
+                required_email = 1
+                element.style.borderColor = error_border
+            }
+
+        } 
+        if (geburtsdatum_input.value != "" && geburtsdatum_input.value != "dd.mm.yyyy" ){
+            geburtsdatum = true
+            required_geburtsdatum = 0
+        } 
+        if (strasse_input.value != ""){
+            strasse = true
+            required_strasse = 0
+
+        } 
+        if (hausnr_input.value != ""){
+            hausnr = true
+            required_hausnr = 0
+        } 
+        if (plz_input.value != ""){
+            try {
+                if (isNaN(parseInt(plz_input.value))){
+                    element.style.borderColor = error_border
+                    plz = false
+                    required_plz = 1
+                } else{
+                    plz = true
+                    required_plz = 0
+                }
+            } catch (error) {
+                element.style.borderColor = error_border
+                plz = false
+                required_plz = 1
+            }
+            
+        } 
+        if (ort_input.value != ""){
+            ort = true
+            required_ort = 0
+        } 
+
+ 
         validateStart()
 
     }
 
     function validateStart(){
         let button = document.getElementById("start");
+        let checkable_items = [required_anrede, required_vorname, required_nachname, required_email, required_geburtsdatum  , required_strasse, required_hausnr, required_plz, required_ort, required_iban]
+        // console.log(error_counter)
+        // if (error_counter < 0){
+        //     helper_text.style.display= "none"
+        // }else {
+        //     helper_text.style.display= "block"
+        // }
+
+        for (let index = 0; index < checkable_items.length; index++) {
+            let element = checkable_items[index];
+            if (element == 1){
+                helper_text.style.display= "block"
+                break;
+            } else {
+                helper_text.style.display= "none"
+            }
+            console.log(index + '; '+ element)
+        }
         if (bool_iban && anrede && vorname && nachname &&email && geburtsdatum && strasse && hausnr && plz && ort) {
             button.disabled = false;
+            helper_text.style.display= "none"
         } else {
             button.disabled = true;
+
         }
     }
+
 
     function validateContext(element){
         if (element.name == ""){
