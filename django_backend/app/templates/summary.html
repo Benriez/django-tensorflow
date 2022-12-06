@@ -60,12 +60,12 @@
                 <h5><i class="fas fa-tooth"></i>Zahnersatz (Optional)</h5>
                 <div class="">
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="mySwitch" name="darkmode" value="yes" onclick="show_zusatz()">
+                        <input class="form-check-input" type="checkbox" id="mySwitch" name="darkmode" value="yes" onclick="show_zusatz()" checked>
                         <label class="form-check-label" for="mySwitch">Sofort Kosten für Zahnersatz sichern!</label>
                     </div>
                 </div>
                 <div class="row">
-                    <div id="zusatz" style="display: none;">
+                    <div id="zusatz" style="display: flex;">
                         {% include 'components/banner.html' %}
                     </div>
                 </div>
