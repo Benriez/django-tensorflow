@@ -18,9 +18,9 @@
             <form method="POST" action="">
                 {% csrf_token %}
                 <div class="card col-12">
-                    <h5><i class="fas fa-user"></i>Wer wird versichert?</h5>
+                    <h5 class="primary-color"><i class="fas fa-user primary-color"></i>Wer wird versichert?</h5>
                     <div class="row">
-                        <select id="anrede" name="anrede" class="select col-12 col-md-2" aria-label="Default select example" onfocusout="validateSelection()">
+                        <select id="anrede" name="anrede" class="select col-12 col-md-2" aria-label="Default select example" onfocusout="validateSelection()" style="color:#7C7C7C; padding-right: 0px;">
                             <option value="Anrede" selected>Anrede</option>
                             <option value="Frau">Frau</option>
                             <option value="Herr">Herr</option>
@@ -38,19 +38,31 @@
 
 
                 <div class="card col-12" style="margin-top: 2rem;">
-                    <h5><i class="fas fa-solid fa-wallet"></i>Bankverbindung</h5>
+                    <h5 class="primary-color"><i class="fas fa-solid fa-wallet primary-color"></i>Bankverbindung</h5>
                     <input id="iban" name="iban" class="col-12 col-md-6 form-control" type="text" placeholder="IBAN" onfocusout="validateIBAN()"></input>
                     <small class="text-center mt-5"><b>Hinweis:</b> Mit der Eingabe meines Kontos erteile ich das Sepa-Lastschriftmandat zum Einzug der Beiträge von meinem Konto</small>
                     <input type="hidden" id="bic" name="bic" value="">
                     <input type="hidden" id="bankname" name="bankname" value="">
                 </div>
 
+
+                <div class="card col-12" style="margin-top: 2rem;">
+                    <h5 class="primary-color"><i class="fas fa-solid fa-info primary-color"></i>Zusatzinformation</h5>
+                    <div style="display: flex; align-items:baseline">
+                        <label for="Versicherungsbeginn">Versicherungsbeginn:</label>
+                        <input id="Versicherungsbeginn" class="form-control col-12 col-md-3" type="date" />
+                    </div>
+                </div>
+
+
+
+
                 <div style="text-align: end; padding-top: 2rem;">
                     <p id="helperText" style="display: none ;color:#ffaaaa; font-weight: 500;">Hinweis: Alle Felder müssen ausgefüllt werden.</p>
                 </div>
 
                 <div style="text-align: end;">
-                    <input id="start" name="next" type="submit" value="Weiter" class="btn btn-primary col-12 col-md-3" style="margin-top: 5rem;" disabled>
+                    <input id="start" name="next" type="submit" value="Weiter" class="btn btn-primary col-12 col-md-3" style="margin-top: .7rem;" disabled>
                 </div>
                 
             </form>
@@ -64,10 +76,6 @@
 </script>
 
 <script>
-    if ( window.history.replaceState ) {
-         window.history.replaceState( null, null, window.location.href );
-    }
-
     let bool_iban = false;
     let anrede = false;
     let vorname = false;
@@ -107,11 +115,30 @@
     let succes_bg_color = "#fbfcff"
     let helper_text = document.getElementById("helperText")
 
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
+
+    // -------------------------------------------------------------------------------
+    window.onload = (event) => {
+        datefield = document.getElementById('Versicherungsbeginn')
+        datefield.value = today
+        datefield.setAttribute("min", today)
+    };
+
+    if ( window.history.replaceState ) {
+         window.history.replaceState( null, null, window.location.href );
+    }
+
+
     function validateSelection() {
         let element = document.getElementById("anrede");
         if (element.value != "Anrede") {
             element.style.borderColor = success_border
             element.style.backgroundColor = succes_bg_color
+            element.style.color = "#000";
             anrede = true
             required_anrede = 0
             
@@ -342,6 +369,10 @@
     }
     input:-webkit-autofill { 
         -webkit-background-clip: text;
+    }
+
+    .primary-color{
+        color:#343a40
     }
 </style>
 
