@@ -15,6 +15,12 @@ def index(request):
         list_geburtsdatum.reverse()
         format_geburtsdatum =""
 
+        str_versicherungsbeginn = request.POST.get("Versicherungsbeginn")
+        list__versicherungsbeginn = list(str_versicherungsbeginn.split("-"))
+        list__versicherungsbeginn.reverse()
+        format_versicherungsbeginn =""
+
+
         try:
             schweigepflicht = StandardPDF.objects.get(name="Schweigepflichtsentbindung").pdf.url
             request.session["schweigepflicht"] = schweigepflicht
@@ -29,6 +35,9 @@ def index(request):
         
         for l in list_geburtsdatum:  
             format_geburtsdatum += l +'.' 
+
+        for l in list__versicherungsbeginn:  
+            format_versicherungsbeginn += l +'.' 
         
         format_geburtsdatum = format_geburtsdatum[:-1]
         strasse = request.POST.get("strasse")
@@ -48,6 +57,7 @@ def index(request):
         request.session["ort"] = ort
         request.session["email"] = email_addresse
         request.session["geburtsdatum"] = format_geburtsdatum
+        request.session["versicherungsbeginn"] = format_versicherungsbeginn
         request.session["iban"] = iban
         request.session["bic"] = bic
         request.session["bankname"] = bankname

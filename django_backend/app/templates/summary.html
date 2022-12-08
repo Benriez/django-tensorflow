@@ -277,7 +277,8 @@
                 "strasse": "{{ request.session.strasse }}",
                 "hausnr": "{{ request.session.hausnr }}",
                 "email": "{{ request.session.email }}",
-                "iban": "{{ request.session.iban }}"
+                "iban": "{{ request.session.iban }}",
+                "versicherungsbeginn": "{{ request.session.versicherungsbeginn}}"
             }
             systemSocket.send(JSON.stringify(context));
             }
@@ -374,20 +375,13 @@
                 "hausnr": "{{ request.session.hausnr }}",
                 "email": "{{ request.session.email }}",
                 "iban": "{{ request.session.iban }}",
-                "str_price": str_price
+                "str_price": str_price,
+                "versicherungsbeginn": "{{ request.session.versicherungsbeginn}}"
             }
             systemSocket.send(JSON.stringify(context));            
             
         }
 
-        
-
-        // if (data.message == "Finish"){
-        //     context ={
-        //         "message": "clear-data"
-        //     }
-        //     systemSocket.send(JSON.stringify(context));
-        // }
     };
     
     systemSocket.onclose = function (e) {
@@ -401,11 +395,6 @@
 
 
     function show_zusatz(){
-        // context ={
-        //     "message": "get_extra_pricelist",
-        //     "birthdate": "{{ request.session.geburtsdatum }}"
-        // }
-        // systemSocket.send(JSON.stringify(context))
         banner = document.getElementById('zusatz')
         extra = document.getElementById('extra_PDF')
 

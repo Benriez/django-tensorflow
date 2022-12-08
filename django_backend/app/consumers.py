@@ -106,9 +106,6 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 browser = await chromium.launch(headless=True)
                 page = await browser.new_page()
                 await page.goto(self.url_offer)
-                # other actions...
-                
-                #fill out external form
                 #try:
                 date, str_price = await get_offer_price(page, data_json)
                 #except:
@@ -668,6 +665,7 @@ async def finish_extra_order(page_extra, data_json):
 
 async def get_offer_step1(page, data_json):
     await page.click('button:has-text("Alle akzeptieren")')
+    await page.locator('[data-placeholder="Versicherungsbeginn"]').fill(data_json['versicherungsbeginn'])
     await page.locator('[data-placeholder="Geburtsdatum"]').fill(data_json['birthdate'])
     await page.locator('[data-placeholder="Vorname"]').fill(data_json['vorname'])
     await page.click('button:has-text("Beitrag berechnen")')
@@ -938,6 +936,7 @@ def build_head_2(user_uuid, customer, data_json, name):
     can.setPageSize((2381, 3368))
     can.setFont('Helvetica', 42)
     can.setFillColorRGB(0,0.6171875,0.875)
+    can.drawString(757, 2437, data_json["versicherungsbeginn"][:-1])
     can.drawString(328, 2231, data_json["vorname"] +' '+data_json["nachname"])
     can.drawString(1302, 2231, data_json["birthdate"])
     can.setFillColorRGB(254,255,255)
@@ -950,7 +949,7 @@ def build_head_2(user_uuid, customer, data_json, name):
         can.drawString(2023, 1913, data_json["str_extra_price"])
         can.drawString(2023, 1790, data_json["str_extra_price"])
     else:
-        can.drawString(328, 1913, "Mehr Zahnvorsorge")
+        can.drawString(328, 1913, "ZahnReinigungsFlat by Zahnidee")
         can.drawString(1512, 1913, "ZAHNV")
         can.drawString(2023, 1913, data_json["str_price"])
         can.drawString(2023, 1790, data_json["str_price"])
