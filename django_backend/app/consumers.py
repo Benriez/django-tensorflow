@@ -249,6 +249,8 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 if SKIP_EMAIL:
                     pass
                 else:
+                    if DEBUG:
+                        print('send email')
                     await send_email(self.user_uuid, data_json)
 
                 await self.channel_layer.group_send(

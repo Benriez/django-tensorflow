@@ -9,7 +9,7 @@ from .main import BASE_DIR
 # key and debugging settings should not changed without care
 SECRET_KEY = os.environ.get("CR_SECRET_KEY") or ImproperlyConfigured("CR_SECRET_KEY not set")
 try:
-    if os.environ.get("CR_DEBUG", True):
+    if os.environ.get("CR_DEBUG") == "True":
         DEBUG = True
 except:
     DEBUG = False
@@ -65,6 +65,10 @@ CHANNEL_LAYERS = {
 SITE_URL=os.environ.get("CR_HOSTS") or ImproperlyConfigured("CR_HOSTS not set")
 try:
     SKIP_EMAIL=os.environ.get("CR_SKIP_EMAIL")
+    if SKIP_EMAIL == 'True':
+        SKIP_EMAIL = True
+    else:
+        SKIP_EMAIL = False
 except:
     pass
 # Static Files
