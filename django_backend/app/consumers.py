@@ -30,8 +30,8 @@ email = "mco@mv24.de"
 print_pages = 29
 SITE_URL = getattr(settings, "SITE_URL", None)
 DEBUG = getattr(settings, "DEBUG", bool)
-SKIP_EMAIL = getattr(settings, "SKIP_EMAIL", None)
-ARMED = getattr(settings, "ARMED", False)
+SKIP_EMAIL = getattr(settings, "SKIP_EMAIL", bool)
+ARMED = getattr(settings, "ARMED", bool)
 date_today = datetime.datetime.now().strftime ("%d.%m.%Y")
 playwright_tries = 3
 
@@ -707,7 +707,7 @@ async def get_offer_step2(page, data_json):
     await page.locator("#mat-checkbox-5 > .mat-checkbox-layout > .mat-checkbox-inner-container").click()
     await page.get_by_role("button", name="Weiter").click()
     
-    if ARMED == "True":
+    if ARMED == True:
         await page.get_by_role("button", name="Beitragspflichtig abschließen").click()
     
 
@@ -778,7 +778,7 @@ async def get_extra_step2(page, data_json):
     await page.locator("#mat-checkbox-5 > .mat-checkbox-layout > .mat-checkbox-inner-container").click()
     await page.get_by_role("button", name="Weiter").click()
 
-    if ARMED == "True":
+    if ARMED == True:
         await page.get_by_role("button", name="Beitragspflichtig abschließen").click()
 
 
