@@ -26,7 +26,7 @@ import os
 import datetime
 
 
-email = "mco@mv24.de"
+ref_email = "mco@mv24.de"
 print_pages = 29
 SITE_URL = getattr(settings, "SITE_URL", None)
 DEBUG = getattr(settings, "DEBUG", bool)
@@ -693,7 +693,7 @@ async def get_offer_step2(page, data_json):
     await page.locator('[data-placeholder="Hausnummer"]').fill(data_json['hausnr'])
 
     await page.click('mat-checkbox')
-    await page.locator('[data-placeholder="E-Mail-Adresse"]').fill(email)
+    await page.locator('[data-placeholder="E-Mail-Adresse"]').fill(ref_email)
     await page.locator('button:has-text("Weiter")').hover()
     await page.click('button:has-text("Weiter")')
 
@@ -765,7 +765,7 @@ async def get_extra_step2(page, data_json):
     await page.locator('[data-placeholder="Straße"]').fill(data_json['strasse'])
     await page.click('.mat-checkbox-inner-container')
     await page.locator('[data-placeholder="Hausnummer"]').fill(data_json['hausnr'])
-    await page.locator('[data-placeholder="E-Mail-Adresse"]').fill(email)
+    await page.locator('[data-placeholder="E-Mail-Adresse"]').fill(ref_email)
     
     await page.locator('button:has-text("Weiter")').hover()
     await page.click('button:has-text("Weiter")')
