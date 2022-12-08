@@ -257,9 +257,8 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 #send email to customer
                 if SKIP_EMAIL:
                     pass
-                else:
-                    if DEBUG:
-                        print('send email')
+                else:              
+                    print('send email')
                     await send_email(self.user_uuid, data_json)
 
                 await self.channel_layer.group_send(
@@ -541,8 +540,8 @@ def send_email(user_uuid, data_json, extra_only=False):
     else:
         offer_pdf = customer.offer_pdf.url
         mail_subject = 'Zahnversicherung'
-        if DEBUG:
-            print('SITE_URL: ', SITE_URL)
+    
+        print('SITE_URL: ', SITE_URL)
         context = {
             "user": data_json["anrede"] + ' ' + data_json["vorname"] + ' ' +data_json["nachname"],
             "domain": SITE_URL,
@@ -560,6 +559,8 @@ def send_email(user_uuid, data_json, extra_only=False):
     msg = EmailMultiAlternatives(subject=mail_subject, body=message, from_email=from_email, to=['testreceiver@mail.com'])
     msg.attach_alternative(html_content, "text/html")
     msg.send()
+
+    print('msg send')
 
     customer.success= True
     customer.save()
