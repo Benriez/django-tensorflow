@@ -80,7 +80,10 @@ STATICFILES_DIRS = [
 ]
 
 ARMED=os.environ.get("CR_ARMED") or ImproperlyConfigured("CR_ARMED not set")
-
+if ARMED == "True":
+    ARMED = True
+else:
+    ARMED = False
 
 
 # ----------------------------------------------------------------------------------------------------------------------------
