@@ -35,10 +35,6 @@ ARMED = getattr(settings, "ARMED", False)
 date_today = datetime.datetime.now().strftime ("%d.%m.%Y")
 playwright_tries = 3
 
-pasteText = "schön, dass Sie sich für den Versicherungsschutz der Barmenia entschieden haben. Für Ihr Vertrauen danken wir Ihnen.Die Barmenia bestätigt den Abschluss Ihrer Ergänzungsversicherung.Im Anhang erhalten Sie Ihren Versicherungsschein.Mehr Zahn „IDEE“ – unser zusätzliches Angebot für Dich: Du kennst ja bereits unsere ZahnReinigungsFlat und profitierst von den vielen Vorteilen. Das zeigt, dass dir gesunde Zähne besonders wichtig sind!Heute habe ich eine tolle Nachricht für dich: Du kannst ab sofort deinen Versicherungsschutz erweitern und erhöhen – und zwar bis zu einervollständigen Kostenübernahme von 100 % bei Zahnersatz.Noch mehr lächeln mit Mehr Zahn „IDEE“ Wenn du jetzt deine ZahnReinigungsFlat mit dem Tarif Mehr Zahn „IDEE“ kombinierst, entfällt die Leistungsstaffel für die Zahnerhaltungsmaßnahmen. Dann sind hochwertige Kunststoff-Füllungen, Wurzel- und Parodontose-Behandlungen, Aufbiss-Schienen und schmerzlindernde Maßnahmenohne Begrenzung zu 100 % inklusive und du erhältst zusätzlich alle zwei Jahre einen 200 EUR Bleaching-Bonus.Zusätzlich sicherst Du Dir den Vorteil der verkürzten Zahnstaffel, so stehen Dir ab dem 01. Januar 2023 bereits maximal 3.000€ Leistung für Zahnersatz zur Verfügung. SICHERE DIR JETZT DEINEN BONUS. Bei 80% Kostenübernahme für 10,60€Bei 90% Kostenübernahme für 16,80€Bei 100% Kostenübernahme für 22,50€ JETZT einfach auf den Link Bonus.ZahnReinigungsFlat.de und online buchen. Hier erhältst du alle wichtigen Infos rund um dieses tolle Angebot. Und mit wenigen Klicks hast du die komplette Lösung für deine Zahngesundheit. Du hast Fragen? Gerne helfen wir dir weiter – ruf uns einfach an."
-pasteText2 = "schön, dass Sie sich für den Versicherungsschutz der Barmenia entschieden haben. Für Ihr Vertrauen danken wir Ihnen.Die Barmenia bestätigt den Abschluss Ihrer Versicherungen (ZahnReinigungsFlat und Mehr Zahn „IDEE“.Im Anhang erhalten Sie Ihre Versicherungsscheine. Du hast Fragen? Gerne helfen wir dir weiter – ruf uns einfach an."
-
-
 if not os.path.exists('./media/pdfs/'):
     os.makedirs('./media/pdfs/')
 
@@ -530,8 +526,7 @@ def send_email(user_uuid, data_json, extra_only=False):
             "user": data_json["anrede"] + ' ' + data_json["vorname"] + ' ' +data_json["nachname"],
             "domain": SITE_URL,
             "offer_pdf": extra_pdf,
-            "offer_only": True,
-            "paste_text": pasteText2
+            "offer_only": True
         }
     else:
         offer_pdf = customer.offer_pdf.url
@@ -541,7 +536,6 @@ def send_email(user_uuid, data_json, extra_only=False):
             "domain": SITE_URL,
             "offer_pdf": offer_pdf,
             "extra_url": 'https://'+ SITE_URL + '/extra/'+ str(user_uuid) + '/',
-            "paste_text": pasteText
         }
         if data_json["extra_order"]==True:
             extra_pdf = customer.extra_pdf.url
