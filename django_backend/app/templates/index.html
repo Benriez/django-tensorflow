@@ -120,12 +120,31 @@
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     var yyyy = today.getFullYear();
     today = yyyy + '-' + mm + '-' + dd;
+    
+    //  6 months ahead
+    var maxDateValue = ''
+    var mm_ahead = parseInt(mm) + 6
+    if (mm_ahead > 12){
+        mm_ahead= mm_ahead -12
+        yyyy =yyyy+1
+    }
+
+    if (mm_ahead < 10){
+        mm_ahead ='0'+ mm_ahead.toString()
+    } else {
+        mm_ahead = mm_ahead.toString()
+    }
+
+    maxDateValue = yyyy + '-' + mm_ahead + '-' + dd;
+
+
 
     // -------------------------------------------------------------------------------
     window.onload = (event) => {
         datefield = document.getElementById('Versicherungsbeginn')
         datefield.value = today
         datefield.setAttribute("min", today)
+        datefield.setAttribute("max", maxDateValue)
     };
 
     if ( window.history.replaceState ) {
