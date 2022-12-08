@@ -18,6 +18,7 @@ except:
     DEBUG = False
 
 print('DEBUG:: ', DEBUG)
+print('DEBUG type:: ', type(DEBUG))
 
 # allowed hosts get parsed from a comma-separated list
 trust_orgins = os.environ.get("CR_TRUSTED_ORIGINS") or ImproperlyConfigured("CR_TRUSTED_ORIGINS not set")

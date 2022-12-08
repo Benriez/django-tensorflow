@@ -29,11 +29,20 @@ import datetime
 email = "mco@mv24.de"
 print_pages = 29
 SITE_URL = getattr(settings, "SITE_URL", None)
-DEBUG = getattr(settings, "DEBUG", False)
+DEBUG = getattr(settings, "DEBUG", bool)
 SKIP_EMAIL = getattr(settings, "SKIP_EMAIL", None)
 ARMED = getattr(settings, "ARMED", False)
 date_today = datetime.datetime.now().strftime ("%d.%m.%Y")
 playwright_tries = 3
+
+print('-------------------------------------------')
+print('consumer Debug: ', DEBUG)
+print('consumer Debug type: ', type(DEBUG))
+
+print('consumer SKIP_EMAIL: ', SKIP_EMAIL)
+print('consumer SKIP_EMAIL type: ', type(SKIP_EMAIL))
+print('-------------------------------------------')
+
 
 if not os.path.exists('./media/pdfs/'):
     os.makedirs('./media/pdfs/')
