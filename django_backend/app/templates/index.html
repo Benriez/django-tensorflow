@@ -121,7 +121,7 @@
     var yyyy = today.getFullYear();
     today = yyyy + '-' + mm + '-' + dd;
     
-    //  6 months ahead
+    //  calc min/ max date value
     var maxDateValue = ''
     var mm_ahead = parseInt(mm) + 6
     if (mm_ahead > 12){
@@ -145,7 +145,6 @@
         datefield.value = today
         datefield.setAttribute("min", today)
         datefield.setAttribute("max", maxDateValue)
-        console.log(vorname_input)
   
     };
 
@@ -322,12 +321,6 @@
     function validateStart(){
         let button = document.getElementById("start");
         let checkable_items = [required_anrede, required_vorname, required_nachname, required_email, required_geburtsdatum  , required_strasse, required_hausnr, required_plz, required_ort, required_iban]
-        // console.log(error_counter)
-        // if (error_counter < 0){
-        //     helper_text.style.display= "none"
-        // }else {
-        //     helper_text.style.display= "block"
-        // }
 
         for (let index = 0; index < checkable_items.length; index++) {
             let element = checkable_items[index];
