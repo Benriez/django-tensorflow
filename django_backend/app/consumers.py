@@ -446,7 +446,10 @@ class ExtraViewConsumer(AsyncWebsocketConsumer):
                 await browser.close() 
 
                 #send email to customer
-                await send_email(self.user_uuid, data_json, extra_only=True)
+                if SKIP_EMAIL:
+                    pass
+                else: 
+                    await send_email(self.user_uuid, data_json, extra_only=True)
 
                 await self.channel_layer.group_send(
                     self.channel,
@@ -554,7 +557,7 @@ def send_email(user_uuid, data_json, extra_only=False):
 
     message = render_to_string('email/send_offer.html', context)   
     html_content = get_template("email/send_offer.html").render(context)
-    msg = EmailMultiAlternatives(subject=mail_subject, body=message, from_email=from_email, to=['testreceiver@mail.com'])
+    msg = EmailMultiAlternatives(subject=mail_subject, body=message, from_email=from_email, to=[data_json["email"]])
     msg.attach_alternative(html_content, "text/html")
     msg.send()
 
