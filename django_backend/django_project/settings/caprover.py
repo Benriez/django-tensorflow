@@ -9,10 +9,15 @@ from .main import BASE_DIR
 # key and debugging settings should not changed without care
 SECRET_KEY = os.environ.get("CR_SECRET_KEY") or ImproperlyConfigured("CR_SECRET_KEY not set")
 try:
+    print(os.environ.get("CR_DEBUG"))
+    print(type(os.environ.get("CR_DEBUG")))
+
     if os.environ.get("CR_DEBUG") == "True":
         DEBUG = True
 except:
     DEBUG = False
+
+print('DEBUG:: ', DEBUG)
 
 # allowed hosts get parsed from a comma-separated list
 trust_orgins = os.environ.get("CR_TRUSTED_ORIGINS") or ImproperlyConfigured("CR_TRUSTED_ORIGINS not set")
