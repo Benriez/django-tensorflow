@@ -256,6 +256,26 @@
 </script>
 
 <style>
+    a {
+        color: #527da8!important;
+        text-decoration: none!important;
+    }
+    .form-check-input:checked {
+        background-color: #0b9fb8!important;
+        border-color: #0b9fb8!important;
+    }
+    .btn:first-child:hover, :not(.btn-check)+.btn:hover {
+        color: var(--bs-btn-hover-color);
+        background-color: #0dcaea!important;
+        border-color: #0dcaea!important;
+    }
+    .btn.disabled, .btn:disabled, fieldset:disabled .btn {
+        color: var(--bs-btn-disabled-color);
+        pointer-events: none;
+        background-color: #00212d!important;
+        border-color: #00212d!important;
+        opacity: var(--bs-btn-disabled-opacity);
+    }
     .loader {
         border: 0.2rem solid #f3f3f3; /* Light grey */
         border-top: 0.2rem solid #3498db; /* Blue */

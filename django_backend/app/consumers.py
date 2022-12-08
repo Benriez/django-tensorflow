@@ -526,7 +526,8 @@ def send_email(user_uuid, data_json, extra_only=False):
             "user": data_json["anrede"] + ' ' + data_json["vorname"] + ' ' +data_json["nachname"],
             "domain": SITE_URL,
             "offer_pdf": extra_pdf,
-            "offer_only": True
+            "offer_only": True,
+            "paste_text": 3
         }
     else:
         offer_pdf = customer.offer_pdf.url
@@ -536,11 +537,13 @@ def send_email(user_uuid, data_json, extra_only=False):
             "domain": SITE_URL,
             "offer_pdf": offer_pdf,
             "extra_url": 'https://'+ SITE_URL + '/extra/'+ str(user_uuid) + '/',
+            "paste_text": 1
         }
         if data_json["extra_order"]==True:
             extra_pdf = customer.extra_pdf.url
             context["extra_pdf"]=extra_pdf
             context["extra_order"] = data_json["extra_order"]
+            context["paste_text"]=2
 
     message = render_to_string('email/send_offer.html', context)   
     html_content = get_template("email/send_offer.html").render(context)

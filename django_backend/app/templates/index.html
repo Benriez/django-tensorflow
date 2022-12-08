@@ -145,6 +145,8 @@
         datefield.value = today
         datefield.setAttribute("min", today)
         datefield.setAttribute("max", maxDateValue)
+        console.log(vorname_input)
+  
     };
 
     if ( window.history.replaceState ) {
@@ -382,6 +384,22 @@
 
 
 <style>
+    .form-check-input:checked {
+        background-color: #0b9fb8!important;
+        border-color: #0b9fb8!important;
+    }
+    .btn:first-child:hover, :not(.btn-check)+.btn:hover {
+        color: var(--bs-btn-hover-color);
+        background-color: #0dcaea!important;
+        border-color: #0dcaea!important;
+    }
+    .btn.disabled, .btn:disabled, fieldset:disabled .btn {
+        color: var(--bs-btn-disabled-color);
+        pointer-events: none;
+        background-color: #00212d!important;
+        border-color: #00212d!important;
+        opacity: var(--bs-btn-disabled-opacity);
+    }
     .controls{
         display: flex;
         justify-content: space-evenly;

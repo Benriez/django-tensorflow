@@ -36,31 +36,49 @@
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 800px;">
                     <tr>
                         <td bgcolor="#F6FDFF" align="left" style="padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">
-                                schön, dass Sie sich für den Versicherungsschutz der Barmenia entschieden haben. Für Ihr Vertrauen danken wir Ihnen.<br> 
-                                Die Barmenia bestätigt den Abschluss Ihrer Ergänzungsversicherung.<br>                       
-                                Im Anhang erhalten Sie Ihren Versicherungsschein.<br>
-                                <br>
-                                <br>
-                                Mehr Zahn „IDEE“ – unser zusätzliches Angebot für Dich:<br> 
-                                <br>
-                                Du kennst ja bereits unsere ZahnReinigungsFlat und profitierst von den vielen Vorteilen. Das zeigt, dass dir gesunde Zähne besonders wichtig sind! Heute habe ich eine tolle Nachricht für dich: Du kannst ab sofort deinen Versicherungsschutz erweitern und erhöhen – und zwar bis zu einervollständigen Kostenübernahme von 100 % bei Zahnersatz.<br> 
-                                <br>
-                                Noch mehr lächeln mit Mehr Zahn „IDEE“<br>
-                                Wenn du jetzt deine ZahnReinigungsFlat mit dem Tarif Mehr Zahn „IDEE“ kombinierst, entfällt die Leistungsstaffel für die Zahnerhaltungsmaßnahmen. Dann sind hochwertige Kunststoff-Füllungen, Wurzel- und Parodontose-Behandlungen, Aufbiss-Schienen und schmerzlindernde Maßnahmenohne Begrenzung zu 100 % inklusive und du erhältst zusätzlich alle zwei Jahre einen 200 EUR Bleaching-Bonus.<br>
-                                <br>
-                                Zusätzlich sicherst Du Dir den Vorteil der verkürzten Zahnstaffel, so stehen Dir ab dem 01. Januar 2023 bereits maximal 3.000€ Leistung für Zahnersatz zur Verfügung.<br>
-                                <br>
-                                SICHERE DIR JETZT DEINEN BONUS.<br>
-                                Bei 80% Kostenübernahme für 10,60€<br>
-                                Bei 90% Kostenübernahme für 16,80€<br>
-                                Bei 100% Kostenübernahme für 22,50€ <br>
-                                <br>
-                                JETZT einfach auf den <a href="https://www.zahnidee.de/zahnzusatz/" target="_blank">Link</a> und online buchen.<br>
-                                <br>
-                                Hier erhältst du alle wichtigen Infos rund um dieses tolle Angebot. Und mit wenigen Klicks hast du die komplette Lösung für deine Zahngesundheit.<br>
-                                Du hast Fragen? Gerne helfen wir dir weiter – ruf uns einfach an.
-                            </p>
+                            {% if paste_text == 1%}                     
+                                <p style="margin: 0;">
+                                    schön, dass Sie sich für den Versicherungsschutz der Barmenia entschieden haben. Für Ihr Vertrauen danken wir Ihnen.<br> 
+                                    Die Barmenia bestätigt den Abschluss Ihrer Ergänzungsversicherung.<br>                       
+                                    Im Anhang erhalten Sie Ihren Versicherungsschein.<br>
+                                    <br>
+                                    <br>
+                                    Mehr Zahn „IDEE“ – unser zusätzliches Angebot für Dich:<br> 
+                                    <br>
+                                    Du kennst ja bereits unsere ZahnReinigungsFlat und profitierst von den vielen Vorteilen. Das zeigt, dass dir gesunde Zähne besonders wichtig sind! Heute habe ich eine tolle Nachricht für dich: Du kannst ab sofort deinen Versicherungsschutz erweitern und erhöhen – und zwar bis zu einervollständigen Kostenübernahme von 100 % bei Zahnersatz.<br> 
+                                    <br>
+                                    Noch mehr lächeln mit Mehr Zahn „IDEE“<br>
+                                    Wenn du jetzt deine ZahnReinigungsFlat mit dem Tarif Mehr Zahn „IDEE“ kombinierst, entfällt die Leistungsstaffel für die Zahnerhaltungsmaßnahmen. Dann sind hochwertige Kunststoff-Füllungen, Wurzel- und Parodontose-Behandlungen, Aufbiss-Schienen und schmerzlindernde Maßnahmenohne Begrenzung zu 100 % inklusive und du erhältst zusätzlich alle zwei Jahre einen 200 EUR Bleaching-Bonus.<br>
+                                    <br>
+                                    Zusätzlich sicherst Du Dir den Vorteil der verkürzten Zahnstaffel, so stehen Dir ab dem 01. Januar 2023 bereits maximal 3.000€ Leistung für Zahnersatz zur Verfügung.<br>
+                                    <br>
+                                    SICHERE DIR JETZT DEINEN BONUS.<br>
+                                    Bei 80% Kostenübernahme für 10,60€<br>
+                                    Bei 90% Kostenübernahme für 16,80€<br>
+                                    Bei 100% Kostenübernahme für 22,50€ <br>
+                                    <br>
+                                    JETZT einfach auf den <a href="https://www.zahnidee.de/zahnzusatz/" target="_blank">Link</a> und online buchen.<br>
+                                    <br>
+                                    Hier erhältst du alle wichtigen Infos rund um dieses tolle Angebot. Und mit wenigen Klicks hast du die komplette Lösung für deine Zahngesundheit.<br>
+                                    Du hast Fragen? Gerne helfen wir dir weiter – ruf uns einfach an.
+                                </p>
+                            {% elif paste_text == 2 %}
+                                <p style="margin: 0;">
+                                    schön, dass Sie sich für den Versicherungsschutz der Barmenia entschieden haben. Für Ihr Vertrauen danken wir Ihnen.<br>
+                                    Die Barmenia bestätigt den Abschluss Ihrer Versicherungen (ZahnReinigungsFlat und Mehr Zahn „IDEE“).<br>
+                                    Im Anhang erhalten Sie Ihre Versicherungsscheine.<br>
+                                    <br>
+                                    Du hast Fragen? Gerne helfen wir dir weiter – ruf uns einfach an.<br>
+                                </p>
+                            {% else %}
+                                <p style="margin: 0;">
+                                    schön, dass Sie sich für den Versicherungsschutz der Barmenia entschieden haben. Für Ihr Vertrauen danken wir Ihnen.<br>
+                                    Die Barmenia bestätigt den Abschluss Ihre Versicherung (Mehr Zahn „IDEE“).<br>
+                                    Im Anhang erhalten Sie Ihren Versicherungsschein.<br>
+                                    <br>
+                                    Du hast Fragen? Gerne helfen wir dir weiter – ruf uns einfach an.<br>
+                                </p>         
+                            {% endif %}
                         </td>
                     </tr>
                     <tr>
@@ -78,13 +96,23 @@
                                                 <td 
                                                     align="center" 
                                                     style="border-radius: 3px;" bgcolor="#00A8AC">
-                                                        <a 
-                                                            href="{{ offer_pdf }}" 
-                                                            target="_blank" 
-                                                            style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #82d0f5; display: inline-block;"
-                                                            >
-                                                                Ihr persönliches Zahnzusatzangebot herunterladen
-                                                        </a>
+                                                        {% if paste_text == 3%}
+                                                            <a 
+                                                                href="{{ offer_pdf }}" 
+                                                                target="_blank" 
+                                                                style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #82d0f5; display: inline-block;"
+                                                                >
+                                                                    Ihr Mehr Zahn "IDEE" Angebot herunterladen
+                                                            </a>
+                                                        {% else %}
+                                                            <a 
+                                                                href="{{ offer_pdf }}" 
+                                                                target="_blank" 
+                                                                style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #82d0f5; display: inline-block;"
+                                                                >
+                                                                    Ihr ZahnReinigungsFlat Angebot herunterladen
+                                                            </a>
+                                                        {% endif %}
                                                 </td>
                                             </tr>
                                         </table>
@@ -100,7 +128,7 @@
                                                                     target="_blank" 
                                                                     style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #82d0f5; display: inline-block;"
                                                                     >
-                                                                        Ihr persönliches Zahnersatzangebot herunterladen
+                                                                        Ihr Mehr Zahn "IDEE" Angebot herunterladen
                                                                 </a>
                                                         </td>
                                                     </tr>
@@ -116,7 +144,7 @@
                                                                     target="_blank" 
                                                                     style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #82d0f5; display: inline-block;"
                                                                     >
-                                                                        Jetzt Zahnzusatzversicherung abschließen
+                                                                        Jetzt Zahnersatz abschließen
                                                                 </a>
                                                         </td>
                                                     </tr>
@@ -130,13 +158,7 @@
                     </tr> <!-- COPY -->
                     <tr>
                         <td bgcolor="#F6FDFF" align="left" style="padding: 0px 30px 0px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">
-                                schön, dass Sie sich für den Versicherungsschutz der Barmenia entschieden haben. Für Ihr Vertrauen danken wir Ihnen.<br>
-                                Die Barmenia bestätigt den Abschluss Ihrer Versicherungen (ZahnReinigungsFlat und Mehr Zahn „IDEE“.<br>
-                                Im Anhang erhalten Sie Ihre Versicherungsscheine.<br>
-                                <br>
-                                Du hast Fragen? Gerne helfen wir dir weiter – ruf uns einfach an.<br>
-                            </p>
+                            <p style="margin: 0;"></p>
                         </td>
                     </tr> <!-- COPY -->
 
