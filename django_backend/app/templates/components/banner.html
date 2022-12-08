@@ -481,17 +481,17 @@
         if (identifier=="extra_small"){
             selection = 0
             str_extra_price = document.getElementById('offer-small-eur').innerText
-            tarif = "Mehr Zahn 80"
+            tarif = 'Mehr Zahn "IDEE" 80'
             shortdesc_tarif= "ZAHN80"
         } else if (identifier=="extra_medium"){
             selection = 1
             str_extra_price = document.getElementById('offer-medium-eur').innerText
-            tarif = "Mehr Zahn 90"
+            tarif = 'Mehr Zahn "IDEE" 90'
             shortdesc_tarif= "ZAHN90"
         } else if (identifier=="extra_large"){
             selection = 2
             str_extra_price = document.getElementById('offer-large-eur').innerText
-            tarif = "Mehr Zahn 100"
+            tarif = 'Mehr Zahn "IDEE" 100'
             shortdesc_tarif= "ZAHN100"
         } else {
             selection = -1
@@ -619,7 +619,8 @@
             "iban": "{{ request.session.iban }}",
             "str_extra_price": str_extra_price,
             "tarif": tarif,
-            "shortdesc_tarif":shortdesc_tarif
+            "shortdesc_tarif":shortdesc_tarif,
+            "versicherungsbeginn": "{{ request.session.versicherungsbeginn}}"
         }
         systemSocket.send(JSON.stringify(context))   
     }

@@ -29,6 +29,7 @@ import datetime
 email = "mco@mv24.de"
 print_pages = 29
 SITE_URL = getattr(settings, "SITE_URL", None)
+DEBUG = getattr(settings, "DEBUG", False)
 SKIP_EMAIL = getattr(settings, "SKIP_EMAIL", None)
 ARMED = getattr(settings, "ARMED", False)
 date_today = datetime.datetime.now().strftime ("%d.%m.%Y")
@@ -66,7 +67,8 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
     
     async def disconnect(self, close_code):
         # Leave group
-        print('disconnected')
+        if DEBUG:
+            print('disconnected')
     
     async def receive(self, text_data):
         # Receive data from WebSocket
@@ -341,7 +343,8 @@ class ExtraViewConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         # Leave group
-        print('disconnected')
+        if DEBUG:
+            print('disconnected')
         self.stop = True  # This will trigger the termination of loop # Maybe you also want to delete the thread
         raise StopConsumer
 
@@ -503,7 +506,8 @@ def delete_customer(user_uuid):
         customer = Customer.objects.get(client_id= user_uuid)
         customer.delete()
     except:
-        print('something went wrong')
+        if DEBUG:
+            print('something went wrong')
 
 
 @sync_to_async
@@ -526,7 +530,8 @@ def send_email(user_uuid, data_json, extra_only=False):
     else:
         offer_pdf = customer.offer_pdf.url
         mail_subject = 'Zahnversicherung'
-        print('SITE_URL: ', SITE_URL)
+        if DEBUG:
+            print('SITE_URL: ', SITE_URL)
         context = {
             "user": data_json["anrede"] + ' ' + data_json["vorname"] + ' ' +data_json["nachname"],
             "domain": SITE_URL,
@@ -803,7 +808,9 @@ def upload_pdf(user_uuid, im_con, name, image_list):
 
 @sync_to_async
 def create_pdf(page, user_uuid ,data_json, name):
-    print('----create pdf----')
+    if DEBUG:
+        print('----create pdf----')
+
     customer = Customer.objects.get(client_id=user_uuid)
     head_1 = build_head_1(user_uuid, customer, data_json)
     head_2 = build_head_2(user_uuid, customer, data_json, name)
@@ -811,7 +818,6 @@ def create_pdf(page, user_uuid ,data_json, name):
     
     #second base
     if name=="Extra":
-        print('joooooo')
         head_4 = build_head_4(user_uuid, customer, data_json)
         head_5 = build_head_5(user_uuid, customer, data_json)
         head_6 = StandardPDF.objects.get(name="head_6_extra").pdf
@@ -898,13 +904,17 @@ def create_pdf(page, user_uuid ,data_json, name):
         customer.second_base_5.delete(save=False)
         customer.second_base_5 = None
         customer.save()
-        print('Done Extra')
+        if DEBUG:
+            print('Done Extra')
     else:
-        print('Done Offer')
+        if DEBUG:
+            print('Done Offer')
         
 
 def build_head_1(user_uuid, customer, data_json):
-    print('----build head 1') 
+    if DEBUG:
+        print('----build head 1') 
+    
     head_1 = StandardPDF.objects.get(name="head_1")
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
@@ -929,7 +939,8 @@ def build_head_1(user_uuid, customer, data_json):
 
 
 def build_head_2(user_uuid, customer, data_json, name):
-    print('----build head 2') 
+    if DEBUG:
+        print('----build head 2') 
     head_2 = StandardPDF.objects.get(name="head_2")
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
@@ -963,7 +974,8 @@ def build_head_2(user_uuid, customer, data_json, name):
 
 
 def build_head_3(user_uuid, customer, data_json):
-    print('----build head 3') 
+    if DEBUG:
+        print('----build head 3') 
     head_3 = StandardPDF.objects.get(name="head_3")
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
@@ -981,7 +993,8 @@ def build_head_3(user_uuid, customer, data_json):
 
 
 def build_head_4(user_uuid, customer, data_json):
-    print('----build head 4') 
+    if DEBUG:
+        print('----build head 4') 
     head_4 = StandardPDF.objects.get(name="head_4")
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
@@ -1009,7 +1022,8 @@ def build_head_4(user_uuid, customer, data_json):
 
 
 def build_head_5(user_uuid, customer, data_json):
-    print('----build head 5') 
+    if DEBUG:
+        print('----build head 5') 
     head_5 = StandardPDF.objects.get(name="head_5")
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
@@ -1047,7 +1061,8 @@ def build_head_5(user_uuid, customer, data_json):
 
 
 def build_extra_second_base_1(user_uuid, customer, data_json):
-    print('----build extra second base 1') 
+    if DEBUG:
+        print('----build extra second base 1') 
     secondbase_1 = StandardPDF.objects.get(name="second_base_1_extra")
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
@@ -1078,12 +1093,14 @@ def build_extra_second_base_1(user_uuid, customer, data_json):
     can.save()
     packet.seek(0)
     second_base_obj = base_creator(packet, secondbase_1, user_uuid, customer, iterator=1)
-    print('finish second base 1')
+    if DEBUG:
+        print('finish second base 1')
     return second_base_obj
     
 
 def build_extra_second_base_2(user_uuid, customer, data_json):
-    print('----build extra second base 2') 
+    if DEBUG:
+        print('----build extra second base 2') 
     secondbase = StandardPDF.objects.get(name="second_base_2_extra")
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
@@ -1107,7 +1124,8 @@ def build_extra_second_base_2(user_uuid, customer, data_json):
 
 
 def build_extra_second_base_3(user_uuid, customer, data_json):
-    print('----build extra second base 3') 
+    if DEBUG:
+        print('----build extra second base 3') 
     secondbase = StandardPDF.objects.get(name="second_base_3_extra")
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
@@ -1126,7 +1144,8 @@ def build_extra_second_base_3(user_uuid, customer, data_json):
 
 
 def build_extra_second_base_4(user_uuid, customer, data_json):
-    print('----build extra second base 4') 
+    if DEBUG:
+        print('----build extra second base 4') 
     secondbase = StandardPDF.objects.get(name="second_base_4_extra")
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
@@ -1145,7 +1164,9 @@ def build_extra_second_base_4(user_uuid, customer, data_json):
 
 
 def base_creator(packet, obj, user_uuid, customer, iterator):
-    print('baseCReator')
+    if DEBUG:
+        print('baseCReator')
+
     new_pdf = PdfFileReader(packet)
     # read your existing PDF
     existing_pdf = PdfFileReader(obj.pdf.open())
@@ -1182,7 +1203,8 @@ def base_creator(packet, obj, user_uuid, customer, iterator):
     local_file.close()
     os.remove(r'./media/pdfs/'+user_uuid +'/'+ base_path)
 
-    print('Done Base: ['+ str(iterator)  +']')
+    if DEBUG:
+        print('Done Base: ['+ str(iterator)  +']')
     
     if iterator == 1:
         return customer.second_base_1
@@ -1247,7 +1269,8 @@ def head_creator(packet, obj, user_uuid, customer, iterator):
     elif iterator == 5:
         return customer.head_5
 
-    print('Done Head: ['+ str(iterator)  +']')
+    if DEBUG:
+        print('Done Head: ['+ str(iterator)  +']')
 
 
 # async def create_pdf(page, user_uuid ,name):

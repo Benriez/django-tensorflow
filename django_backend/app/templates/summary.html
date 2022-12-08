@@ -329,7 +329,8 @@
                 "strasse": "{{ request.session.strasse }}",
                 "hausnr": "{{ request.session.hausnr }}",
                 "email": "{{ request.session.email }}",
-                "iban": "{{ request.session.iban }}"
+                "iban": "{{ request.session.iban }}",
+                "versicherungsbeginn": "{{ request.session.versicherungsbeginn}}"
             }
             systemSocket.send(JSON.stringify(context));
             document.getElementById('loader_angebot').style.display='flex'
@@ -448,6 +449,7 @@
             "current_contract": current_contract,
             "selection": selection,
             "extra_order": extra_order,
+            "versicherungsbeginn": "{{ request.session.versicherungsbeginn}}"
 
         }
         console.log(context)
@@ -459,7 +461,7 @@
 
 <style>
     a {
-        color: #343a40!important;
+        color: #527da8!important;
         text-decoration: none!important;
     }
     .loading-text{
