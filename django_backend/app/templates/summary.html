@@ -245,7 +245,9 @@
             name='user-id'
             var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
             if (match) {
+                console.log('cookie match')
                 if (match != data.uuid){
+                    console.log("match != data.uuid")
                     context ={
                         "message": "check-uuid-exists",
                         "uuid": match[2]
@@ -253,8 +255,26 @@
                     systemSocket.send(JSON.stringify(context));
                 }
             }
-            else{    
-                document.cookie = name+"="+data.uuid + "; path=/";
+            else {    
+                document.cookie = name+"="+data.uuid + "; path=/; SameSite=None; Secure";
+                //----------------------------------------------------------------------------------------------------
+                // START PROCESS
+                context ={
+                        "message": "get-offer-price",
+                        "birthdate": "{{ request.session.geburtsdatum }}",
+                        "vorname": "{{ request.session.vorname }}",
+                        "anrede": "{{ request.session.anrede }}",
+                        "nachname": "{{ request.session.nachname }}",
+                        "plz": "{{ request.session.plz }}",
+                        "ort": "{{ request.session.ort }}",
+                        "strasse": "{{ request.session.strasse }}",
+                        "hausnr": "{{ request.session.hausnr }}",
+                        "email": "{{ request.session.email }}",
+                        "iban": "{{ request.session.iban }}",
+                        "versicherungsbeginn": "{{ request.session.versicherungsbeginn}}"
+                }
+                systemSocket.send(JSON.stringify(context));
+            
             }
         }
 
@@ -389,6 +409,7 @@
     };
 
     //----------------------------------------------------------------------------------------------------
+    
     if ( window.history.replaceState ) {
          window.history.replaceState( null, null, window.location.href );
     }
