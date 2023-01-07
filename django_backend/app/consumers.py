@@ -70,6 +70,11 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         # Leave group
         if DEBUG:
             print('disconnected')
+        
+        async with playwright.async_playwright() as playwright:
+            browsers = await playwright.browsers()
+            for browser in browsers:
+                await browser.close() 
     
     async def receive(self, text_data):
         # Receive data from WebSocket
