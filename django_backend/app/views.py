@@ -57,7 +57,7 @@ def index(request):
         request.session["ort"] = ort
         request.session["email"] = email_addresse
         request.session["geburtsdatum"] = format_geburtsdatum
-        request.session["versicherungsbeginn"] = format_versicherungsbeginn
+        request.session["versicherungsbeginn"] = format_versicherungsbeginn[:-1]
         request.session["iban"] = iban
         request.session["bic"] = bic
         request.session["bankname"] = bankname

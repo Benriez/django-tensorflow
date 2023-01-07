@@ -44,6 +44,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
     url_offer = "https://ssl.barmenia.de/online-versichern/#/zahnversicherung/Beitrag?tarif=2&adm=00232070&app=makler"
     url_extra = "https://ssl.barmenia.de/online-versichern/#/zahnversicherung/Beitrag?tarif=1&app=makler&ADM=00232070"
     user_uuid = ""
+    customer_age = -1
 
     async def connect(self):
         self.user_uuid = await get_or_create_customer()
@@ -103,60 +104,106 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
 
         if data_json['message'] =="get-offer-price":
             await update_customer(self.user_uuid, data_json)
-            async with async_playwright() as playwright:
-                chromium = playwright.webkit # or "firefox" or "webkit".
-                browser = await chromium.launch(headless=True)
-                page = await browser.new_page()
-                await page.goto(self.url_offer)
-                #try:
-                date, str_price = await get_offer_price(page, data_json)
-                #except:
-                    # await self.channel_layer.group_send(
-                    #     self.channel,
-                    #     {
-                    #         'type': 'timeout_exception',
-                    #         'data': {
-                    #             'message': 'Please reload the page'
-                    #         }
-                    #     }
-                    # )
-                await browser.close()               
-                await self.channel_layer.group_send(
-                    self.channel,
-                    {
-                        'type': 'get_offer_price',
-                        'data': {
-                            'message': 'Offer_Price',
-                            'price': str_price,
-                            'date': date
-                        }
+
+            # calc offer price <20 years = 15 Euro || > 20 years = 9 Euro
+            str_price =''
+            str_birthday = data_json['birthdate'][-4:]
+            str_today = date_today[-4:]
+            birthday = int(str_birthday)
+            current_date = int(str_today)
+            self.customer_age = current_date- birthday
+
+            if self.customer_age < 20:
+                str_price = '15,00'
+            else:
+                str_price = '9,00'
+
+
+            await self.channel_layer.group_send(
+                self.channel,
+                {
+                    'type': 'get_offer_price',
+                    'data': {
+                        'message': 'Offer_Price',
+                        'price': str_price,
+                        'date': data_json['versicherungsbeginn']
                     }
-                )
+                }
+            )
+
         
         if data_json['message'] == 'offer-price-received':
-            async with async_playwright() as playwright:
-                chromium = playwright.chromium # or "firefox" or "webkit".
-                browser = await chromium.launch(headless=True)
-                page = await browser.new_page()
-                await page.goto(self.url_extra)
-                
-                #fill out external form
-                small_price, medium_price, large_price, damage_text = await get_extra_price(page, data_json)           
-                await browser.close()               
-                # send result back to client
-                await self.channel_layer.group_send(
-                    self.channel,
-                    {
-                        'type': 'serve_extra_price',
-                        'data': {
-                            'message': 'serve_extra_price',
-                            'small': small_price,
-                            'medium': medium_price,
-                            'large': large_price,
-                            'damage_text': damage_text
-                        }
+            small_price = ''
+            medium_price = ''
+            large_price = ''
+            damage_text = {
+                'text1_damage2':"250 EUR im 1. Kalenderjahr",
+                'text2_damage2':"125 EUR im 1. Kalenderjahr",
+                'text3_damage2':"500 EUR im 2. Kalenderjahr",
+                'text1_damage3':"250 EUR im 2. Kalenderjahr",
+                'text2_damage3':"750 EUR im 3. Kalenderjahr",
+                'text3_damage3':"375 EUR im 3. Kalenderjahr"
+
+            }
+
+            # calc small price
+            if self.customer_age <= 20:
+                small_price = '0,70'
+            if 20 < self.customer_age <= 30:
+                small_price = '4,60'
+            if 30 < self.customer_age <= 40:    
+                small_price = '10,60'
+            if 40 < self.customer_age <= 50:    
+                small_price = '15,90'
+            if 50 < self.customer_age <= 60:    
+                small_price = '23,90'
+            if self.customer_age > 60:
+                small_price = '29,90'
+
+            # calc medium price
+            if self.customer_age <= 20:
+                medium_price = '1,00'
+            if 20 < self.customer_age <= 30:
+                medium_price = '7,10'
+            if 30 < self.customer_age <= 40:    
+                medium_price = '16,80'
+            if 40 < self.customer_age <= 50:    
+                medium_price = '25,10'
+            if 50 < self.customer_age <= 60:    
+                medium_price = '37,50'
+            if self.customer_age > 60:
+                medium_price = '45,70'
+
+
+            
+            # calc large price
+            if self.customer_age <= 20:
+                large_price = '1,30'
+            if 20 < self.customer_age <= 30:
+                large_price = '9,50'
+            if 30 < self.customer_age <= 40:    
+                large_price = '22,50'
+            if 40 < self.customer_age <= 50:    
+                large_price = '33,70'
+            if 50 < self.customer_age <= 60:    
+                large_price = '50,40'
+            if self.customer_age > 60:
+                large_price = '61,40'
+            
+
+            await self.channel_layer.group_send(
+                self.channel,
+                {
+                    'type': 'serve_extra_price',
+                    'data': {
+                        'message': 'serve_extra_price',
+                        'small': small_price,
+                        'medium': medium_price,
+                        'large': large_price,
+                        'damage_text': damage_text
                     }
-                )  
+                }
+            ) 
 
         if data_json['message'] == 'extra-price-received':
             async with async_playwright() as playwright:
@@ -312,6 +359,8 @@ def update_customer(user_id, data_json):
     encodedIban = base64.b64encode(byteIban)
     customer.iban = encodedIban
     customer.save()
+
+    return customer.birthdate
 
 
 
@@ -622,6 +671,7 @@ async def get_extra_price(page, data_json):
     text2_damage3 = await page.locator("li >>nth=1").inner_text()
     text3_damage3 = await page.locator("li >>nth=2").inner_text()   
 
+    
 
     damage_text = {
         'text1_damage2':text1_damage2,
