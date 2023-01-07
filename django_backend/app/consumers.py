@@ -998,7 +998,7 @@ def build_head_2(user_uuid, customer, data_json, name):
     can.setPageSize((2381, 3368))
     can.setFont('Helvetica', 42)
     can.setFillColorRGB(0,0.6171875,0.875)
-    can.drawString(757, 2437, data_json["versicherungsbeginn"][:-1])
+    can.drawString(757, 2437, data_json["versicherungsbeginn"])
     can.drawString(328, 2231, data_json["vorname"] +' '+data_json["nachname"])
     can.drawString(1302, 2231, data_json["birthdate"])
     can.setFillColorRGB(254,255,255)
