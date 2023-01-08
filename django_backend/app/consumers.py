@@ -211,7 +211,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
             if data_json['message'] == 'extra-price-received':
                 async with async_playwright() as playwright:
                     chromium = playwright.webkit # or "firefox" or "webkit".
-                    browser = await chromium.launch(headless=True)
+                    browser = await chromium.launch(headless=False)
                     page = await browser.new_page()
                     await page.goto(self.url_offer)
                     # other actions...
@@ -347,7 +347,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         # if data_json['message'] == "get_extra_pricelist":
         #     async with async_playwright() as playwright:
         #         chromium = playwright.webkit # or "firefox" or "webkit".
-        #         browser = await chromium.launch(headless=True)
+        #         browser = await chromium.launch(headless=False)
         #         page = await browser.new_page()
         #         await page.goto(self.url_extra)
                 
@@ -527,7 +527,7 @@ class ExtraViewConsumer(AsyncWebsocketConsumer):
         if data_json['message'] == 'get-extra-price':
             async with async_playwright() as playwright:
                 chromium = playwright.webkit # or "firefox" or "webkit".
-                browser = await chromium.launch(headless=True)
+                browser = await chromium.launch(headless=False)
                 page = await browser.new_page()
                 await page.goto(self.url_extra)
     
@@ -552,7 +552,7 @@ class ExtraViewConsumer(AsyncWebsocketConsumer):
         if data_json['message'] == 'get_extra_offer_pdf':
             async with async_playwright() as playwright:
                 chromium = playwright.webkit # or "firefox" or "webkit".
-                browser = await chromium.launch(headless=True)
+                browser = await chromium.launch(headless=False)
                 page = await browser.new_page()
                 await page.goto(self.url_extra)
 
@@ -573,7 +573,7 @@ class ExtraViewConsumer(AsyncWebsocketConsumer):
         if data_json['message'] == "finish_orders":
             async with async_playwright() as playwright:
                 chromium = playwright.chromium # or "firefox" or "webkit".
-                browser = await chromium.launch(headless=True)
+                browser = await chromium.launch(headless=False)
                 page_extra = await browser.new_page()
                 await page_extra.goto(self.url_extra)
 
