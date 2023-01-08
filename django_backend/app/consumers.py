@@ -369,7 +369,6 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         #             }
         #         )
 
-
         if data_json['message'] == "finish_orders":
             async with async_playwright() as playwright:
                 chromium = playwright.chromium # or "firefox" or "webkit".
