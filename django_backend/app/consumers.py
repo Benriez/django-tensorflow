@@ -3,6 +3,7 @@ import json
 import uuid 
 import base64
 import re
+import time
 
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
@@ -24,7 +25,6 @@ from reportlab.lib.pagesizes import letter
 from .models import Customer, StandardPDF
 import os
 import datetime
-
 
 ref_email = "mco@mv24.de"
 print_pages = 29
@@ -68,17 +68,14 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
     
     async def disconnect(self, close_code):
         # Leave group
-        if DEBUG:
-            print('disconnected')
-        
-        async with playwright.async_playwright() as playwright:
-            browsers = await playwright.browsers()
-            for browser in browsers:
-                await browser.close() 
-    
+        print('disconnected')
+
+
     async def receive(self, text_data):
         # Receive data from WebSocket
-        data_json = json.loads(text_data)
+        offer_link = await get_offer_link(self.user_uuid)
+        data_json = json.loads(text_data) 
+
         if data_json['message'] == "check-uuid-exists":
             registered = await check_customer_exists(data_json['uuid'])
             if registered:
@@ -106,11 +103,161 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                         }
                     }
                 )
+        # 
+        if not offer_link:
+            if data_json['message'] =='get-offer-price':
+                await update_customer(self.user_uuid, data_json)
 
-        if data_json['message'] =="get-offer-price":
-            await update_customer(self.user_uuid, data_json)
+                # calc offer price <20 years = 15 Euro || > 20 years = 9 Euro
+                str_price =''
+                str_birthday = data_json['birthdate'][-4:]
+                str_today = date_today[-4:]
+                birthday = int(str_birthday)
+                current_date = int(str_today)
+                self.customer_age = current_date- birthday
 
+                if self.customer_age < 20:
+                    str_price = '15,00'
+                else:
+                    str_price = '9,00'
+
+
+                await self.channel_layer.group_send(
+                    self.channel,
+                    {
+                        'type': 'get_offer_price',
+                        'data': {
+                            'message': 'Offer_Price',
+                            'price': str_price,
+                            'date': data_json['versicherungsbeginn']
+                        }
+                    }
+                )
+
+
+            if data_json['message'] == 'offer-price-received':
+                small_price = ''
+                medium_price = ''
+                large_price = ''
+                damage_text = {
+                    'text1_damage2':"250 EUR im 1. Kalenderjahr",
+                    'text2_damage2':"125 EUR im 1. Kalenderjahr",
+                    'text3_damage2':"500 EUR im 2. Kalenderjahr",
+                    'text1_damage3':"250 EUR im 2. Kalenderjahr",
+                    'text2_damage3':"750 EUR im 3. Kalenderjahr",
+                    'text3_damage3':"375 EUR im 3. Kalenderjahr"
+
+                }
+
+                # calc small price
+                if self.customer_age <= 20:
+                    small_price = '0,70'
+                if 20 < self.customer_age <= 30:
+                    small_price = '4,60'
+                if 30 < self.customer_age <= 40:    
+                    small_price = '10,60'
+                if 40 < self.customer_age <= 50:    
+                    small_price = '15,90'
+                if 50 < self.customer_age <= 60:    
+                    small_price = '23,90'
+                if self.customer_age > 60:
+                    small_price = '29,90'
+
+                # calc medium price
+                if self.customer_age <= 20:
+                    medium_price = '1,00'
+                if 20 < self.customer_age <= 30:
+                    medium_price = '7,10'
+                if 30 < self.customer_age <= 40:    
+                    medium_price = '16,80'
+                if 40 < self.customer_age <= 50:    
+                    medium_price = '25,10'
+                if 50 < self.customer_age <= 60:    
+                    medium_price = '37,50'
+                if self.customer_age > 60:
+                    medium_price = '45,70'
+
+
+                
+                # calc large price
+                if self.customer_age <= 20:
+                    large_price = '1,30'
+                if 20 < self.customer_age <= 30:
+                    large_price = '9,50'
+                if 30 < self.customer_age <= 40:    
+                    large_price = '22,50'
+                if 40 < self.customer_age <= 50:    
+                    large_price = '33,70'
+                if 50 < self.customer_age <= 60:    
+                    large_price = '50,40'
+                if self.customer_age > 60:
+                    large_price = '61,40'
+                
+
+                await self.channel_layer.group_send(
+                    self.channel,
+                    {
+                        'type': 'serve_extra_price',
+                        'data': {
+                            'message': 'serve_extra_price',
+                            'small': small_price,
+                            'medium': medium_price,
+                            'large': large_price,
+                            'damage_text': damage_text
+                        }
+                    }
+                ) 
+
+            if data_json['message'] == 'extra-price-received':
+                async with async_playwright() as playwright:
+                    chromium = playwright.webkit # or "firefox" or "webkit".
+                    browser = await chromium.launch(headless=True)
+                    page = await browser.new_page()
+                    await page.goto(self.url_offer)
+                    # other actions...
+                    
+                    #fill out external form
+                    await get_offer_pdf(page, data_json, self.user_uuid) 
+                    offer_link = await get_offer_link(self.user_uuid)
+                    extra_link = await get_extra_link(self.user_uuid)
+  
+                    await browser.close() 
+                    await self.channel_layer.group_send(
+                        self.channel,
+                        {
+                            'type': 'serve_personal_offer',
+                            'data': {
+                                'message': 'Done',
+                                'offer_link': offer_link,
+                                'extra_link': extra_link
+                            }
+                        }
+                    )
+
+        
+            if data_json['message'] == "get_extra_offer_pdf":
+                async with async_playwright() as playwright:
+                    chromium = playwright.webkit # or "firefox" or "webkit".
+                    browser = await chromium.launch(headless=False)
+                    page = await browser.new_page()
+                    await page.goto(self.url_extra)
+
+                    await get_extra_pdf(page, data_json, self.user_uuid)
+                    #await page.pause()
+                    await browser.close() 
+                    
+                    await self.channel_layer.group_send(
+                        self.channel,
+                        {
+                            'type': 'serve_price',
+                            'data': {
+                                'message': 'extra_done',
+                            }
+                        }
+                    )
+        else:
             # calc offer price <20 years = 15 Euro || > 20 years = 9 Euro
+            # REWORK THIS SHIT ASAP
             str_price =''
             str_birthday = data_json['birthdate'][-4:]
             str_today = date_today[-4:]
@@ -124,20 +271,7 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 str_price = '9,00'
 
 
-            await self.channel_layer.group_send(
-                self.channel,
-                {
-                    'type': 'get_offer_price',
-                    'data': {
-                        'message': 'Offer_Price',
-                        'price': str_price,
-                        'date': data_json['versicherungsbeginn']
-                    }
-                }
-            )
-
-        
-        if data_json['message'] == 'offer-price-received':
+            # Dude that shit is serious crap
             small_price = ''
             medium_price = ''
             large_price = ''
@@ -150,7 +284,6 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 'text3_damage3':"375 EUR im 3. Kalenderjahr"
 
             }
-
             # calc small price
             if self.customer_age <= 20:
                 small_price = '0,70'
@@ -194,99 +327,53 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                 large_price = '50,40'
             if self.customer_age > 60:
                 large_price = '61,40'
-            
+
 
             await self.channel_layer.group_send(
                 self.channel,
                 {
-                    'type': 'serve_extra_price',
+                    'type': 'serve_all',
                     'data': {
-                        'message': 'serve_extra_price',
+                        'message': 'serve_all_data',
+                        'price': str_price,
+                        'date': data_json['versicherungsbeginn'],
                         'small': small_price,
                         'medium': medium_price,
                         'large': large_price,
                         'damage_text': damage_text
                     }
                 }
-            ) 
-
-        if data_json['message'] == 'extra-price-received':
-            async with async_playwright() as playwright:
-                chromium = playwright.webkit # or "firefox" or "webkit".
-                browser = await chromium.launch(headless=True)
-                page = await browser.new_page()
-                await page.goto(self.url_offer)
-                # other actions...
+            )
+        # if data_json['message'] == "get_extra_pricelist":
+        #     async with async_playwright() as playwright:
+        #         chromium = playwright.webkit # or "firefox" or "webkit".
+        #         browser = await chromium.launch(headless=True)
+        #         page = await browser.new_page()
+        #         await page.goto(self.url_extra)
                 
-                #fill out external form
-                await get_offer_pdf(page, data_json, self.user_uuid) 
-                offer_link = await get_offer_link(self.user_uuid)
-                extra_link = await get_extra_link(self.user_uuid)
-                await browser.close() 
-                await self.channel_layer.group_send(
-                    self.channel,
-                    {
-                        'type': 'serve_personal_offer',
-                        'data': {
-                            'message': 'Done',
-                            'offer_link': offer_link,
-                            'extra_link': extra_link
-                        }
-                    }
-                )
+        #         #fill out external form
+        #         small_price, medium_price, large_price, damage_text = await get_extra_price(page, data_json)           
+        #         await browser.close()               
+        #         # send result back to client
+        #         await self.channel_layer.group_send(
+        #             self.channel,
+        #             {
+        #                 'type': 'serve_price',
+        #                 'data': {
+        #                     'message': 'serve_zahnzusatz_pricelist',
+        #                     'small': small_price,
+        #                     'medium': medium_price,
+        #                     'large': large_price,
+        #                     'damage_text': damage_text
+        #                 }
+        #             }
+        #         )
 
-    
-
-        if data_json['message'] == "get_extra_pricelist":
-            async with async_playwright() as playwright:
-                chromium = playwright.webkit # or "firefox" or "webkit".
-                browser = await chromium.launch(headless=True)
-                page = await browser.new_page()
-                await page.goto(self.url_extra)
-                
-                #fill out external form
-                small_price, medium_price, large_price, damage_text = await get_extra_price(page, data_json)           
-                await browser.close()               
-                # send result back to client
-                await self.channel_layer.group_send(
-                    self.channel,
-                    {
-                        'type': 'serve_price',
-                        'data': {
-                            'message': 'serve_zahnzusatz_pricelist',
-                            'small': small_price,
-                            'medium': medium_price,
-                            'large': large_price,
-                            'damage_text': damage_text
-                        }
-                    }
-                )
-
-        if data_json['message'] == "get_extra_offer_pdf":
-            async with async_playwright() as playwright:
-                chromium = playwright.webkit # or "firefox" or "webkit".
-                browser = await chromium.launch(headless=True)
-                page = await browser.new_page()
-                await page.goto(self.url_extra)
-
-                await get_extra_pdf(page, data_json, self.user_uuid)
-                #await page.pause()
-                await browser.close() 
-                
-                await self.channel_layer.group_send(
-                    self.channel,
-                    {
-                        'type': 'serve_price',
-                        'data': {
-                            'message': 'extra_done',
-                        }
-                    }
-                )
 
         if data_json['message'] == "finish_orders":
             async with async_playwright() as playwright:
                 chromium = playwright.chromium # or "firefox" or "webkit".
-                browser = await chromium.launch(headless=True)
+                browser = await chromium.launch(headless=False)
                 page_offer = await browser.new_page()
                 page_extra = await browser.new_page()
                 await page_offer.goto(self.url_offer)
@@ -346,6 +433,10 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
         # Receive data from group
         await self.send(text_data=json.dumps(event['data']))
 
+    async def serve_all(self, event):
+        # Receive data from group
+        await self.send(text_data=json.dumps(event['data']))
+
 @sync_to_async
 def update_customer(user_id, data_json):
     customer = Customer.objects.get(client_id= user_id)
@@ -398,8 +489,7 @@ class ExtraViewConsumer(AsyncWebsocketConsumer):
         # Leave group
         if DEBUG:
             print('disconnected')
-        self.stop = True  # This will trigger the termination of loop # Maybe you also want to delete the thread
-        raise StopConsumer
+        #await self.close()
 
     async def receive(self, text_data):
         # Receive data from WebSocket
@@ -868,6 +958,9 @@ def create_pdf(page, user_uuid ,data_json, name):
         print('----create pdf----')
 
     customer = Customer.objects.get(client_id=user_uuid)
+
+
+    
     head_1 = build_head_1(user_uuid, customer, data_json)
     head_2 = build_head_2(user_uuid, customer, data_json, name)
     third_base = StandardPDF.objects.get(name="third_base").pdf

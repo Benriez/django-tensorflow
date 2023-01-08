@@ -232,7 +232,6 @@
     let systemSocket = new WebSocket(ws_scheme+'://'+window.location.host + '/ws/scraper/');
 
 
-
     //----------------------------------------------------------------------------------------------------
     systemSocket.onopen = function(e) {   
         console.log('systemsocket connected');
@@ -300,7 +299,51 @@
             }
             systemSocket.send(JSON.stringify(context));
             }
+        
+        if (data.message == "serve_all_data"){
+            document.getElementById('beitrag').innerText = data.price + ' € / Monat'
+            document.getElementById('loader_beitrag').style.display = "none"
+            document.getElementById('loader-beitrag-text').style.display = "none"
+            document.getElementById('beitrag').style.display = 'block' 
 
+            document.getElementById('insurance_begin').innerText = data.date
+            document.getElementById('loader_begin').style.display = "none"
+            document.getElementById('loader-begin-text').style.display = "none"
+            document.getElementById('insurance_begin').style.display = 'block' 
+
+
+            document.getElementById('offer-small-eur').innerText = data.small
+            document.getElementById('loader-col-small').style.display = "none"
+            document.getElementById('loader-col-small-text').style.display = "none"
+            document.getElementById('offer-small').style.display = "flex"
+            document.getElementById('extra_small').disabled = false        
+
+            document.getElementById('offer-medium-eur').innerText = data.medium
+            document.getElementById('loader-col-medium').style.display = "none"
+            document.getElementById('loader-col-medium-text').style.display = "none"
+            document.getElementById('offer-medium').style.display = "flex"
+            document.getElementById('extra_medium').disabled = false
+
+            document.getElementById('offer-large-eur').innerText = data.large
+            document.getElementById('loader-col-large').style.display = "none"
+            document.getElementById('loader-col-large-text').style.display = "none"
+            document.getElementById('offer-large').style.display = "flex"
+            document.getElementById('extra_large').disabled = false
+
+            document.getElementById('text1_damage2').innerText = data.damage_text.text1_damage2
+            document.getElementById('text2_damage2').innerText = data.damage_text.text2_damage2
+            document.getElementById('text3_damage2').innerText = data.damage_text.text3_damage2
+            document.getElementById('text1_damage3').innerText = data.damage_text.text1_damage3
+            document.getElementById('text2_damage3').innerText = data.damage_text.text2_damage3
+            document.getElementById('text3_damage3').innerText = data.damage_text.text3_damage3
+
+
+            document.getElementById('loader_angebot').style.display = 'none'
+            document.getElementById('angebot_check').style.display = 'flex'
+            document.getElementById('offer_link').href = data.offer_link
+            document.getElementById('extra_link').href = data.extra_link
+            document.getElementById('personalizedPDF').style.display = 'flex'
+        }
         if (data.message == "Congrats"){
             console.log('youre all set up')
             document.getElementById('finish-dialog-loader').style.display='none'
