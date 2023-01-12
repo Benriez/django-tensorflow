@@ -176,9 +176,6 @@ class ScraperViewConsumer(AsyncWebsocketConsumer):
                     medium_price = '37,50'
                 if self.customer_age > 60:
                     medium_price = '45,70'
-
-
-                
                 # calc large price
                 if self.customer_age <= 20:
                     large_price = '1,30'
