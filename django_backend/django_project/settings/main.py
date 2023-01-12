@@ -21,12 +21,13 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'rest_framework',
+    # 'tensorflow',
 
     # Add your apps here
-    "app.apps.AppConfig",
-    "storages",
-    "authentication",
-    "djmoney",
+    'app.apps.AppConfig',
+    'storages',
+    'authentication',
+    'djmoney',
 ]
 
 REST_FRAMEWORK = {

@@ -9,6 +9,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string, get_template
 from django.conf import settings
+# import tensorflow as tf
 
 from .models import Customer
 
