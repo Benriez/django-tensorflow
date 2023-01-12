@@ -3,418 +3,80 @@
 {% load static %}
 {% block content %}
 <div class="row">
-    <div class="col-12 col-md-10 offset-md-1">
-        <div class="form-content">
-            <div style="display: flex;justify-content: space-between;">
-                <p>
-                    <span class="badge badge-pill badge-dark mr-2">1</span>
-                    Daten
-                </p>
-                <p>
-                    <span class="badge badge-pill badge-dark mr-2">2</span>
-                    Zusammenfassung
-                </p>
-            </div>
-            <form method="POST" action="">
-                {% csrf_token %}
-                <div class="card col-12">
-                    <h5 class="primary-color"><i class="fas fa-user primary-color"></i>Wer wird versichert?</h5>
-                    <div class="row">
-                        <select id="anrede" name="anrede" class="select col-12 col-md-2" aria-label="Default select example" onfocusout="validateSelection()" style="color:#7C7C7C; padding-right: 0px;">
-                            <option value="Anrede" selected>Anrede</option>
-                            <option value="Frau">Frau</option>
-                            <option value="Herr">Herr</option>
-                        </select>
-                        <input id="vorname" name="vorname" class="col-12 col-md-5" type="text" pattern="^[a-zA-Z]+$" placeholder="Vorname" onfocusout="validateForm(str_obj='vorname')">
-                        <input id="nachname" name="nachname" class="col-12 col-md-5" type="text" placeholder="Nachname" onfocusout="validateForm(str_obj='nachname')">
-                        <input type="email" class="col-12 col-md-8" id="email-addresse" name="email-addresse" aria-describedby="emailHelp" placeholder="E-Mail Adresse" onfocusout="validateForm(str_obj='email-addresse')">
-                        <input id="geburtsdatum" name="geburtsdatum" class="col-12 col-md-4" type="text" placeholder="Geburtsdatum" onfocus="(this.type='date')" onfocusout="validateForm(str_obj='geburtsdatum')">
-                        <input id="strasse" name="strasse" class="col-9 col-md-5" type="text" placeholder="Straße" onfocusout="validateForm(str_obj='strasse')">
-                        <input id="hausnr" name="hausnr" class="col-3 col-md-2" type="text" placeholder="Haus-nr" onfocusout="validateForm(str_obj='hausnr')">
-                        <input id="plz" name="plz" class="col-6 col-md-2" type="text" placeholder="PLZ" onfocusout="validateForm(str_obj='plz')">
-                        <input id="ort" name="ort" class="col-6 col-md-3" type="text" placeholder="Ort" onfocusout="validateForm(str_obj='ort')">
-                    </div>
-                </div>
+   
 
-
-                <div class="card col-12" style="margin-top: 2rem;">
-                    <h5 class="primary-color"><i class="fas fa-solid fa-wallet primary-color"></i>Bankverbindung</h5>
-                    <input id="iban" name="iban" class="col-12 col-md-6 form-control" type="text" placeholder="IBAN" onfocusout="validateIBAN()"></input>
-                    <small class="text-center mt-5"><b>Hinweis:</b> Mit der Eingabe meines Kontos erteile ich das Sepa-Lastschriftmandat zum Einzug der Beiträge von meinem Konto</small>
-                    <input type="hidden" id="bic" name="bic" value="">
-                    <input type="hidden" id="bankname" name="bankname" value="">
-                </div>
-
-
-                <div class="card col-12" style="margin-top: 2rem;">
-                    <h5 class="primary-color"><i class="fas fa-solid fa-info primary-color"></i>Zusatzinformation</h5>
-                    <div style="display: flex; align-items:baseline">
-                        <label for="Versicherungsbeginn">Versicherungsbeginn:</label>
-                        <input id="Versicherungsbeginn" name="Versicherungsbeginn" class="form-control col-12 col-md-3" type="date" />
-                    </div>
-                </div>
-
-
-
-
-                <div style="text-align: end; padding-top: 2rem;">
-                    <p id="helperText" style="display: none ;color:#ffaaaa; font-weight: 500;">Hinweis: Alle Felder müssen ausgefüllt werden.</p>
-                </div>
-
-                <div style="text-align: end;">
-                    <input id="start" name="next" type="submit" value="Weiter" class="btn btn-primary col-12 col-md-3" style="margin-top: .7rem;" disabled>
-                </div>
-                
-            </form>
-        </div>
-    </div>
 </div>
 
-
 <script>
-    
-</script>
+    let ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+    let systemSocket = new WebSocket(ws_scheme+'://'+window.location.host + '/ws/scraper/');
 
-<script>
-    let bool_iban = false;
-    let anrede = false;
-    let vorname = false;
-    let nachname = false;
-    let email = false;
-    let geburtsdatum = false
-    let strasse = false;
-    let hausnr = false;
-    let plz = false;
-    let ort = false;
-
-    let required_iban =-1;
-    let required_anrede =-1;
-    let required_vorname =-1;
-    let required_nachname =-1;
-    let required_email =-1;
-    let required_geburtsdatum =-1;
-    let required_strasse =-1;
-    let required_hausnr =-1;
-    let required_plz =-1;
-    let required_ort =-1;
-    
-    let iban_input = document.getElementById("iban");
-    let anrede_input = document.getElementById("anrede");
-    let vorname_input= document.getElementById("vorname");
-    let nachname_input = document.getElementById("nachname");
-    let email_input = document.getElementById("email-addresse");
-    let geburtsdatum_input = document.getElementById("geburtsdatum");
-    let strasse_input = document.getElementById("strasse");
-    let hausnr_input = document.getElementById("hausnr");
-    let plz_input = document.getElementById("plz");
-    let ort_input = document.getElementById("ort");
-
-    let error_border ="#ffaaaa"
-    let error_counter = -1;
-    let success_border ="#f6f6f6"
-    let succes_bg_color = "#fbfcff"
-    let helper_text = document.getElementById("helperText")
-
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-    today = yyyy + '-' + mm + '-' + dd;
-    
-    //  calc min/ max date value
-    var maxDateValue = ''
-    var mm_ahead = parseInt(mm) + 6
-    if (mm_ahead > 12){
-        mm_ahead= mm_ahead -12
-        yyyy =yyyy+1
-    }
-
-    if (mm_ahead < 10){
-        mm_ahead ='0'+ mm_ahead.toString()
-    } else {
-        mm_ahead = mm_ahead.toString()
-    }
-
-    maxDateValue = yyyy + '-' + mm_ahead + '-' + dd;
-
-
-
-    // -------------------------------------------------------------------------------
-    window.onload = (event) => {
-        datefield = document.getElementById('Versicherungsbeginn')
-        datefield.value = today
-        datefield.setAttribute("min", today)
-        datefield.setAttribute("max", maxDateValue)
-  
+    systemSocket.onopen = function(e) {   
+        console.log('systemsocket connected');
     };
 
+    systemSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        console.log(data)
+        if (data.message == "set_uuid"){
+            name='user-id'
+            var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+            if (match) {
+                console.log('cookie match')
+                if (match != data.uuid){
+                    console.log("match != data.uuid")
+                    context ={
+                        "message": "check-uuid-exists",
+                        "uuid": match[2]
+                    }
+                    systemSocket.send(JSON.stringify(context));
+                }
+            }
+            else {    
+                document.cookie = name+"="+data.uuid + "; path=/; SameSite=None; Secure";
+                //----------------------------------------------------------------------------------------------------
+                // START PROCESS
+                context ={
+                        "message": "get-offer-price",
+                }
+                systemSocket.send(JSON.stringify(context));
+            
+            }
+        }
+
+        if (data.message == "checked-uuid"){
+            if (data.checked==false){
+                document.cookie = name+"="+data.uuid + "; path=/";
+            }
+            //----------------------------------------------------------------------------------------------------
+            // START PROCESS
+            context ={
+                "message": "get-offer-price",
+            }
+            systemSocket.send(JSON.stringify(context));
+            }
+        
+        
+    };
+    
+    systemSocket.onclose = function (e) {
+        console.log('Chat socket closed');
+    };
+
+    //----------------------------------------------------------------------------------------------------
+    
     if ( window.history.replaceState ) {
          window.history.replaceState( null, null, window.location.href );
     }
 
 
-    function validateSelection() {
-        let element = document.getElementById("anrede");
-        if (element.value != "Anrede") {
-            element.style.borderColor = success_border
-            element.style.backgroundColor = succes_bg_color
-            element.style.color = "#000";
-            anrede = true
-            required_anrede = 0
-            
-        } else {
-            anrede = false
-            error_counter = error_counter+1
-            element.style.borderColor = error_border
-            required_anrede = 1
-        }
     
-        validateStart()
-    }
     
-    function validateForm(str_obj) {
-        console.log('-----validate Form-----')
-        let element = document.getElementById(str_obj);
-        if (element.value == "") {
-            element.style.borderColor = error_border
-            // error_counter = error_counter+1
-            if (element.name == "vorname"){
-                vorname = false
-                required_vorname = 1
-            }
-            if (element.name == "nachname"){
-                nachname = false
-                required_nachname = 1
-            }
-            if (element.name == "iban"){
-                iban = false
-                required_iban = 1
-            }
-            if (element.name == "anrede"){
-                anrede = false
-                required_anrede = 1
-            }
-            if (element.name == "email-addresse"){
-                email = false
-                required_email = 1
-            }
-            if (element.name == "geburtsdatum"){
-                geburtsdatum = false
-                required_geburtsdatum = 1
-            }
-            if (element.name == "strasse"){
-                strasse = false
-                required_strasse = 1
-                
-            }
-            if (element.name == "hausnr"){
-                hausnr = false
-                required_hausnr = 1
-
-            }
-            if (element.name == "plz"){
-                plz = false
-                required_plz = 1
-
-            }
-            if (element.name == "ort"){
-                ort = false
-                required_ort = 1
-
-            }
-        } else {
-            element.style.borderColor = success_border
-            // error_counter = error_counter-1
-        }
-
-
-        // check all fields not just current selected because of autofill
-        if (iban_input.value != ""){
-            iban = true
-            element.style.backgroundColor = succes_bg_color
-            required_iban = 0
-
-
-        } 
-        if (anrede_input.value != ""){
-            anrede = true
-            element.style.backgroundColor = succes_bg_color
-            required_anrede = 0
-
-        } 
-        if (vorname_input.value != ""){
-            vorname = true
-            element.style.backgroundColor = succes_bg_color
-            required_vorname = 0
-
-        } 
-        if (nachname_input.value != ""){
-            nachname = true
-            element.style.backgroundColor = succes_bg_color
-            required_nachname = 0
-
-        } 
-        if (email_input.value != ""){
-            // check if string contains @ and . 
-            if (email_input.value.includes('@')){
-                if (email_input.value.includes('.')){
-                    email = true
-                    element.style.backgroundColor = succes_bg_color
-                    required_email = 0
-                } else {
-                    email = false
-                    required_email = 1
-                    element.style.borderColor = error_border
-                }
-            } else {
-                email = false
-                required_email = 1
-                element.style.borderColor = error_border
-            }
-
-        } 
-        if (geburtsdatum_input.value != "" && geburtsdatum_input.value != "dd.mm.yyyy" ){
-            geburtsdatum = true
-            element.style.backgroundColor = succes_bg_color
-            required_geburtsdatum = 0
-        } 
-        if (strasse_input.value != ""){
-            strasse = true
-            element.style.backgroundColor = succes_bg_color
-            required_strasse = 0
-
-        } 
-        if (hausnr_input.value != ""){
-            hausnr = true
-            element.style.backgroundColor = succes_bg_color
-            required_hausnr = 0
-        } 
-        if (plz_input.value != ""){
-            try {
-                if (isNaN(parseInt(plz_input.value))){
-                    element.style.borderColor = error_border
-                    plz = false
-                    required_plz = 1
-                } else{
-                    plz = true
-                    element.style.backgroundColor = succes_bg_color
-                    required_plz = 0
-                }
-            } catch (error) {
-                element.style.borderColor = error_border
-                plz = false
-                required_plz = 1
-            }
-            
-        } 
-        if (ort_input.value != ""){
-            ort = true
-            element.style.backgroundColor = succes_bg_color
-            required_ort = 0
-        } 
-
- 
-        validateStart()
-
-    }
-
-    function validateStart(){
-        let button = document.getElementById("start");
-        let checkable_items = [required_anrede, required_vorname, required_nachname, required_email, required_geburtsdatum  , required_strasse, required_hausnr, required_plz, required_ort, required_iban]
-
-        for (let index = 0; index < checkable_items.length; index++) {
-            let element = checkable_items[index];
-            if (element == 1){
-                helper_text.style.display= "block"
-                break;
-            } else {
-                helper_text.style.display= "none"
-            }
-        }
-        // console.log("bool_iban: ", bool_iban)
-        // console.log("anrede: ", anrede)
-        // console.log("vorname: ", vorname)
-        // console.log("nachname: ", nachname)
-        // console.log("email: ", email)
-        // console.log("geburtsdatum: ", geburtsdatum)
-        // console.log("strasse: ", strasse)
-        // console.log("hausnr: ", hausnr)
-        // console.log("plz: ", plz)
-        // console.log("ort: ", ort)
-
-        if (bool_iban && anrede && vorname && nachname &&email && geburtsdatum && strasse && hausnr && plz && ort) {
-            button.disabled = false;
-            helper_text.style.display= "none"
-        } else {
-            button.disabled = true;
-
-        }
-    }
-
-
-    function validateContext(element){
-        if (element.name == ""){
-
-        }
-    }
-
-    function validateIBAN(){
-        iban = document.getElementById("iban")
-        axios.get("https://openiban.com/validate/" + iban.value + "?getBIC=true")
-            .then(function (response) {
-                valid = response.data.valid
-                document.getElementById('bic').value = response.data.bankData.bic
-                document.getElementById('bankname').value = response.data.bankData.name
-
-                if (valid){
-                    iban.classList.remove("is-false");
-                    iban.classList.add("is-valid");
-                    bool_iban = true
-                    validateForm("iban")
-                } else {
-                    iban.classList.remove("is-valid");
-                    iban.classList.add("is-false");
-                    bool_iban = false
-                    validateForm("iban")
-                }
-            })
-            .catch(function (error) {
-                bool_iban = false
-                validateForm("iban")
-            });
-        
-    }
 </script>
 
 
 <style>
-    .form-check-input:checked {
-        background-color: #0b9fb8!important;
-        border-color: #0b9fb8!important;
-    }
-    .btn:first-child:hover, :not(.btn-check)+.btn:hover {
-        color: var(--bs-btn-hover-color);
-        background-color: #0dcaea!important;
-        border-color: #0dcaea!important;
-    }
-    .btn.disabled, .btn:disabled, fieldset:disabled .btn {
-        color: var(--bs-btn-disabled-color);
-        pointer-events: none;
-        background-color: #00212d!important;
-        border-color: #00212d!important;
-        opacity: var(--bs-btn-disabled-opacity);
-    }
-    .controls{
-        display: flex;
-        justify-content: space-evenly;
-    }
-    input:-webkit-autofill { 
-        -webkit-background-clip: text;
-    }
-
-    .primary-color{
-        color:#343a40
-    }
+    
 </style>
 
 
